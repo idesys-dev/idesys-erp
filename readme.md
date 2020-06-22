@@ -51,7 +51,13 @@ usefull helpers, that you use in your test cases.
     pytest -v
 
 
-### TODO
+## Deployment
+
+In the branch named `deploy`, commit your changes and run `git push heroku deploy:master`.
+
+In the heroku panel, set all the enviromnent variables.
+
+## TODO
 
  - Set up prospector
  - Write some tests
