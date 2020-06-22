@@ -2,6 +2,7 @@ flask
 flask-login
 flask-mongoengine
 oauthlib
+dnspython
 requests
 pyopenssl
 google-api-python-client
