@@ -1,0 +1,7 @@
+-   repo: local
+    hooks:
+    -   id: system
+        name: Prospector
+        entry: python3 -m prospector
+        language: system
+        files: \.py$
