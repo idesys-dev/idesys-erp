@@ -1,3 +1,7 @@
+coverage
+pytest
+prospector
+pre-commit
 flask
 flask-login
 flask-mongoengine
