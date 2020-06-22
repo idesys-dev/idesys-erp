@@ -1,9 +1,8 @@
 # Python standard libraries
 import os
-import sqlite3
 
 # Third-party libraries
-from flask import Flask, redirect, request, url_for, render_template
+from flask import Flask, render_template
 from flask_login import LoginManager, login_required
 from flask_mongoengine import MongoEngine
 
@@ -53,6 +52,7 @@ def create_app(config_filename=None):
         return render_template('index.html')
 
     return app
+
 
 if __name__ == "__main__":
     app = create_app('development_config.py')
