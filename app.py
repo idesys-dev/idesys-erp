@@ -22,7 +22,7 @@ def create_app(config_filename=None):
     else:
         app.config.from_pyfile(config_filename)
 
-    db = MongoEngine(app)
+    MongoEngine(app)
 
     with app.app_context():
         from auth.views import auth_blueprint
@@ -41,6 +41,7 @@ def create_app(config_filename=None):
 
     create_admin(app)
 
+    # pylint: disable=unused-variable
     # Flask-Login helper to retrieve a user from our db
     @login_manager.user_loader
     def load_user(user_id):
@@ -50,10 +51,11 @@ def create_app(config_filename=None):
     @login_required
     def index():
         return render_template('index.html')
+    # pylint: enable=unused-variable
 
     return app
 
 
 if __name__ == "__main__":
-    app = create_app('development_config.py')
+    app = create_app()
     app.run(ssl_context="adhoc")

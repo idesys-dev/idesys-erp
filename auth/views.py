@@ -1,6 +1,5 @@
 # see https://realpython.com/flask-google-login/
 
-import os
 import json
 
 from flask import current_app, Blueprint, request, redirect, url_for, render_template, flash
