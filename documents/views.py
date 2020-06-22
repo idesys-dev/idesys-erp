@@ -1,5 +1,5 @@
-from flask import Blueprint, request, render_template, g, url_for, redirect
-from flask_login import login_required, current_user
+from flask import Blueprint, request, render_template, url_for, redirect
+from flask_login import current_user
 
 from .document_rendering.render_document import render_document
 from documents import forms
@@ -10,6 +10,7 @@ documents_bp = Blueprint('documents_bp', __name__, template_folder='templates')
 def restrict_bp_to_admins():
     if not current_user.is_authenticated:
         return redirect(url_for('auth_bp.login'))
+    return None
 
 @documents_bp.route('/rm', methods=['GET', 'POST'])
 def rm():

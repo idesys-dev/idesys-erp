@@ -74,12 +74,12 @@ def render_xlsx(_type, data, output_name):
 
 def render_pptx(_type, data, output_name):
     # see https://github.com/Thykof/template-pptx-jinja/blob/master/example.py
-    def majuscule(input):
-        return input.capitalize()
+    def majuscule(_input):
+        return _input.capitalize()
 
-    def gender(input, value):
+    def gender(_input, value):
         # usage: {{president.sexe| gender('e')}}
-        return value if input == 'f' else ''
+        return value if _input == 'f' else ''
 
     jinja2_env = jinja2.Environment()
     jinja2_env.filters['gender'] = gender

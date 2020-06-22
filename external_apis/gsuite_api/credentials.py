@@ -2,7 +2,6 @@
 
 import os
 
-from flask import current_app
 from google.oauth2 import service_account
 
 

@@ -1,8 +1,6 @@
-import os
-import tempfile
 
 import pytest
-from flask_login import login_user, current_user
+from flask_login import login_user
 
 from app import create_app
 from auth.models.user import User
@@ -10,7 +8,7 @@ from auth.models.user import User
 
 @pytest.fixture
 def app():
-    app = create_app('test_config.py')
+    app = create_app()
     test_user = User.objects(email='test@idesys.org').first()
     if test_user is None:
         test_user = User(email='test@idesys.org', name='test', google_id='test_google_id')

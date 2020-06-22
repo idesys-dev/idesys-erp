@@ -1,7 +1,5 @@
 # See https://slack.dev/python-slackclient/
 
-import os
-
 from flask import current_app
 from slack import WebClient
 
@@ -24,7 +22,7 @@ def get_channel_by_name(name):
 
 def send(message, receiver_name):
     receiver = get_channel_by_name(receiver_name)
-    if receiver != 'Error' and receiver != 'Not found':
+    if receiver not in ('Error',  'Not found'):
         receiver_id = receiver['id']
         slack_client.chat_postMessage(
             channel=receiver_id,

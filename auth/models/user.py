@@ -7,6 +7,7 @@ class User(UserMixin, me.Document):
     profile_pic = me.StringField()
     google_id = me.StringField(required=True)
 
+    #pylint: disable=invalid-overridden-method
     @staticmethod
     def is_authenticated():
         return True
@@ -18,6 +19,7 @@ class User(UserMixin, me.Document):
     @staticmethod
     def is_anonymous():
         return False
+    #pylint: enable=invalid-overridden-method
 
     def get_id(self):
         return self.google_id
