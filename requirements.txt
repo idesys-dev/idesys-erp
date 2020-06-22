@@ -10,3 +10,4 @@ Flask-WTF
 pytest
 coverage
 gunicorn
+docxtpl

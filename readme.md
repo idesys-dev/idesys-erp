@@ -57,6 +57,8 @@ In the branch named `deploy`, commit your changes and run `git push heroku deplo
 
 In the heroku panel, set all the enviromnent variables.
 
+To rebuild on heroku, push an empty commit with `git commit --allow-empty -m "Re-build"`
+
 ## TODO
 
  - Set up prospector
