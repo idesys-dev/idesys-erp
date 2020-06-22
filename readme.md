@@ -26,12 +26,12 @@ There can be:
 Run:
 
     export FLASK_ENV=development
-    export SECRET_KEY=x
+    export FLASK_SECRET_KEY=x
     export GOOGLE_CLIENT_ID=x
     export GOOGLE_CLIENT_SECRET=x
-    export MONGODB_URI=x
-    export SLACK_TOKEN=x
     export GOOGLE_SERVICE_ACCOUNT_INFO={}
+    export MONGODB_URI=x
+    export SLACK_BOT_TOKEN=x
     python3 app.py
 
 
@@ -57,10 +57,15 @@ In the branch named `deploy`, commit your changes and run `git push heroku deplo
 
 In the heroku panel, set all the enviromnent variables.
 
-To rebuild on heroku, push an empty commit with `git commit --allow-empty -m "Re-build"`
+To rebuild on heroku, push an empty commit with `git commit --allow-empty -m "Re-build"`.
+
+If you want to clean the cache: `heroku repo:purge_cache -a idesys-erp`.
 
 ## TODO
 
  - Set up prospector
  - Write some tests
  - Set up test coverage
+ - POC: electronic signature
+ - POC: grab mails
+ - Get the document templates from google drive
