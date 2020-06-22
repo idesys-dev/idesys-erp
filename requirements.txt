@@ -1,0 +1,10 @@
+flask
+flask-login
+oauthlib
+requests
+pyopenssl
+google-api-python-client
+Flask-WTF
+pytest
+coverage
+gunicorn

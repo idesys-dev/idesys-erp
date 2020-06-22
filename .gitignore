@@ -1,0 +1,10 @@
+__pycache__
+documents/document_rendering/generated_documents
+development_config.py
+production_config.py
+test_config.py
+.pytest_cache
+htmlcov
+.coverage
+GOOGLE_SERVICE_ACCOUNT_INFO.json
+idesysbot0-1591888101053-881fb9387839.json

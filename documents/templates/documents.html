@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _type }}{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+
+{% from "_formhelpers.html" import render_field %}
+<form method="post">
+  <dl>
+    {% for field in form %}
+    {{ render_field(field) }}
+    {% endfor %}
+  </dl>
+  <p><input type="submit" value="Valider">
+</form>
+
+{% if link %}
+<a href="{{link}}" target="_blank">Éditer le document</a>
+{% endif %}
+
+{% endblock %}
