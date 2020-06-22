@@ -27,25 +27,37 @@ clone the repository:
 
     git clone https://github.com/idesys-dev/idesys-erp.git
     cd idesys-erp
-    pip3 install -r dev-requirements.txt
+    python3 -m venv env
+    source env/bin/activate
+    git checkout develop
+    pip install -r dev-requirements.txt
     pre-commit install
 
-Generate the secret key with:
-
+Generate the secret key with, run `python`, and:
+```python
     import secrets
     secrets.token_hex(16)
+```
 
-Run:
+Then, each time you open a new terminal, run:
 
+```bash
+    source env/bin/activate
     export FLASK_ENV=development
     export FLASK_SECRET_KEY=x
     export GOOGLE_CLIENT_ID=x
     export GOOGLE_CLIENT_SECRET=x
-    export GOOGLE_SERVICE_ACCOUNT_INFO={}
-    export MONGODB_URI=x
+    # export GOOGLE_SERVICE_ACCOUNT_INFO={}
+    export MONGODB_URI="x"
     export SLACK_BOT_TOKEN=x
+```
+Remplace the `x` by the actual value.
 
-    python3 app.py
+Get the `idesysbot0-1591888101053-881fb9387839.json` file.
+
+Then you can run:
+
+    python app.py
 
 ### Tests
 
