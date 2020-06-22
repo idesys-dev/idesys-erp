@@ -12,3 +12,4 @@ coverage
 gunicorn
 docxtpl
 openpyxl
+template_pptx_jinja
