@@ -22,42 +22,21 @@ There can be:
  - a `static` folder, where you write js or css code specific to that module
 
 ### Getting started
-
+> Need Docker + Docker Compose, make
 clone the repository:
-
+```sh
     git clone https://github.com/idesys-dev/idesys-erp.git
-    cd idesys-erp
-    python3 -m venv env
-    source env/bin/activate
-    git checkout develop
-    pip install -r dev-requirements.txt
-    pre-commit install
 
-Generate the secret key with, run `python`, and:
-```python
-    import secrets
-    secrets.token_hex(16)
+    make start
+    #  get secret with
+    make generate-secret
+
+    # open env file and set var
+    make restart
+
 ```
 
-Then, each time you open a new terminal, run:
 
-```bash
-    source env/bin/activate
-    export FLASK_ENV=development
-    export FLASK_SECRET_KEY=x
-    export GOOGLE_CLIENT_ID=x
-    export GOOGLE_CLIENT_SECRET=x
-    # export GOOGLE_SERVICE_ACCOUNT_INFO={}
-    export MONGODB_URI="x"
-    export SLACK_BOT_TOKEN=x
-```
-Remplace the `x` by the actual value.
-
-Get the `idesysbot0-1591888101053-881fb9387839.json` file.
-
-Then you can run:
-
-    python app.py
 
 ### Tests
 
@@ -66,13 +45,14 @@ Make sure that all your views are tested.
 All the test functions are in the `tests` folder. The `conftest.py` define some
 usefull helpers, that you use in your test cases.
 
-    pytest -v
+   make test
 
 ### Linter
 
 See http://prospector.landscape.io/en/master/index.html.
 
-    prospector
+    
+   make lint
 
 
 ## TODO

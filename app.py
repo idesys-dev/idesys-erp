@@ -1,6 +1,7 @@
 # Python standard libraries
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 # Third-party libraries
 from flask import Flask, render_template
 from flask_login import LoginManager, login_required
@@ -58,4 +59,4 @@ def create_app(config_filename=None):
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(ssl_context="adhoc")
+    app.run(host=os.environ['FLASK_RUN_HOST'], ssl_context='adhoc')

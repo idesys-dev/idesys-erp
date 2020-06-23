@@ -18,3 +18,4 @@ template_pptx_jinja
 slackclient
 flask-admin
 email_validator
+python-dotenv
