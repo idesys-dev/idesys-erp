@@ -1,7 +1,6 @@
 # Python standard libraries
 import os
 from dotenv import load_dotenv
-load_dotenv()
 # Third-party libraries
 from flask import Flask, render_template
 from flask_login import LoginManager, login_required
@@ -10,6 +9,7 @@ from flask_mongoengine import MongoEngine
 # Internal imports
 
 def create_app(config_filename=None):
+    load_dotenv()
     # Flask app setup
     app = Flask(__name__)
     if config_filename is None:
