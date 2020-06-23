@@ -2,6 +2,7 @@
 
 from flask import current_app
 from slack import WebClient
+from slack.errors import SlackApiError
 
 
 slack_client = WebClient(current_app.config['SLACK_BOT_TOKEN'])
@@ -21,12 +22,18 @@ def get_channel_by_name(name):
     return 'Error'
 
 def send(message, receiver_name):
-    receiver = get_channel_by_name(receiver_name)
-    if receiver not in ('Error',  'Not found'):
-        receiver_id = receiver['id']
-        slack_client.chat_postMessage(
-            channel=receiver_id,
-            text=message
-        )
-        return 'Send'
-    return receiver
+    try:
+        receiver = get_channel_by_name(receiver_name)
+        if receiver not in ('Error',  'Not found'):
+            receiver_id = receiver['id']
+            slack_client.chat_postMessage(
+                channel=receiver_id,
+                text=message
+            )
+            return 'Send'
+        return receiver
+    except SlackApiError as e:
+        # You will get a SlackApiError if "ok" is False
+        assert e.response["ok"] is False
+        assert e.response["error"]  # str like 'invalid_auth', 'channel_not_found'
+        return e.response["error"]
