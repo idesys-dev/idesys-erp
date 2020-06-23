@@ -25,21 +25,11 @@ There can be:
 
 > Need Docker + Docker Compose, make
 
-    sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-    service docker restart
-    sudo usermod -aG docker $(whoami)
-    # Close and open your desktop user session
-    sudo service docker start
-    # sudo rm -rf /var/lib/docker
-    # sudo docker -d --storage-opt dm.basesize=20G
-    # sudo service docker stop
-    # sudo rm -rf /var/lib/docker
-    # sudo bash -c 'install -vm755 <(curl -L https://github.com/docker/machine/releases/download/v0.5.3/docker-machine_linux-amd64) /usr/local/bin/docker-machine'
-
 ```sh
     # clone the repository:
     git clone https://github.com/idesys-dev/idesys-erp.git
+
+    cd idesys-erp
 
     make start
     #  get secret with
