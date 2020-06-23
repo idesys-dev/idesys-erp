@@ -7,7 +7,8 @@ from google.oauth2 import service_account
 
 DEFAULT_USER_EMAIL = 'contactclient@idesys.org'
 
-SERVICE_ACCOUNT_FILE = 'idesysbot0-1591888101053-881fb9387839.json'
+
+SERVICE_ACCOUNT_FILE = 'idesys-erp-7323070a412e.json'
 if not os.path.exists(SERVICE_ACCOUNT_FILE):
     try:
         GOOGLE_SERVICE_ACCOUNT_INFO = os.environ['GOOGLE_SERVICE_ACCOUNT_INFO']
