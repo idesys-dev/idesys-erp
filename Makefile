@@ -15,7 +15,7 @@ start: .env  ## Start the development server
 start-d: .env  ## Start the development server (silent)
 	$(DOCKER_COMPOSE) up -d
 
-start-d: .env  ## Start the development server (silent)
+restart: .env  ## Restart the development server (silent)
 	$(DOCKER_COMPOSE) restart
 
 stop: ## Stop the project
