@@ -1,8 +1,6 @@
 __pycache__
 documents/document_rendering/generated_documents
-development_config.py
-production_config.py
-test_config.py
+external_apis/gsuite_api/downloaded
 .pytest_cache
 htmlcov
 .coverage

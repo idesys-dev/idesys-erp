@@ -121,7 +121,9 @@ def render_document(doc_type, file_extension, data, name):
     metadata_mime_type = mime_types[file_extension]['metadata']
     media_mimetype = mime_types[file_extension]['media']
     creds = credentials.get_delegated_credentials(scopes, current_user.email)
-    link = gdrive.upload(creds, output_path, metadata_mime_type, media_mimetype)
+    file = gdrive.upload(creds, output_path, metadata_mime_type, media_mimetype)
+    print(file)
+    link = file.get('webViewLink')
     resp = send_message.send('Nouveau document généré sur IdéSYS-ERP : ' + link, 'zapier-test')
     flash(resp)
     doc = Document(title=name, path=output_path, link=link, _type=doc_type, status="created")
