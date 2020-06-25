@@ -1,0 +1,9 @@
+  
+version: '3.7'
+
+services:
+    server:
+        image: docker.pkg.github.com/${GITHUB_REPOSITORY}/server
+        build:
+        cache_from:
+            - docker.pkg.github.com/${GITHUB_REPOSITORY}/server
