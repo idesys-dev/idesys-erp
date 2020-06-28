@@ -20,7 +20,7 @@ jobs:
      - name: Docker Pull
        run: docker-compose pull server || true
      - name: Make Start
-       run: make start
+       run: make start -d
      - name: Lint
        run: make lint
      - name: Test
