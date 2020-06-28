@@ -24,5 +24,10 @@ jobs:
      - name: Lint
        run: make lint
      - name: Test
-       run: make test
-
+       run: |
+        docker-compose exec -T server pip install pytest-cov
+        docker-compose exec -T server pytest -v --cov-report=xml
+     - name: Codecov
+       uses: codecov/codecov-action@v1.0.7
+       with:
+          token: ${{ secrets.CODECOV_TOKEN }}
