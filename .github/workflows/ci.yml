@@ -13,12 +13,16 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
      - uses: actions/checkout@v2
+     - name: Env
+       run: cp -f .env.dist .env
+     - name: Docker Login
+       run: docker login  docker.pkg.github.com -u ${GITHUB_ACTOR} -p ${{secrets.TOKEN}}
+     - name: Docker Pull
+       run: docker-compose pull server || true
+     - name: Make Start
+       run: make start
      - name: Lint
-       run: |
-          cp -f .env.dist .env
-          docker login  docker.pkg.github.com -u ${GITHUB_ACTOR} -p ${{secrets.TOKEN}}
-          docker-compose pull server || true
-          make start
-          make lint
-          make test
+       run: make lint
+     - name: Test
+       run: make test
 
