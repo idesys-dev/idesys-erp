@@ -20,7 +20,7 @@ jobs:
      - name: Lint
        run: |
           cp -f .env.dist .env
-          docker login -u github-ci-token -p $GITHUB_TOKEN docker.pkg.github.com
+          docker login docker.pkg.github.com -u github-ci-token -p $GITHUB_TOKEN
           docker-compose pull server || true
           make start
           make lint
