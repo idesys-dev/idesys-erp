@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, url_for, redirect
+from flask import Blueprint, request, render_template, url_for, redirect, flash
 from flask_login import current_user
 
 from .document_rendering.render_document import render_document
@@ -56,6 +56,31 @@ def pp():
         link = None
 
     return render_template('documents.html', form=form, link=link, _type="Propale")
+
+@documents_bp.route('/fa', methods=['GET', 'POST'])
+def fa():
+    form = forms.GenerateFA(request.form)
+    link = None
+    if request.method == 'POST':
+        if form.validate():
+            data = {
+                'reference': form.reference.data,
+                'client_name': form.client_name.data,
+                'client_address': form.client_address.data,
+                'no_etude': form.no_etude.data,
+                'contract_type': form.contract_type.data,
+                'reference_contract': form.reference_contract.data,
+                'fees': form.fees.data,
+                'issue_date': form.issue_date.data,
+                'expiry_date': form.expiry_date.data,
+                'percentage_deposit': form.percentage_deposit.data,
+            }
+            link = render_document('fa', 'xlsx', data, form.reference.data)
+        else:
+            flash('Formulaire invalide')
+
+    return render_template('documents.html', form=form, link=link, _type="FA")
+
 
 
 # Legacy code: from the previous Rest API for IdéSYS-ERP:

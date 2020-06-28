@@ -1,12 +1,12 @@
-from copy import copy
 import os
 
 from flask import flash
 from flask_login import current_user
 import jinja2
 from docxtpl import DocxTemplate
-from openpyxl import load_workbook, Workbook
+from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
+from openpyxl.drawing.image import Image
 from template_pptx_jinja.render import PPTXRendering
 
 from documents.models.document import Document
@@ -35,40 +35,45 @@ def render_docx(_type, data, output_name):
     return output_path
 
 def render_xlsx(_type, data, output_name):
-    """Example:
-        data = {
-            "pay": "180",
-            "jeh": "2",
-        }
-        output_name = 'bv-jean'
-    """
     filename = INPUT_DIR + "{_type}.xlsx".format(_type=_type)
     sheetname = 'template'
 
-    wb_template = load_workbook(filename=filename)
-    ws = wb_template[sheetname]
+    wb_in = load_workbook(filename=filename)
+    ws_in = wb_in[sheetname]
 
-    wb = Workbook()
-    ws_out = wb.active
+    ws_out = wb_in.copy_worksheet(ws_in)
     ws_out.title = output_name
 
-    for row in range(1, ws.max_row+1):
-        for col in range(1, ws.max_column+1):
-            content = ws[get_column_letter(col) + str(row)].value
+    # text_data = data['text_data']
+    # img_data = data['img_data']
+    jinja2_env = jinja2.Environment()
+
+    def add_image(input_text, img_path):
+        # usage: {{  loc | add_image('logo.png') }}
+        # where loc is for example A1 or B2
+        img = Image(INPUT_DIR + '/' + img_path)
+        ws_out.add_image(img, input_text)
+        return ''
+
+    jinja2_env.filters['add_image'] = add_image
+
+    for row in range(1, ws_in.max_row+1):
+        for col in range(1, ws_in.max_column+1):
+            content = ws_in[get_column_letter(col) + str(row)].value
             if content:
+                content = str(content)
 
                 # Use french decimal format
                 if isinstance(content, float):
-                    content = str(content)
                     content = content.replace('.', ',')
 
-                template = jinja2.Template(str(content))
+                template = jinja2_env.from_string(content)
                 rendered = template.render(data)
                 ws_out[get_column_letter(col) + str(row)] = rendered
-                ws_out[get_column_letter(col) + str(row)].font = copy(ws[get_column_letter(col) + str(row)].font)
 
+    del wb_in[sheetname]
     output_path = OUTPUT_DIR + output_name + '.xlsx'
-    wb.save(filename=output_path)
+    wb_in.save(filename=output_path)
     return output_path
 
 
@@ -125,7 +130,7 @@ def render_document(doc_type, file_extension, data, name):
     print(file)
     link = file.get('webViewLink')
     resp = send_message.send('Nouveau document généré sur IdéSYS-ERP : ' + link, 'zapier-test')
-    flash(resp)
+    flash("Slack send message:" + str(resp))
     doc = Document(title=name, path=output_path, link=link, _type=doc_type, status="created")
     doc.save()
     return link
