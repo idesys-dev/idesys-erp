@@ -51,7 +51,7 @@ def create_app(config_filename=None):
     @app.route("/")
     @login_required
     def index():
-        return render_template('index.html')
+        return render_template('pages/index.html')
     # pylint: enable=unused-variable
 
     return app
