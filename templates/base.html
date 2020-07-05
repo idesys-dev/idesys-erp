@@ -4,27 +4,23 @@
   <meta charset="utf-8">
   <title>{% block title %}{% endblock %} - IdéSYS-ERP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/sb-admin/css/sb-admin-2.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   {% block meta %}
   {% endblock %}
 </head>
+<body class="bg-gradient-primary">
 
-<body>
-  <nav>
-    <h1>IdéSYS-ERP</h1>
-    <ul>
-      
-    </ul>
-  </nav>
-  <section class="content">
-    <header>
-      {% block header %}{% endblock %}
-    </header>
-    {% for message in get_flashed_messages() %}
-      <div class="flash">{{ message }}</div>
-    {% endfor %}
-    {% block content %}{% endblock %}
-  </section>
+
+    {% block container %}{% endblock %}
+
+
+
+  <script src="{{ url_for('static', filename='vendor/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/sb-admin/js/sb-admin-2.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
 </body>
 </html>
