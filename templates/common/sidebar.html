@@ -4,7 +4,7 @@
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <div class="sidebar-brand-icon">
-          <img src="/img/LogoV2.PNG" class="img-fluid">
+          <img src="../static/img/logoblance.png" height="45">
         </div>
         <div class="sidebar-brand-text mx-3">IdéSYS ERP</div>
       </a>
@@ -12,16 +12,17 @@
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
-      <!-- Login - Name -->
+      <!-- Login -->
       <li class="nav-item">
-        <a class="nav-link" href="/">
-          <img src="{{current_user.profile_pic}}" alt="Google profile pic" class="align-items-left" height="50"></img>
-      </li>
+        <a class="nav-link" href="{{ url_for('auth_bp.user')}}">
+          <img src="{{current_user.profile_pic}}" alt="Google profile pic" height="40"></img>
+          <span>{{current_user.name}}</span></a>
+        </li>
 
-      <!-- Login - Logout -->
-      <li class="nav-item">
+      <!-- Logout -->
+      <li class="nav-item ">
         <a class="nav-link" href="{{ url_for('auth_bp.logout') }}">
-          <i class="fa fa-fw fa-sign-out"></i>
+          <i class="fa fa-fw fa-sign-out-alt"></i>
           <span>Se déconnecter</span></a>
       </li>
 
