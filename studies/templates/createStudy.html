@@ -1,0 +1,24 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}{{ _type }}{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<h2>Suivi d'Étude</h2>
+Ajouter une étude<hr>
+{% from "_formhelpers.html" import render_field %}
+<form method="post">
+  <dl>
+    <h4>Choix du prospect</h4>
+    {% for field in form %}
+    {{ render_field(field) }}
+    {% endfor %}
+  </dl>
+  <p><input type="submit" value="Valider">
+</form>
+
+{% if link %} {% endif %}
+
+{% endblock %}
