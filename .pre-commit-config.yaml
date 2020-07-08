@@ -2,6 +2,6 @@
     hooks:
     -   id: system
         name: Prospector
-        entry: python3 -m prospector
+        entry: python -m prospector
         language: system
         files: \.py$
