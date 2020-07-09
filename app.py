@@ -61,5 +61,5 @@ def create_app(config_filename=None):
 
 if __name__ == "__main__":
     app = create_app()
-    #app.run(host=os.environ['FLASK_RUN_HOST'], ssl_context='adhoc')
-    app.run(ssl_context='adhoc')
+    app.run(host=os.environ['FLASK_RUN_HOST'], ssl_context='adhoc')
+    #app.run(ssl_context='adhoc')

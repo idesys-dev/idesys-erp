@@ -12,3 +12,4 @@ class Etude(me.Document):
     state = me.StringField(required=True)
     listDocuments = me.ListField(me.ReferenceField(Document))
     listLabels = me.ListField(me.ReferenceField(Label))
+

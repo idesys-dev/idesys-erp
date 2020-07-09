@@ -4,6 +4,8 @@ from flask_login import current_user
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy
 from models import organisme
 
+from models.etude import Etude
+
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
 @studies_bp.before_request
@@ -40,3 +42,8 @@ def nouveau():
 def prospect():
     form = ProspectChoice(request.form)
     return render_template('createStudy.html', form=form)
+
+#Tableau de bord des études 
+@studies_bp.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    return render_template('dashboard.html',etude=Etude.objects)

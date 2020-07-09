@@ -1,0 +1,57 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}Dashboard Etudes{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<h2>Suivi d'Étude</h2>
+<span>Tableau de bord</span><hr>
+
+<!-- Bonton d'ajout d'étude-->
+<a href="#" class="btn btn-primary">
+    <span class="icon text-white-50">
+      <i class="fas fa-fw fa-plus-circle
+
+      "></i>
+    </span>
+    <span class="text">Ajouter une étude</span>
+  </a>
+
+  <!-- Onglets -->
+  <div class="card text-center">
+    <div class="card-header">
+      <ul class="nav nav-pills card-header-pills">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Toutes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">En cours</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Terminés</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="#">Avorté<s></s></a>
+        </li>
+      </ul>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Special title treatment</h5>
+      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+  </div>
+  <!-- Affichage des études en cours -->
+  {% for i in etude %}
+  <div class="card shadow">
+    <h6 class=" font-weight-bold text-primary">{{i.number}} : {{i.name}}</h6>
+    <div class="card-body">
+      {{i.description}}
+    </div>
+  {% endfor %}
+  
+
+  
+{% endblock %}
