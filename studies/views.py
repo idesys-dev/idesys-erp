@@ -44,6 +44,25 @@ def prospect():
     return render_template('createStudy.html', form=form)
 
 #Tableau de bord des études 
-@studies_bp.route('/dashboard', methods=['GET', 'POST'])
-def dashboard():
-    return render_template('dashboard.html',etude=Etude.objects)
+
+#Onglet : Toutes
+@studies_bp.route('/dashboard?tab=<string:tab>', methods=['GET', 'POST'])
+def dashboard(tab):
+        lenght = len(Etude.objects)
+        if tab == 'all' :
+            title = "Toutes les études"
+
+        elif tab == 'progressing':
+            title = "En cours"
+
+        elif tab == 'finished':
+            title = "Terminées"
+
+        elif tab == 'failed':
+            title = "Avortées"
+        
+        else :
+            title = "???"
+
+        return render_template('dashboard.html',etude=Etude.objects, title=title, tab=tab)
+   
