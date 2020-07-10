@@ -2,9 +2,7 @@ from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy
-from models import organisme
-
-from models.etude import Etude
+from models import organisme, labels, etude
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
@@ -46,23 +44,32 @@ def prospect():
 #Tableau de bord des études 
 
 #Onglet : Toutes
+@studies_bp.route('/dashboard', methods=['GET', 'POST'])
 @studies_bp.route('/dashboard?tab=<string:tab>', methods=['GET', 'POST'])
-def dashboard(tab):
-        lenght = len(Etude.objects)
-        if tab == 'all' :
-            title = "Toutes les études"
+def dashboard(tab='all'):
+    listCategory = []
+    for i in labels.Labels.objects :
+        if i.category not in listCategory :
+            listCategory.append(i.category)
 
-        elif tab == 'progressing':
-            title = "En cours"
+    if tab == 'all' :
+        title = "Toutes les études"
 
-        elif tab == 'finished':
-            title = "Terminées"
+    elif tab == 'progressing':
+        title = "En cours"
 
-        elif tab == 'failed':
-            title = "Avortées"
-        
-        else :
-            title = "???"
+    elif tab == 'finished':
+        title = "Terminées"
 
-        return render_template('dashboard.html',etude=Etude.objects, title=title, tab=tab)
+    elif tab == 'failed':
+        title = "Avortées"
+    else :
+        title = "Error 404 : tab not found"    
+    
+    return render_template('dashboard.html',
+            etude=etude.Etude.objects,
+            labels=labels.Labels.objects,
+            listCategory=listCategory,
+            title=title,
+            tab=tab )
    

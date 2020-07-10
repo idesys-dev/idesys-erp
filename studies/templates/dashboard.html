@@ -32,21 +32,26 @@
         </div>
       </div>
     </form>
+
     <!-- Boutons recherche par labels-->
-    <!-- for i in label.catégories-->
     <ul class="list-inline mt-4 ">
-      <div class="dropdown mb-2">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+      {% for i in listCategory %}
+      <div class="dropdown list-inline-item mb-2">
+        <button class="btn btn-secondary dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
-          Dropdown
+          {{i}}
         </button>
         <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
+          {% for j in labels %}
+          {% if i == j.category %}
+          <a class="dropdown-item" href="#">{{j.label}}</a>
+          {% endif %}
+          {% endfor %}
         </div>
       </div>
+      {% endfor %}
     </ul>
+
   </div>
 </div>
 
@@ -59,7 +64,7 @@
   <div class="card-header">
     <ul class="nav nav-pills card-header-pills">
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('studies_bp.dashboard', tab='all') }}">Toutes</a>
+        <a class="nav-link" href="{{ url_for('studies_bp.dashboard') }}">Toutes</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('studies_bp.dashboard', tab='progressing') }}">En cours</a>
@@ -77,16 +82,39 @@
   <div class="card-body">
     {% for i in etude %}
     {% if (tab == i.state) or (tab == 'all') %}
-    <div class="row card text-left shadow mb-2 ">
-      <div class="card-body pl-2 pt-2 col-6">
-        <h6 class="font-weight-bold text-primary pl-2 pt-2">{{i.number}} : {{i.name}}</h6>
-        <span>{{i.description}} : {{i.state}}</span>
+    <!-- Def ligne -->
+    <div class=" card text-left shadow mb-2 border-left-secondary">
+      <!-- PArti 1 : titre description labels-->
+      <div class="card-body pl-2 pt-2 row">
+        <div class="col-6">
+          <h6 class="font-weight-bold text-primary pl-2 pt-2">{{i.number}} : {{i.name}}</h6>
+          <span>{{i.description}} : {{i.state}}</span>
+          <ul class="list-inline pl-2 pb-2">
+            {% for j in i.listLabels %}
+            {% for k in labels %}
+            {% if j.id == k.id %}
+            <li class="list-inline-item">{{k.label}}</li>
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="col-3">
+          <p>Quali : {{i.idFollowerQuality}}</p>
+          <p>Suiveur : {{i.idFollowerStudy}}</p>
+        </div>
+        <div class="col-2">
+          <span>{{i.state}}</span>
+        </div>
+        <div class="col-1 text-align-center">
+          <span>Prix</span>
+          <span>000 €</span>
+          <span>NB JEH</span>
+          <span>12</span>
+        </div>
       </div>
-      <ul class="list-inline pl-2 pt-2">
-        {% for j in i.listLabels %}
-        <li class="list-inline-item">{{j}} </li>
-        {% endfor %}
-      </ul>
+
+
     </div>
     {% endif %}
     {% endfor %}
