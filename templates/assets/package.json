@@ -1,0 +1,19 @@
+{
+  "name": "idesys-erp-asset",
+  "version": "1.0.0",
+  "description": "",
+  "main": " ",
+  "dependencies": {
+    "startbootstrap-sb-admin-2": "^4.1.1"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1"
+  },
+  "scripts": {
+    "start": "gulp watch"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}
