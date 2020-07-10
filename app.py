@@ -29,7 +29,7 @@ def create_app(config_filename=None):
         from auth.views import auth_blueprint
         from documents.views import documents_bp
         from studies.views import studies_bp
-    from auth.models.user import User
+    from models.user import User
     from admin import create_admin
 
     app.register_blueprint(auth_blueprint, url_prefix='/auth')

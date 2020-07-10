@@ -12,7 +12,7 @@ from flask_login import (
 import requests
 from oauthlib.oauth2 import WebApplicationClient
 
-from auth.models.user import User
+from models.user import User
 
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"

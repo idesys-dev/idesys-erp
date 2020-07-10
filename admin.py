@@ -5,7 +5,7 @@ from flask_admin import Admin
 from flask_admin.contrib.mongoengine import ModelView
 from flask_login import current_user
 
-from auth.models import user
+from models import user
 from documents.models import document
 
 class BaseAdminView(ModelView):
