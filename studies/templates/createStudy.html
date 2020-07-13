@@ -6,19 +6,64 @@
 {% endblock %}
 
 {% block content %}
-<h2>Suivi d'Étude</h2>
-Ajouter une étude<hr>
-{% from "_formhelpers.html" import render_field %}
-<form method="post">
-  <dl>
-    <h4>Choix du prospect</h4>
-    {% for field in form %}
-    {{ render_field(field) }}
-    {% endfor %}
-  </dl>
-  <p><input type="submit" value="Valider">
-</form>
+<div class="container-fluid">
+<!-- Start Container -->
+  <h2>Suivi d'Étude</h2>
+  Ajouter une étude<hr>
 
-{% if link %} {% endif %}
+  {% from "_formhelpers.html" import render_field %}
+  <form method="post">
+    <dl>
+        {% for field in formSubmit %}
+        {{ render_field(field, class='form-control') }}
+        {% endfor %}
+    </dl>
+    <input type="submit" name="btn" value="Valider" class='btn btn-warning btn-block'>
+  </form>
 
+  <hr>
+
+  <form method="post">
+  <div class="row">
+    <!-- Start Row -->
+
+    <div class="col">
+      <!-- Start Col -->
+      <h5> Informations sur l'étude</h5>
+        <dl>
+          {% for field in formCreateStudy %}
+          {{ render_field(field, class='form-control') }}
+          {% endfor %}
+        </dl>
+        <!-- End Col -->
+    </div>
+
+    <div class="col">
+      <!-- Start Col -->
+      <h5> Choix du prospect </h5>
+      <dl>
+        {% for field in formProspectChoice %}
+        {{ render_field(field, class='form-control') }}
+        {% endfor %}
+      </dl>
+
+      <h5> Labels </h5>
+      <dl>
+          {% for field in formLabel %}
+          {{ render_field(field, class='form-control') }}
+          {% endfor %}
+      </dl>
+      <!-- End Col -->
+    </div>
+    <!-- End Row -->
+  </div>
+
+  <hr>
+
+  <p><input type="submit" name ="btn" value="Enregistrer" class='btn btn btn-success btn-block'>
+  </form>
+
+  <p><input type="submit" value="Annuler" class='btn btn btn-danger btn-block'>
+  <!-- End Container -->
+</div>
 {% endblock %}

@@ -1,6 +1,4 @@
 import mongoengine as me
-from models.labels import Label
-from documents.models.document import Document
 
 class Etude(me.Document):
     number = me.IntField(required=True)
@@ -10,5 +8,5 @@ class Etude(me.Document):
     description = me.StringField(required=True)
     applicationFees = me.IntField(required=True)
     state = me.StringField(required=True)
-    listDocuments = me.ListField(me.ReferenceField(Document))
-    listLabels = me.ListField(me.ReferenceField(Label))
+    listDocuments = me.ListField()
+    listLabels = me.ListField(required=True)

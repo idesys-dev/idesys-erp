@@ -1,0 +1,52 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}{{ _type }}{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+<!-- Start Container -->
+  <h2>Suivi d'Étude</h2>
+  Ajouter un prospect<hr>
+
+  {% from "_formhelpers.html" import render_field %}
+  <form method="post">
+  <div class="row">
+    <!-- Start Row  -->
+    <div class="col">
+      <!-- Start Col -->
+      <h5> Création d'un prospect</h5>
+      <dl>
+        {% for field in formCreateProspect %}
+        {{ render_field(field, class='form-control') }}
+        {% endfor %}
+      </dl>
+      <!--End Col -->
+    </div>
+
+    <div class="col">
+      <!-- Start Col -->
+      <h5> Création d'un contact</h5>
+      <dl>
+        {% for field in formCreateContact %}
+        {{ render_field(field, class='form-control') }}
+        {% endfor %}
+      </dl>
+      <!-- End Col -->
+    </div>
+  <!-- End Row -->
+  </div>
+
+  <hr>
+
+  <p><input type="submit" name="btn" value="Enregistrer" class='btn btn btn-success btn-block'>
+  </form>
+
+  <form method="post">
+    <p><input type="submit" name="btn" value="Annuler" class='btn btn btn-danger btn-block'>
+  </form>
+<!-- End Container -->
+</div>
+{% endblock %}

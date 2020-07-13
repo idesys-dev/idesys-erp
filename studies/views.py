@@ -1,8 +1,8 @@
 from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
-from studies.forms import TypeCreate, ProspectChoice, CreateStudy
-from models import organisme
+from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, Labels, CreateContact
+from models import organisme, etude, contact
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
@@ -12,31 +12,73 @@ def restrict_bp_to_admins():
         return redirect(url_for('auth_bp.login'))
     return None
 
-@studies_bp.route('/create', methods=['GET', 'POST'])
-def create():
-    form = TypeCreate(request.form)
-    if request.method == 'POST'and form.validate():
-        if form.structureSave.data == 'Non':
-            return redirect(url_for('.nouveau'))
+@studies_bp.route('/consultStudies', methods=['GET', 'POST'])
+def consultStudies():
+    return render_template('studies.html')
 
-        return redirect(url_for('.prospect'))
+@studies_bp.route('/createStudy', methods=['GET', 'POST'])
+def createStudy():
+    # We declare all forms we describe in the forms.py
+    formCreateStudy = CreateStudy(request.form)
+    formSubmit = TypeCreate(request.form)
+    formProspectChoice = ProspectChoice(request.form)
+    formLabel = Labels(request.form)
 
-    return render_template('createStudy.html', form=form)
+    if request.method == 'POST':
+        if request.form['btn'] == 'Valider' and formSubmit.structureSave.data == 'Non':
+            # If the prospect doesn't exist, we create it
+            return redirect(url_for(".createProspect"))
 
-@studies_bp.route('/nouveau', methods=['GET', 'POST'])
-def nouveau():
-    form = CreateStudy(request.form)
-    if request.method == 'POST'and form.validate():
+        if request.form['btn'] ==  'Enregistrer':
+            etu = etude.Etude(
+            number = 1,
+            name = formCreateStudy.studyName.data,
+            idFollowerQuality = formCreateStudy.followerQuality.data,
+            idFollowerStudy = formCreateStudy.followerStudy.data,
+            description = formCreateStudy.description.data,
+            applicationFees = 100,
+            state = "Début",
+            listLabels = [formLabel.year.data, formLabel.sector.data, formLabel.prospection.data] )
+            etu.save()
+
+            return redirect(url_for(".consultStudies"))
+
+    # If the prospect already exist, we have to choose it
+    return render_template('createStudy.html',
+    formCreateStudy=formCreateStudy,
+    formLabel=formLabel,
+    formSubmit=formSubmit,
+    formProspectChoice=formProspectChoice )
+
+@studies_bp.route('/createProspect', methods=['GET', 'POST'])
+def createProspect():
+    formCreateProspect = CreateProspect(request.form)
+    formCreateContact = CreateContact(request.form)
+
+    if request.method == 'POST':
+        if request.form['btn'] == 'Annuler':
+            return redirect(url_for(".createStudy"))
+
         org = organisme.Organisme(
-        name = form.structureName.data,
-        adresse = form.adresse.data,
-        city = form.city.data,
-        postalCode = form.postalCode.data)
-        print(org)
+        name = formCreateProspect.structureName.data,
+        typeStructure = formCreateProspect.structureType.data,
+        adresse = formCreateProspect.adresse.data,
+        city = formCreateProspect.city.data,
+        postalCode = formCreateProspect.postalCode.data,
+        sector = formCreateProspect.sector.data )
         org.save()
-    return render_template('createStudy.html', form=form)
 
-@studies_bp.route('/prospect', methods=['GET', 'POST'])
-def prospect():
-    form = ProspectChoice(request.form)
-    return render_template('createStudy.html', form=form)
+        cont = contact.Contact(
+        idOrganisme = org.id,
+        firstName = formCreateContact.firstName.data,
+        name = formCreateContact.name.data,
+        job = formCreateContact.position.data,
+        email = formCreateContact.email.data,
+        phone = formCreateContact.phone.data )
+        cont.save()
+
+        return redirect(url_for(".createStudy"))
+
+    return render_template('createProspect.html',
+    formCreateProspect=formCreateProspect,
+    formCreateContact=formCreateContact )

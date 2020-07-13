@@ -1,0 +1,11 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}{{ _type }}{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+Page des études
+<p><a href="{{ url_for('studies_bp.createStudy') }}">Ajouter une nouvelle étude</a>.</p>
+{% endblock %}

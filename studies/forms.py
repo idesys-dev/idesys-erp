@@ -1,35 +1,50 @@
-from wtforms import Form, StringField, IntegerField, SelectField
+from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms import validators as v
+from models import organisme, labels
+
+def getLabels(typeLabel):
+    mesLabels = [("Aucun", "Aucun")]
+    for item in labels.Label.objects:
+        if item.category == typeLabel:
+            mesLabels.append((item.label, item.label))
+    return mesLabels
+
+def getProspect():
+    prospect = [("Aucun", "Aucun")]
+    for item in organisme.Organisme.objects:
+        prospect.append((item.name, item.name))
+    return prospect
 
 class TypeCreate(Form):
     structureSave = SelectField('L\'organisme est-il déjà défini ?', choices=[
-        ("Non", "Non"),
-        ("Oui", "Oui")])
+        ("Oui", "Oui"),
+        ("Non", "Non")])
 
 
 class ProspectChoice(Form):
-    prospectChoice = SelectField('Sélectionner l\'organisme déjà existant', choices=[
-        ("Bonnefon", "Bonnefon"),
-        ("EDC", "EDC")])
-    structureType = StringField('Type de la structure', [
-        v.Length(min=0, max=50),
-        v.DataRequired()
-    ])
-    year = SelectField('Année', choices=[
-        ("2018", "2018"),
-        ("2019", "2019"),
-        ("2020", "2020")])
-    sector = SelectField('Filière', choices=[
-        ("Informatique", "Informatique"),
-        ("Electronique", "Electronique"),
-        ("Thermique", "Thermique")])
-    prospection = SelectField('Prospection', choices=[
-        ("Prospection", "Prospection"),
-        ("Spontanee", "Spontanee")])
+    prospectChoice = SelectField('Sélectionner l\'organisme déjà existant', choices=getProspect())
 
 
 class CreateStudy(Form):
+    studyName = StringField('Nom de l\'étude', [
+        v.Length(min=0, max=50),
+        v.DataRequired()
+    ])
+    followerStudy = SelectField('Suiveur d\'étude', choices=[
+        ("Aucun", "Aucun"),
+        ("Paul Terrassin", "Paul Terrassin"),
+        ("David Thibaut", "David Thibaut")])
+    followerQuality = SelectField('Suiveur qualité', choices=[
+        ("Aucun", "Aucun"),
+        ("Ulysse Guyon", "Ulysse Guyon"),
+        ("Antoine Zuber", "Antoine Zuber")])
+    description = TextAreaField('Description', [
+        v.DataRequired()
+    ])
+
+
+class CreateProspect(Form):
     structureName = StringField('Nom de la structure', [
         v.Length(min=0, max=50),
         v.DataRequired()
@@ -46,12 +61,12 @@ class CreateStudy(Form):
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-    postalCode = IntegerField('Code postal', [v.DataRequired()
+    postalCode = IntegerField('Code postal', [
+        v.DataRequired()
     ])
-    sector = SelectField('Secteur d\'activité', choices=[
-        ("Informatique", "Informatique"),
-        ("Electronique", "Electronique"),
-        ("Thermique", "Thermique")])
+    sector = SelectField('Secteur d\'activité', choices=getLabels("Secteur"))
+
+class CreateContact(Form):
     name = StringField('Nom', [
         v.Length(min=0, max=50),
         v.DataRequired()
@@ -72,14 +87,9 @@ class CreateStudy(Form):
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-    year = SelectField('Année', choices=[
-        ("2018", "2018"),
-        ("2019", "2019"),
-        ("2020", "2020")])
-    sector = SelectField('Filière', choices=[
-        ("Informatique", "Informatique"),
-        ("Electronique", "Electronique"),
-        ("Thermique", "Thermique")])
-    prospection = SelectField('Prospection', choices=[
-        ("Prospection", "Prospection"),
-        ("Spontanee", "Spontanee")])
+
+
+class Labels(Form):
+    year = SelectField('Année', choices=getLabels("Année"))
+    sector = SelectField('Filière', choices=getLabels("Filière"))
+    prospection = SelectField('Prospection', choices=getLabels("Prospection"))
