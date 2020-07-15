@@ -9,7 +9,9 @@
 <div class="container-fluid">
 <!-- Start Container -->
   <h2>Suivi d'Étude</h2>
-  Ajouter un prospect<hr>
+  <p>Ajouter un prospect</p>
+
+  <hr>
 
   {% from "_formhelpers.html" import render_field %}
   <form method="post">
@@ -41,12 +43,10 @@
 
   <hr>
 
-  <p><input type="submit" name="btn" value="Enregistrer" class='btn btn btn-success btn-block'>
+  <p><input type="submit" name="btn" value="Enregistrer" class='btn btn btn-success btn-block'></p>
   </form>
 
-  <form method="post">
-    <p><input type="submit" name="btn" value="Annuler" class='btn btn btn-danger btn-block'>
-  </form>
+  <p><a href="{{ url_for('studies_bp.createStudy') }}"><input type="submit" name="btn" value="Annuler" class='btn btn btn-danger btn-block'></a></p>
 <!-- End Container -->
 </div>
 {% endblock %}

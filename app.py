@@ -34,7 +34,7 @@ def create_app(config_filename=None):
 
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(documents_bp, url_prefix='/documents')
-    app.register_blueprint(studies_bp, url_prefix='/etudes')
+    app.register_blueprint(studies_bp, url_prefix='/studies')
 
     # User session management setup
     # https://flask-login.readthedocs.io/en/latest

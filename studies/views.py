@@ -12,11 +12,7 @@ def restrict_bp_to_admins():
         return redirect(url_for('auth_bp.login'))
     return None
 
-@studies_bp.route('/consultStudies', methods=['GET', 'POST'])
-def consultStudies():
-    return render_template('studies.html')
-
-@studies_bp.route('/createStudy', methods=['GET', 'POST'])
+@studies_bp.route('/create-study', methods=['GET', 'POST'])
 def createStudy():
     # We declare all forms we describe in the forms.py
     formCreateStudy = CreateStudy(request.form)
@@ -42,10 +38,7 @@ def createStudy():
             list_labels = [formLabel.year.data, formLabel.sector.data, formLabel.prospection.data] )
             etu.save()
 
-            return redirect(url_for(".consultStudies"))
-
-        if request.form['btn'] == 'Annuler':
-            return redirect(url_for(".consultStudies"))
+            return redirect(url_for("index"))
 
     # If the prospect already exist, we have to choose it
     return render_template('createStudy.html',
@@ -54,34 +47,32 @@ def createStudy():
     formSubmit=formSubmit,
     formProspectChoice=formProspectChoice )
 
-@studies_bp.route('/createProspect', methods=['GET', 'POST'])
+@studies_bp.route('/create-prospect', methods=['GET', 'POST'])
 def createProspect():
     formCreateProspect = CreateProspect(request.form)
     formCreateContact = CreateContact(request.form)
 
     if request.method == 'POST':
-        if request.form['btn'] == 'Annuler':
+        if request.form['btn'] ==  'Enregistrer':
+            org = organisme.Organisme(
+            name = formCreateProspect.structure_name.data,
+            type_structure = formCreateProspect.structure_type.data,
+            adresse = formCreateProspect.adresse.data,
+            city = formCreateProspect.city.data,
+            postal_code = formCreateProspect.postal_code.data,
+            sector = formCreateProspect.sector.data )
+            org.save()
+
+            cont = contact.Contact(
+            id_organisme = org.id,
+            first_name = formCreateContact.first_name.data,
+            name = formCreateContact.name.data,
+            job = formCreateContact.position.data,
+            email = formCreateContact.email.data,
+            phone = formCreateContact.phone.data )
+            cont.save()
+
             return redirect(url_for(".createStudy"))
-
-        org = organisme.Organisme(
-        name = formCreateProspect.structure_name.data,
-        type_structure = formCreateProspect.structure_type.data,
-        adresse = formCreateProspect.adresse.data,
-        city = formCreateProspect.city.data,
-        postal_code = formCreateProspect.postal_code.data,
-        sector = formCreateProspect.sector.data )
-        org.save()
-
-        cont = contact.Contact(
-        id_organisme = org.id,
-        first_name = formCreateContact.first_name.data,
-        name = formCreateContact.name.data,
-        job = formCreateContact.position.data,
-        email = formCreateContact.email.data,
-        phone = formCreateContact.phone.data )
-        cont.save()
-
-        return redirect(url_for(".createStudy"))
 
     return render_template('createProspect.html',
     formCreateProspect=formCreateProspect,
