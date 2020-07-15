@@ -72,10 +72,9 @@ class CreateContact(Form):
         v.DataRequired()
     ])
     phone = TelField('Téléphone', [
-        v.Length(min=0, max=50),
+        v.Length(min=0, max=14),
         v.DataRequired()
     ])
-
 
 class Labels(Form):
     year = SelectField('Année', choices=Label.getLabels("Année"))
