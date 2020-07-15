@@ -25,16 +25,16 @@ def createStudy():
     formLabel = Labels(request.form)
 
     if request.method == 'POST':
-        if request.form['btn'] == 'Valider' and formSubmit.structure_Save.data == 'Non':
+        if request.form['btn'] == 'Valider' and formSubmit.structure_save.data == 'Non':
             # If the prospect doesn't exist, we create it
             return redirect(url_for(".createProspect"))
 
         if request.form['btn'] ==  'Enregistrer':
             etu = etude.Etude(
             number = 1,
-            name = formCreateStudy.study_Name.data,
-            idFollowerQuality = formCreateStudy.follower_Quality.data,
-            idFollowerStudy = formCreateStudy.follower_Study.data,
+            name = formCreateStudy.study_name.data,
+            idFollowerQuality = formCreateStudy.follower_quality.data,
+            idFollowerStudy = formCreateStudy.follower_study.data,
             description = formCreateStudy.description.data,
             applicationFees = 100,
             state = "Début",
@@ -63,17 +63,17 @@ def createProspect():
             return redirect(url_for(".createStudy"))
 
         org = organisme.Organisme(
-        name = formCreateProspect.structure_Name.data,
-        typeStructure = formCreateProspect.structure_Type.data,
+        name = formCreateProspect.structure_name.data,
+        typeStructure = formCreateProspect.structure_type.data,
         adresse = formCreateProspect.adresse.data,
         city = formCreateProspect.city.data,
-        postalCode = formCreateProspect.postal_Code.data,
+        postalCode = formCreateProspect.postal_code.data,
         sector = formCreateProspect.sector.data )
         org.save()
 
         cont = contact.Contact(
         idOrganisme = org.id,
-        firstName = formCreateContact.first_Name.data,
+        firstName = formCreateContact.first_name.data,
         name = formCreateContact.name.data,
         job = formCreateContact.position.data,
         email = formCreateContact.email.data,
