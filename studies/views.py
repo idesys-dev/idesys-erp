@@ -25,22 +25,25 @@ def createStudy():
     formLabel = Labels(request.form)
 
     if request.method == 'POST':
-        if request.form['btn'] == 'Valider' and formSubmit.structureSave.data == 'Non':
+        if request.form['btn'] == 'Valider' and formSubmit.structure_Save.data == 'Non':
             # If the prospect doesn't exist, we create it
             return redirect(url_for(".createProspect"))
 
         if request.form['btn'] ==  'Enregistrer':
             etu = etude.Etude(
             number = 1,
-            name = formCreateStudy.studyName.data,
-            idFollowerQuality = formCreateStudy.followerQuality.data,
-            idFollowerStudy = formCreateStudy.followerStudy.data,
+            name = formCreateStudy.study_Name.data,
+            idFollowerQuality = formCreateStudy.follower_Quality.data,
+            idFollowerStudy = formCreateStudy.follower_Study.data,
             description = formCreateStudy.description.data,
             applicationFees = 100,
             state = "Début",
             listLabels = [formLabel.year.data, formLabel.sector.data, formLabel.prospection.data] )
             etu.save()
 
+            return redirect(url_for(".consultStudies"))
+
+        if request.form['btn'] == 'Annuler':
             return redirect(url_for(".consultStudies"))
 
     # If the prospect already exist, we have to choose it
@@ -60,17 +63,17 @@ def createProspect():
             return redirect(url_for(".createStudy"))
 
         org = organisme.Organisme(
-        name = formCreateProspect.structureName.data,
-        typeStructure = formCreateProspect.structureType.data,
+        name = formCreateProspect.structure_Name.data,
+        typeStructure = formCreateProspect.structure_Type.data,
         adresse = formCreateProspect.adresse.data,
         city = formCreateProspect.city.data,
-        postalCode = formCreateProspect.postalCode.data,
+        postalCode = formCreateProspect.postal_Code.data,
         sector = formCreateProspect.sector.data )
         org.save()
 
         cont = contact.Contact(
         idOrganisme = org.id,
-        firstName = formCreateContact.firstName.data,
+        firstName = formCreateContact.first_Name.data,
         name = formCreateContact.name.data,
         job = formCreateContact.position.data,
         email = formCreateContact.email.data,
