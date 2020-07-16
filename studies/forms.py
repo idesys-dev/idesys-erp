@@ -2,7 +2,7 @@ from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms import validators as v
 from models.labels import Label
-from models.organisme import Organisme
+from models.organization import Organization
 
 class TypeCreate(Form):
     structure_save = SelectField('L\'organisme est-il déjà défini ?', choices=[
@@ -11,7 +11,7 @@ class TypeCreate(Form):
 
 
 class ProspectChoice(Form):
-    prospect_choice = SelectField('Sélectionner l\'organisme déjà existant', choices=Organisme.getOrganisme())
+    prospect_choice = SelectField('Sélectionner l\'organisme déjà existant', choices=Organization.getOrganization())
 
 
 class CreateStudy(Form):

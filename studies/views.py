@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, Labels, CreateContact
-from models import organisme, etude, contact
+from models import organization, study, contact
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
@@ -26,7 +26,7 @@ def createStudy():
             return redirect(url_for(".createProspect"))
 
         if request.form['btn'] ==  'Enregistrer':
-            etu = etude.Etude(
+            etu = study.Study(
                 number = 1,
                 organisme = formProspectChoice.prospect_choice.data,
                 name = formCreateStudy.study_name.data,
@@ -54,7 +54,7 @@ def createProspect():
 
     if request.method == 'POST':
         if request.form['btn'] ==  'Enregistrer':
-            org = organisme.Organisme(
+            org = organization.Organization(
                 name = formCreateProspect.structure_name.data,
                 type_structure = formCreateProspect.structure_type.data,
                 adresse = formCreateProspect.adresse.data,

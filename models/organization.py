@@ -1,6 +1,6 @@
 import mongoengine as me
 
-class Organisme(me.Document):
+class Organization(me.Document):
     name = me.StringField(required=True)
     type_structure = me.StringField(required=True)
     adresse = me.StringField(required=True)
@@ -9,8 +9,8 @@ class Organisme(me.Document):
     sector = me.StringField(required=True)
 
     @staticmethod
-    def getOrganisme():
+    def getOrganization():
         prospect = [("Aucun", "Aucun")]
-        for item in Organisme.objects:
+        for item in Organization.objects:
             prospect.append((item.name, item.name))
         return prospect

@@ -1,8 +1,8 @@
 import mongoengine as me
 
-class Etude(me.Document):
+class Study(me.Document):
     number = me.IntField(required=True)
-    organisme= me.ReferenceField('Organisme')
+    organisme= me.ReferenceField('Organization')
     name = me.StringField(required=True)
     follower_quality= me.ReferenceField('User')
     follower_study= me.ReferenceField('User')
