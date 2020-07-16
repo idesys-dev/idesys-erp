@@ -102,7 +102,16 @@ def callback():
     user = User.objects(google_id=unique_id).first()
     if not user:
         user = User(
-            google_id=unique_id, name=users_name, email=users_email, profile_pic=picture
+            google_id=unique_id, 
+            name=users_name, 
+            email=users_email, 
+            profile_pic=picture,
+
+            adress="",
+            postal_code="",
+            city="",
+            graduation_classes="",
+            mandate=True
         )
         user.save()
 

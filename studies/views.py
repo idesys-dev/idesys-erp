@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy
-from models import organisme, labels, etude
+from models import organization, labels, study, missions, phases 
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
@@ -27,11 +27,11 @@ def create():
 def nouveau():
     form = CreateStudy(request.form)
     if request.method == 'POST'and form.validate():
-        org = organisme.Organisme(
+        org = organization.Organization(
         name = form.structureName.data,
-        adresse = form.adresse.data,
+        adress = form.adresse.data,
         city = form.city.data,
-        postalCode = form.postalCode.data)
+        postal_code = form.postalCode.data)
         print(org)
         org.save()
     return render_template('createStudy.html', form=form)
@@ -67,9 +67,30 @@ def dashboard(tab='all'):
         title = "Error 404 : tab not found"    
     
     return render_template('dashboard.html',
-            etude=etude.Etude.objects,
+            study=study.Study.objects,
             labels=labels.Labels.objects,
             listCategory=listCategory,
             title=title,
             tab=tab )
-   
+
+
+@studies_bp.context_processor
+def utility_processor():
+    def get_info(id_study):
+        total_price = 0
+        tot_jeh = 0
+        if id_study == '':
+            return "Id non valide"
+
+        etu = study.Study.objects(id=id_study).first()
+
+        for g in etu.list_missions:
+            
+            for i in g.list_phases:
+                total_price += i.price_jeh * i.nb_jeh
+                tot_jeh += i.nb_jeh
+        
+        return {"price":total_price, 
+                "tot_jeh": tot_jeh}
+
+    return dict(get_info=get_info)

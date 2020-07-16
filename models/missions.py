@@ -1,16 +1,16 @@
 import mongoengine as me
-from models.etude import Etude
 from models.documents import Documents
 from models.phases import Phases
 from models.user import User
 
 
 
-class Mission(me.Document):
-    idEtude = me.ReferenceField(Etude)(required=True)
-    idIntervenant = me.ReferenceField(User)(required=True)
-    nom = me.StringField(required=True)
-    dateDebut = me.StringField(required=True)
-    dateFin= me.StringField(required=True)
-    listDocuments = me.ListField(me.ReferenceField(Documents))
-    listPhases = me.ListField(me.ReferenceField(Phases))
+class Missions(me.EmbeddedDocument):
+    id_intervener = me.ReferenceField(User)
+    name = me.StringField(required=True)
+    begin_date = me.DateTimeField(required=True)
+    end_date= me.DateTimeField(required=True)
+    list_documents = me.ListField(me.ReferenceField(Documents))
+    list_phases = me.EmbeddedDocumentListField(Phases)
+
+  

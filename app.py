@@ -7,6 +7,8 @@ from flask_login import LoginManager, login_required
 from flask_mongoengine import MongoEngine
 
 # Internal imports
+import models as mo
+from models.seeder import starter_db
 
 def create_app(config_filename=None):
     load_dotenv()
@@ -24,6 +26,7 @@ def create_app(config_filename=None):
         app.config.from_pyfile(config_filename)
 
     MongoEngine(app)
+   
 
     with app.app_context():
         from auth.views import auth_blueprint
@@ -43,6 +46,16 @@ def create_app(config_filename=None):
     login_manager.login_view = 'auth_bp.login'
 
     create_admin(app)
+
+    #Réinitialisatioon des collections
+    mo.study.Study.drop_collection()
+    mo.organization.Organization.drop_collection()
+    mo.user.User.drop_collection()
+    mo.labels.Labels.drop_collection()
+
+
+    #Lancement du seeder
+    starter_db()
 
     # pylint: disable=unused-variable
     # Flask-Login helper to retrieve a user from our db

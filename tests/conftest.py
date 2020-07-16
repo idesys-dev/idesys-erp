@@ -4,7 +4,7 @@ from flask_login import login_user
 from flask import make_response
 
 from app import create_app
-from auth.models.user import User
+from models.user import User
 
 
 @pytest.fixture

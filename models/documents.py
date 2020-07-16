@@ -1,11 +1,10 @@
 import mongoengine as me
 
 class Documents(me.Document):
-    chemin = me.StringField(required=True)
-    typeDoc = me.StringField(required=True)
-    etatDoc = me.StringField(required=True)
-    signature = me.BooleanField(required=True)
-    dateSignature = me.StringField
-    dateSignature = me.StringField(required=True)
+    path = me.StringField(required=True)
+    doc_type = me.StringField(required=True)
+    doc_state = me.StringField(required=True)
+    signed = me.BooleanField(required=True)
+    signed_date = me.StringField
     tags = listDocuments = me.ListField
 

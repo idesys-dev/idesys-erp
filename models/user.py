@@ -1,11 +1,27 @@
 from flask_login import UserMixin
 import mongoengine as me
 
+from models.roles import Roles
+from models.documents import Documents
+from models.labels import Labels
+
 class User(UserMixin, me.Document):
     email = me.EmailField(required=True)
     name = me.StringField(required=True)
     profile_pic = me.StringField()
     google_id = me.StringField(required=True)
+
+    #Ajout pour la db 
+    adress = me.StringField(required=True)
+    postal_code = me.StringField(required=True)
+    city = me.StringField(required=True)
+    graduation_classes = me.StringField(required=True)
+    mandate = me.BooleanField(required=True)
+    list_role = me.ListField(me.ReferenceField(Roles))
+    list_label = me.ListField(me.ReferenceField(Labels))
+    list_documents = me.ListField(me.ReferenceField(Documents))
+
+
 
     #pylint: disable=invalid-overridden-method
     @staticmethod

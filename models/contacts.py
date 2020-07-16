@@ -1,10 +1,8 @@
 import mongoengine as me
-from models.organisme import Organisme
 
-class Contacts(me.Document):
-    idOrganisme = me.ReferenceField(Organisme)(required=True)
-    prenom = me.StringField(required=True)
-    nom = me.StringField(required=True)
-    poste = me.StringField(required=True)
-    email = me.StringField(required=True)
-    tel = me.StringField
+class Contacts(me.EmbeddedDocument):
+    first_name = me.StringField(required=True)
+    last_name = me.StringField(required=True)
+    job = me.StringField(required=True)
+    email = me.EmailField(required=True)
+    tel = me.StringField(required=True)
