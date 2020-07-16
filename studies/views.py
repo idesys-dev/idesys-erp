@@ -27,15 +27,15 @@ def createStudy():
 
         if request.form['btn'] ==  'Enregistrer':
             etu = etude.Etude(
-            number = 1,
-            organisme = formProspectChoice.prospect_choice.data,
-            name = formCreateStudy.study_name.data,
-            id_follower_quality = formCreateStudy.follower_quality.data,
-            id_follower_study = formCreateStudy.follower_study.data,
-            description = formCreateStudy.description.data,
-            application_fees = 100,
-            state = "Début",
-            list_labels = [formLabel.year.data, formLabel.sector.data, formLabel.prospection.data] )
+                number = 1,
+                organisme = formProspectChoice.prospect_choice.data,
+                name = formCreateStudy.study_name.data,
+                id_follower_quality = formCreateStudy.follower_quality.data,
+                id_follower_study = formCreateStudy.follower_study.data,
+                description = formCreateStudy.description.data,
+                application_fees = 100,
+                state = "Début",
+                list_labels = [formLabel.year.data, formLabel.sector.data, formLabel.prospection.data] )
             etu.save()
 
             return redirect(url_for("index"))
@@ -55,21 +55,21 @@ def createProspect():
     if request.method == 'POST':
         if request.form['btn'] ==  'Enregistrer':
             org = organisme.Organisme(
-            name = formCreateProspect.structure_name.data,
-            type_structure = formCreateProspect.structure_type.data,
-            adresse = formCreateProspect.adresse.data,
-            city = formCreateProspect.city.data,
-            postal_code = formCreateProspect.postal_code.data,
-            sector = formCreateProspect.sector.data )
+                name = formCreateProspect.structure_name.data,
+                type_structure = formCreateProspect.structure_type.data,
+                adresse = formCreateProspect.adresse.data,
+                city = formCreateProspect.city.data,
+                postal_code = formCreateProspect.postal_code.data,
+                sector = formCreateProspect.sector.data )
             org.save()
 
             cont = contact.Contact(
-            id_organisme = org.id,
-            first_name = formCreateContact.first_name.data,
-            name = formCreateContact.name.data,
-            job = formCreateContact.position.data,
-            email = formCreateContact.email.data,
-            phone = formCreateContact.phone.data )
+                id_organisme = org,
+                first_name = formCreateContact.first_name.data,
+                name = formCreateContact.name.data,
+                job = formCreateContact.position.data,
+                email = formCreateContact.email.data,
+                phone = formCreateContact.phone.data )
             cont.save()
 
             return redirect(url_for(".createStudy"))
