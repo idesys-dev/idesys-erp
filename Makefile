@@ -22,7 +22,6 @@ stop: ## Stop the project
 	$(DOCKER_COMPOSE) down
 
 lint: ## Linter
-	$(DOCKER_COMPOSE) exec -T server prospector
 	$(DOCKER_COMPOSE) exec -T server python3 -m prospector --profile /code/.prospector.yaml
 
 
