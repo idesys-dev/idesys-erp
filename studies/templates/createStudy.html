@@ -14,7 +14,7 @@
   <hr>
 
   {% from "_formhelpers.html" import render_field %}
-  <form method="post">
+  <form method="post" class="submitButton">
     <dl>
         {% for field in formSubmit %}
         {{ render_field(field, class='form-control') }}
@@ -25,7 +25,7 @@
 
   <hr>
 
-  <form method="post">
+  <form method="post" class="etude">
   <div class="row">
     <!-- Start Row -->
 
