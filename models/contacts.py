@@ -5,4 +5,4 @@ class Contacts(me.EmbeddedDocument):
     last_name = me.StringField(required=True)
     job = me.StringField(required=True)
     email = me.EmailField(required=True)
-    tel = me.StringField(required=True)
+    tel = me.StringField(required=False)

@@ -3,16 +3,16 @@ from wtforms.fields.html5 import EmailField, TelField
 from wtforms import validators as v
 
 class TypeCreate(Form):
-    structureSave = SelectField('L\'organisme est-il déjà défini ?', choices=[
+    structure_save = SelectField('L\'organisme est-il déjà défini ?', choices=[
         ("Non", "Non"),
         ("Oui", "Oui")])
 
 
 class ProspectChoice(Form):
-    prospectChoice = SelectField('Sélectionner l\'organisme déjà existant', choices=[
+    prospect_choice = SelectField('Sélectionner l\'organisme déjà existant', choices=[
         ("Bonnefon", "Bonnefon"),
         ("EDC", "EDC")])
-    structureType = StringField('Type de la structure', [
+    structure_type = StringField('Type de la structure', [
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
@@ -30,15 +30,15 @@ class ProspectChoice(Form):
 
 
 class CreateStudy(Form):
-    structureName = StringField('Nom de la structure', [
+    structure_name = StringField('Nom de la structure', [
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-    structureType = StringField('Type de la structure', [
+    structuretype = StringField('Type de la structure', [
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-    adresse = StringField('Adresse', [
+    adress = StringField('Adresse', [
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
@@ -46,7 +46,7 @@ class CreateStudy(Form):
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-    postalCode = IntegerField('Code postal', [v.DataRequired()
+    postal_code = IntegerField('Code postal', [v.DataRequired()
     ])
     sector = SelectField('Secteur d\'activité', choices=[
         ("Informatique", "Informatique"),
@@ -56,7 +56,7 @@ class CreateStudy(Form):
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-    firstName = StringField('Prénom', [
+    first_name = StringField('Prénom', [
         v.Length(min=0, max=50),
         v.DataRequired()
     ])

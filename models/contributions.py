@@ -5,10 +5,4 @@ class Contributions(me.Document):
     base = me.StringField(required=True)
     junior_rate = me.IntField(required=True)
     student_rate = me.IntField(required=True)
-    info = me.StringField
-
-
-
-
-
-    
+    info = me.StringField(required=False)

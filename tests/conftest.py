@@ -15,8 +15,11 @@ def app():
     app.config['DEVELOPMENT'] = True
     test_user = User.objects(email='test@idesys.org').first()
     if test_user is None:
-        test_user = User(email='test@idesys.org', name='test',
-            google_id='test_google_id')
+        test_user = User(
+            email='test@idesys.org',
+            name='test',
+            google_id='test_google_id',
+            )
     test_user.save()
 
     # pylint: disable=unused-variable

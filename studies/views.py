@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy
-from models import organization, labels, study, missions, phases 
+from models import organization, labels, study 
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
@@ -82,13 +82,11 @@ def utility_processor():
         if id_study == '':
             return "Id non valide"
 
-        etu = study.Study.objects(id=id_study).first()
+        sty = study.Study.get(id_study)
 
-        for g in etu.list_missions:
-            
-            for i in g.list_phases:
-                total_price += i.price_jeh * i.nb_jeh
-                tot_jeh += i.nb_jeh
+        for i in sty.list_phases:
+            total_price += i.price_jeh * i.nb_jeh
+            tot_jeh += i.nb_jeh
         
         return {"price":total_price, 
                 "tot_jeh": tot_jeh}

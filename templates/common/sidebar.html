@@ -55,7 +55,7 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner animated--grow-in rounded">
             <a class="collapse-item" href="{{ url_for('studies_bp.dashboard', tab='all') }}"">Voir les études</a>
-            <a class="collapse-item" href="/">Créer une étude</a>
+            <a class="collapse-item" href="{{ url_for('studies_bp.create') }}">Créer une étude</a>
             <a class="collapse-item" href="/">Chiffre d'affaire</a>
           </div>
         </div>

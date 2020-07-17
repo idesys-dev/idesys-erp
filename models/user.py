@@ -12,16 +12,14 @@ class User(UserMixin, me.Document):
     google_id = me.StringField(required=True)
 
     #Ajout pour la db 
-    adress = me.StringField(required=True)
-    postal_code = me.StringField(required=True)
-    city = me.StringField(required=True)
-    graduation_classes = me.StringField(required=True)
-    mandate = me.BooleanField(required=True)
+    adress = me.StringField(required=False)
+    postal_code = me.StringField(required=False)
+    city = me.StringField(required=False)
+    graduation_classes = me.StringField(required=False)
+    mandate = me.BooleanField(required=False)
     list_role = me.ListField(me.ReferenceField(Roles))
     list_label = me.ListField(me.ReferenceField(Labels))
     list_documents = me.ListField(me.ReferenceField(Documents))
-
-
 
     #pylint: disable=invalid-overridden-method
     @staticmethod

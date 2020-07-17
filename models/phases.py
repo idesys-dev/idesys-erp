@@ -1,7 +1,6 @@
 import mongoengine as me
 
-
-class Phases(me.EmbeddedDocument):
+class Phases(me.Document):
     name = me.StringField(required=True)
     lenght_week = me.IntField(required=True)
     nb_jeh = me.IntField(required=True)
@@ -9,3 +8,7 @@ class Phases(me.EmbeddedDocument):
     phase_number = me.IntField(required=True)
     control_point = me.BooleanField(required=True)
     bill = me.BooleanField(required=True)
+
+    @staticmethod
+    def get(phases_id):
+        return Phases.objects(id=phases_id).first()

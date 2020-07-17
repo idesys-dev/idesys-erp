@@ -106,12 +106,6 @@ def callback():
             name=users_name, 
             email=users_email, 
             profile_pic=picture,
-
-            adress="",
-            postal_code="",
-            city="",
-            graduation_classes="",
-            mandate=True
         )
         user.save()
 

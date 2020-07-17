@@ -8,7 +8,7 @@
     <h2>Étude - Tableau de bord</h2>
     <hr>
     <!-- Bonton d'ajout d'étude-->
-    <a href="#" class="btn btn-primary mb-2">
+    <a href="{{ url_for('studies_bp.create') }}" class="btn btn-primary mb-2">
       <span class="icon text-white-50">
         <i class="fas fa-fw fa-plus-circle"></i>
       </span>
@@ -78,8 +78,11 @@
 
   <!-- Affichage des études -->
   <div class="card-body">
+
+    {% set ns = namespace(found=false) %}
     {% for i in study %}
     {% if (tab == i.state) or (tab == 'all') %}
+    {% set ns.found = true %}
 
     <!-- Def ligne -->
     <div class=" card text-left shadow mb-2 border-left-secondary">
@@ -89,50 +92,67 @@
         <div class="col-md-6 ">
           <h6 class="font-weight-bold text-primary pl-2 pt-2">{{i.number}} : {{i.name}}</h6>
           <span>{{i.description}} : {{i.state}}</span>
-          
+
         </div>
 
-         
+
         <!-- Parti 2 : suiveur, qualité, réalisateurs-->
-        
-        <div class="col-md-3">
-          <p>Quali : {{i.id_follower_quality.name}}</p>
-          <p>Suiveur : {{i.id_follower_study.name}}</p>
-          {% for j in i.list_missions%}
-          <p>Intervenant : {{j.id_intervener.name}}</p>
-          {% endfor %}
+
+        <div class="col-md-3 text-center py-0">
+          <p><small>Qualité : </small>{{i.id_follower_quality.name}}</p>
+          <p><small>Suiveur : </small>{{i.id_follower_study.name}}</p>
+          <div class="dropdown list-inline-item mb-2">
+            <button class="btn btn-secondary dropdown-toggle " type="button" id="dropdownMenuButton"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Intervenant(s)
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">
+              {% for j in i.list_missions %}
+              <a class="dropdown-item" href="#">{{j.id_intervener.name}}</a>
+              {% endfor %}
+            </div>
+          </div>
         </div>
 
-        <div class="col-md-2">
+
+        <div class="col-md-2 text-center">
           <span>{{i.state}}</span>
         </div>
 
-        <div class="col-md-1 text-align-center">
+        <div class="col-md-1 text-center align-self-middle">
           {% set info = get_info(i.id) %}
           <span>Prix</span>
-          <span class="text-primary">{{info["price"]}}</span>
+          <span class="text-primary">{{info["price"]}} €</span>
+          <hr>
           <span>Nb JEH</span>
           <span class="text-primary">{{info["tot_jeh"]}}</span>
 
         </div>
-      <!-- Fin de ligne -->
+        <!-- Fin de ligne -->
       </div>
       <div class="card-footer d-flex">
         <ul class="list-group list-group-horizontal-md">
           {% for j in i.list_labels %}
-             <li class="bg-secondary text-white list-group-item pb-1 pt-1"><small>{{j.label}}</small></li>
+          <li class="bg-secondary text-white list-group-item py-1"><small>{{j.label}}</small></li>
           {% endfor %}
         </ul>
-         <!-- Bonton d'ajout d'étude-->
+        <!-- Bonton d'ajout d'étude-->
         <a href="#" class="btn btn-primary ml-auto">
           <span class="text">Consulter</span>
         </a>
-
       </div>
-
     </div>
     {% endif %}
     {% endfor %}
+
+    <!-- Message d'erreur-->
+    {% if not ns.found %}
+    <div class=" card bg-danger text-center mb-2 ">
+      <div class="card-body">
+        <span class="text-white"> Error 404 : No study find !</span>
+      </div>
+    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

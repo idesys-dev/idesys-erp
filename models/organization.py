@@ -9,3 +9,7 @@ class Organization(me.Document):
     postal_code = me.IntField(required=True)
     list_labels = me.ListField(me.ReferenceField(Labels))
     list_contacts = me.EmbeddedDocumentListField(Contacts)
+
+    @staticmethod
+    def get(orga_id):
+        return Organization.objects(id=orga_id).first()

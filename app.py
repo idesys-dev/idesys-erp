@@ -52,6 +52,7 @@ def create_app(config_filename=None):
     mo.organization.Organization.drop_collection()
     mo.user.User.drop_collection()
     mo.labels.Labels.drop_collection()
+    mo.phases.Phases.drop_collection()
 
 
     #Lancement du seeder

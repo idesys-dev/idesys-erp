@@ -1,10 +1,9 @@
-import mongoengine as me
 import models as mo
 from datetime import date
 
 def starter_db():
     
-    #Définition Users
+    #----------- Définition Users ---------#
     ug = mo.user.User(
         email = "ulysse.guyon@idesys.org",
         name = "Ulysse Guyon",
@@ -50,10 +49,7 @@ def starter_db():
         mandate = False,
     ).save()
 
-
-
-
-    #Définition des labels
+    #---------- Définition des labels -----------#
     a20 = mo.labels.Labels (
         category="Année",
         label="2020"
@@ -104,8 +100,10 @@ def starter_db():
         label="Entreprise du Numérique"
     ).save()
 
-    #Definition d'une étude
-    phaseBonnefon1 = mo.phases.Phases(
+    #----------- Definition d'une étude -------------#
+
+    #Définitions des phases
+    phase_bonnefon_1 = mo.phases.Phases(
         name = "Maquettage",
         lenght_week = 8,
         nb_jeh = 8,
@@ -113,9 +111,9 @@ def starter_db():
         phase_number = 1,
         control_point = False,
         bill = False
-    )
+    ).save()
 
-    phaseBonnefon2 = mo.phases.Phases(
+    phase_bonnefon_2 = mo.phases.Phases(
         name = "Maquettage 2",
         lenght_week = 8,
         nb_jeh = 5,
@@ -123,9 +121,9 @@ def starter_db():
         phase_number = 1,
         control_point = False,
         bill = False
-    )
+    ).save()
 
-    phaseBonnefon3 = mo.phases.Phases(
+    phase_bonnefon_3 = mo.phases.Phases(
         name = "Maquettage 3",
         lenght_week = 8,
         nb_jeh = 3,
@@ -133,27 +131,31 @@ def starter_db():
         phase_number = 1,
         control_point = False,
         bill = False
-    )
+    ).save()
 
-    
-    misBonnefon1 = mo.missions.Missions(
+    #Définitions des missions
+    mis_bonnefon_1 = mo.missions.Missions(
         id_intervener = sr.id,
         name = "Mission Simon",
         begin_date = date(2020,6,15),
         end_date= date(2020,7,20),
         list_documents = [],
-        list_phases = [phaseBonnefon1,phaseBonnefon2]
+        list_phases = [phase_bonnefon_1.id,phase_bonnefon_2.id]
     )
 
-    misBonnefon2 = mo.missions.Missions(
+    mis_bonnefon_2 = mo.missions.Missions(
         id_intervener = am.id,
         name = "Mission Alex",
         begin_date = date(2020,6,15),
         end_date= date(2020,7,20),
         list_documents = [],
-        list_phases = [phaseBonnefon3]
+        list_phases = [phase_bonnefon_3.id]
     )
 
+   
+
+
+    #Création de l'étude
     mo.study.Study(
         number=150,
         name="[WEB] - Bonnefon",
@@ -164,10 +166,11 @@ def starter_db():
         state="progressing",
         list_documents=[],
         list_labels=[a20.id,fInfo.id,pDe.id,sEsn],
-        list_missions=[misBonnefon1, misBonnefon2],
+        list_missions=[mis_bonnefon_1, mis_bonnefon_2],
+        list_phases=[phase_bonnefon_1.id,phase_bonnefon_2.id,phase_bonnefon_3.id]
     ).save()
 
-    #Contact et organiqme 
+    #Contact et organisme 
     celine = mo.contacts.Contacts(
         first_name = "Céline",
         last_name = "Baudoin",
@@ -183,6 +186,4 @@ def starter_db():
         postal_code="202020",
         list_labels = [],
         list_contacts = [celine]
-    ).save()
-
-   
+    ).save() 
