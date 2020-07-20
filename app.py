@@ -48,7 +48,8 @@ def create_app(config_filename=None):
     create_admin(app)
 
     #Launch seeder
-    starter_db()
+    if app.config['FLASK_ENV'] == 'development':
+        starter_db()
 
     # pylint: disable=unused-variable
     # Flask-Login helper to retrieve a user from our db
@@ -68,4 +69,3 @@ def create_app(config_filename=None):
 if __name__ == "__main__":
     app = create_app()
     app.run(host=os.environ['FLASK_RUN_HOST'], ssl_context='adhoc')
-    #app.run(ssl_context='adhoc')
