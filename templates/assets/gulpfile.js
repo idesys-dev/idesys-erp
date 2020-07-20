@@ -9,7 +9,7 @@ const gulp = require("gulp");
 const plumber = require("gulp-plumber");
 const rename = require("gulp-rename");
 const sass = require("gulp-sass");
-const uglify = require("gulp-uglify");
+const minify = require("gulp-minify");
 const sourcemaps = require('gulp-sourcemaps');
 
 // Load package.json for banner
@@ -23,23 +23,13 @@ const banner = ['/*!\n',
   '\n'
 ].join('');
 
-// BrowserSync
-function browserSync(done) {
-  browsersync.init({
-
-    proxy: {
-      target: "localhost:5000", // can be [virtual host, sub-directory, localhost with port]
-      ws: true // enables websockets
+function browserSync() {
+  browsersync.init(
+    ["./scss/**/*.scss", "./js/**/*.js", '../**/*.html'],
+    {
+      proxy: "localhost:5000"
     }
-  });
-
-  done();
-}
-
-// BrowserSync reload
-function browserSyncReload(done) {
-  browsersync.reload();
-  done();
+  );
 }
 
 // CSS task
@@ -47,13 +37,11 @@ function css() {
   return gulp
     .src("./scss/**/*.scss")
     .pipe(plumber())
-    .pipe(sourcemaps.init())
     .pipe(sass({
       outputStyle: "expanded",
       includePaths: "./node_modules",
-    }))
-    .pipe(sourcemaps.write('.'))
-    .on("error", sass.logError)
+    })
+      .on("error", sass.logError))
     .pipe(autoprefixer({
       cascade: false
     }))
@@ -65,6 +53,7 @@ function css() {
       suffix: ".min"
     }))
     .pipe(cleanCSS())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest("../../static/css"))
     .pipe(browsersync.reload({
       stream: true
@@ -78,13 +67,17 @@ function js() {
       './js/*.js',
       '!./js/*.min.js',
     ])
-    .pipe(uglify())
+    .pipe(sourcemaps.init())
+    .pipe(minify({
+      ext: {
+        src: '.js',
+        min: '.min.js'
+      }
+    }))
     .pipe(header(banner, {
       pkg: pkg
     }))
-    .pipe(rename({
-      suffix: '.min'
-    }))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('../../static/js'))
     .pipe(browsersync.reload({
       stream: true
