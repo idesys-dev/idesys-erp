@@ -28,11 +28,13 @@ def create_app(config_filename=None):
     with app.app_context():
         from auth.views import auth_blueprint
         from documents.views import documents_bp
+        from studies.views import studies_bp
     from auth.models.user import User
     from admin import create_admin
 
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(documents_bp, url_prefix='/documents')
+    app.register_blueprint(studies_bp, url_prefix='/studies')
 
     # User session management setup
     # https://flask-login.readthedocs.io/en/latest

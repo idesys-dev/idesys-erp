@@ -12,23 +12,6 @@
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
-      <!-- Login -->
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('auth_bp.user')}}">
-          <img src="{{current_user.profile_pic}}" alt="Google profile pic" height="40"></img>
-          <span>{{current_user.name}}</span></a>
-        </li>
-
-      <!-- Logout -->
-      <li class="nav-item ">
-        <a class="nav-link" href="{{ url_for('auth_bp.logout') }}">
-          <i class="fa fa-fw fa-sign-out-alt"></i>
-          <span>Se déconnecter</span></a>
-      </li>
-
-    
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0">
 
       <!-- A FAIRE -->
       <!-- Nav Item - Dashboard -->
@@ -51,11 +34,10 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-cog"></i>
           <span>Suivi d'étude</span></a>
-        </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="/">Voir les études</a>
-            <a class="collapse-item" href="/">Créer une étude</a>
+            <a class="collapse-item" href="{{ url_for('studies_bp.createStudy')}}">Créer une étude</a>
             <a class="collapse-item" href="/">Chiffre d'affaire</a>
           </div>
         </div>
