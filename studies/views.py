@@ -77,3 +77,7 @@ def createProspect():
     return render_template('createProspect.html',
     formCreateProspect=formCreateProspect,
     formCreateContact=formCreateContact )
+
+@studies_bp.route('/recap-study', methods=['GET', 'POST'])
+def recapStudy():
+    return render_template('recapStudy.html')
