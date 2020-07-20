@@ -13,3 +13,10 @@ class Organization(me.Document):
     @staticmethod
     def get(orga_id):
         return Organization.objects(id=orga_id).first()
+
+    @staticmethod
+    def getOrganization():
+        prospect = [("Aucun", "Aucun")]
+        for item in Organization.objects:
+            prospect.append((item.name, item.name))
+        return prospect

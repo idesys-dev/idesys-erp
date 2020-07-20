@@ -1,0 +1,52 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}{{ _type }}{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+<!-- Start Container -->
+  <h2>Suivi d'Étude</h2>
+  <p>Ajouter un prospect</p>
+
+  <hr>
+
+  {% from "_formhelpers.html" import render_field %}
+  <form method="post" class="prospect">
+  <div class="row">
+    <!-- Start Row  -->
+    <div class="col">
+      <!-- Start Col -->
+      <h5> Création d'un prospect</h5>
+      <dl>
+        {% for field in formCreateProspect %}
+        {{ render_field(field, class='form-control') }}
+        {% endfor %}
+      </dl>
+      <!--End Col -->
+    </div>
+
+    <div class="col">
+      <!-- Start Col -->
+      <h5> Création d'un contact</h5>
+      <dl>
+        {% for field in formCreateContact %}
+        {{ render_field(field, class='form-control') }}
+        {% endfor %}
+      </dl>
+      <!-- End Col -->
+    </div>
+  <!-- End Row -->
+  </div>
+
+  <hr>
+
+  <p><input type="submit" name="btn" value="Enregistrer" class='btn btn btn-success btn-block'></p>
+  </form>
+
+  <p><a href="{{ url_for('studies_bp.createStudy') }}"><input type="submit" name="btn" value="Annuler" class='btn btn btn-danger btn-block'></a></p>
+<!-- End Container -->
+</div>
+{% endblock %}

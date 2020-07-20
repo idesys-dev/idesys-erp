@@ -26,7 +26,7 @@
           <span>Se déconnecter</span></a>
       </li>
 
-    
+
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
@@ -51,11 +51,10 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-cog"></i>
           <span>Suivi d'étude</span></a>
-        </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner animated--grow-in rounded">
             <a class="collapse-item" href="{{ url_for('studies_bp.dashboard', tab='all') }}"">Voir les études</a>
-            <a class="collapse-item" href="{{ url_for('studies_bp.create') }}">Créer une étude</a>
+            <a class="collapse-item" href="{{ url_for('studies_bp.createStudy') }}">Créer une étude</a>
             <a class="collapse-item" href="/">Chiffre d'affaire</a>
           </div>
         </div>

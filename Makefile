@@ -43,7 +43,7 @@ kill: ## Kill the project
 build: ## Build the project
 	$(DOCKER_COMPOSE) build
 
-console: ## Open a console 
+console: ## Open a console
 	$(DOCKER_COMPOSE) exec server sh
 
 
