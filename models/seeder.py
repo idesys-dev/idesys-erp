@@ -2,8 +2,17 @@ import models as mo
 from datetime import date
 
 def starter_db():
+
+    #Drop collections
+    mo.study.Study.drop_collection()
+    mo.organization.Organization.drop_collection()
+    mo.user.User.drop_collection()
+    mo.labels.Labels.drop_collection()
+    mo.phases.Phases.drop_collection()
+
+
     
-    #----------- Définition Users ---------#
+    #-----------  Users ---------#
     ug = mo.user.User(
         email = "ulysse.guyon@idesys.org",
         name = "Ulysse Guyon",
@@ -49,7 +58,7 @@ def starter_db():
         mandate = False,
     ).save()
 
-    #---------- Définition des labels -----------#
+    #---------- Labels -----------#
     a20 = mo.labels.Labels (
         category="Année",
         label="2020"
@@ -100,9 +109,9 @@ def starter_db():
         label="Entreprise du Numérique"
     ).save()
 
-    #----------- Definition d'une étude -------------#
+    #----------- Study-------------#
 
-    #Définitions des phases
+    #Phases
     phase_bonnefon_1 = mo.phases.Phases(
         name = "Maquettage",
         lenght_week = 8,
@@ -133,7 +142,7 @@ def starter_db():
         bill = False
     ).save()
 
-    #Définitions des missions
+    #Missions
     mis_bonnefon_1 = mo.missions.Missions(
         id_intervener = sr.id,
         name = "Mission Simon",
@@ -155,7 +164,7 @@ def starter_db():
    
 
 
-    #Création de l'étude
+    #Create Study
     mo.study.Study(
         number=150,
         name="[WEB] - Bonnefon",
@@ -170,7 +179,7 @@ def starter_db():
         list_phases=[phase_bonnefon_1.id,phase_bonnefon_2.id,phase_bonnefon_3.id]
     ).save()
 
-    #Contact et organisme 
+    #Contact & organization
     celine = mo.contacts.Contacts(
         first_name = "Céline",
         last_name = "Baudoin",

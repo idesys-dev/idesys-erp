@@ -41,9 +41,8 @@ def prospect():
     form = ProspectChoice(request.form)
     return render_template('createStudy.html', form=form)
 
-#Tableau de bord des études 
-
-#Onglet : Toutes
+#Study dashboard
+#Tabs
 @studies_bp.route('/dashboard', methods=['GET', 'POST'])
 @studies_bp.route('/dashboard?tab=<string:tab>', methods=['GET', 'POST'])
 def dashboard(tab='all'):
