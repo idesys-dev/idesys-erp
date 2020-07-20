@@ -1,7 +1,7 @@
 from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms import validators as v
-from models.labels import Label
+from models.labels import Labels
 from models.organization import Organization
 
 class TypeCreate(Form):
@@ -32,20 +32,12 @@ class CreateStudy(Form):
     ])
 
 
-<<<<<<< HEAD
-class CreateStudy(Form):
-=======
 class CreateProspect(Form):
->>>>>>> develop
     structure_name = StringField('Nom de la structure', [
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-<<<<<<< HEAD
-    structuretype = StringField('Type de la structure', [
-=======
     structure_type = StringField('Type de la structure', [
->>>>>>> develop
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
@@ -57,14 +49,10 @@ class CreateProspect(Form):
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-<<<<<<< HEAD
-    postal_code = IntegerField('Code postal', [v.DataRequired()
-=======
     postal_code = IntegerField('Code postal', [
         v.DataRequired()
->>>>>>> develop
     ])
-    sector = SelectField('Secteur d\'activité', choices=Label.getLabels("Secteur"))
+    sector = SelectField('Secteur d\'activité', choices=Labels.getLabels("Secteur"))
 
 class CreateContact(Form):
     name = StringField('Nom', [
@@ -88,7 +76,7 @@ class CreateContact(Form):
         v.DataRequired()
     ])
 
-class Labels(Form):
-    year = SelectField('Année', choices=Label.getLabels("Année"))
-    sector = SelectField('Filière', choices=Label.getLabels("Filière"))
-    prospection = SelectField('Prospection', choices=Label.getLabels("Prospection"))
+#class Labels(Form):
+#   year = SelectField('Année', choices=Labels.getLabels("Année"))
+#   sector = SelectField('Filière', choices=Labels.getLabels("Filière"))
+#   prospection = SelectField('Prospection', choices=Labels.getLabels("Prospection"))

@@ -7,10 +7,11 @@ class Labels(me.Document):
     @staticmethod
     def get(labels_id):
         return Labels.objects(id=labels_id).first()
-        
+
+    @staticmethod 
     def getLabels(typeLabel):
         mesLabels = [("Aucun", "Aucun")]
-        for item in Label.objects:
+        for item in Labels.objects:
             if item.category == typeLabel:
                 mesLabels.append((item.label, item.label))
         return mesLabels
