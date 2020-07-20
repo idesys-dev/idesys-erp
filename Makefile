@@ -38,13 +38,13 @@ generate-secret: ## Generate secret token
 ## -----
 ##
 
-install-assets: # Install dependencies npm assets
+install-assets: ## Install dependencies npm assets
 	$(DOCKER_COMPOSE) exec -T server sh -c "cd templates/assets && npm install"
 
-build-assets: install-assets  # Build assets
+build-assets: install-assets  ## Build assets
 	$(DOCKER_COMPOSE) exec -T server sh -c "cd templates/assets && npm run build"
 
-watch-assets: install-assets # Build & watch assets
+watch-assets: install-assets ## Build & watch assets
 	$(DOCKER_COMPOSE) exec -T server sh -c "cd templates/assets && npm run watch"
 
 
