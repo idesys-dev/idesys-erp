@@ -36,6 +36,7 @@ function browserSync() {
 function css() {
   return gulp
     .src("./scss/**/*.scss")
+    .pipe(sourcemaps.init())
     .pipe(plumber())
     .pipe(sass({
       outputStyle: "expanded",
@@ -52,8 +53,8 @@ function css() {
     .pipe(rename({
       suffix: ".min"
     }))
-    .pipe(cleanCSS())
     .pipe(sourcemaps.write())
+    .pipe(cleanCSS())
     .pipe(gulp.dest("../../static/css"))
     .pipe(browsersync.reload({
       stream: true

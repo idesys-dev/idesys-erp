@@ -1,6 +1,3 @@
-import "../node_modules/startbootstrap-sb-admin-2"
-import "../node_modules/startbootstrap-sb-admin-2"
-
 
 const BANNER = `
 __          __    _                                         _____     _    __   _____ __     __ _____  
