@@ -47,15 +47,7 @@ def create_app(config_filename=None):
 
     create_admin(app)
 
-    #Réinitialisatioon des collections
-    mo.study.Study.drop_collection()
-    mo.organization.Organization.drop_collection()
-    mo.user.User.drop_collection()
-    mo.labels.Labels.drop_collection()
-    mo.phases.Phases.drop_collection()
-
-
-    #Lancement du seeder
+    #Launch seeder
     starter_db()
 
     # pylint: disable=unused-variable
