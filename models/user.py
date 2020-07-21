@@ -41,10 +41,11 @@ class User(UserMixin, me.Document):
     @staticmethod
     def get(user_id):
         return User.objects(google_id=user_id).first()
-
-    #Get admin(True) or intervener(False)
-    @staticmethod 
+    
+    @staticmethod
+    #Get admin(True) or intervener(False) 
     def get_admin_intervener(type_user):
+        print("get_admin_intervener")
         users = [("Aucun", "Aucun")]
         for i in User.objects:
             if i.role is not None : 
@@ -54,5 +55,4 @@ class User(UserMixin, me.Document):
                 #Case of admins    
                 elif type_user and i.role.name != "Intervenant":
                     users.append((i.id, i.name))
-
         return users

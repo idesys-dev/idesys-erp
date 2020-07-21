@@ -11,15 +11,18 @@ class TypeCreate(Form):
         ("Non", "Non")])
 
 class ProspectChoice(Form):
-    prospect_choice = SelectField('Sélectionner l\'organisme déjà existant', choices=Organization.getOrganization())
+    prospect_choice = SelectField('Sélectionner l\'organisme déjà existant', choices=Organization.get_organization())
 
 class CreateStudy(Form):
     study_name = StringField('Nom de l\'étude', [
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
+
     follower_study = SelectField('Suiveur d\'étude', choices=User.get_admin_intervener(True))
+    
     follower_quality = SelectField('Suiveur qualité', choices=User.get_admin_intervener(True))
+    
     description = TextAreaField('Description', [
         v.DataRequired()
     ])
@@ -44,7 +47,8 @@ class CreateProspect(Form):
     postal_code = IntegerField('Code postal', [
         v.DataRequired()
     ])
-    sector = SelectField('Secteur d\'activité', choices=Labels.getLabels("Secteur"))
+
+    sector = SelectField('Secteur d\'activité', choices=Labels.get_labels("Secteur"))
 
 class CreateContact(Form):
     name = StringField('Nom', [
@@ -69,7 +73,6 @@ class CreateContact(Form):
     ])
 
 class LabelsForm(Form):
-    year = SelectField('Année', choices=Labels.getLabels("Année"))
-    sector = SelectField('Filière', choices=Labels.getLabels("Filière"))
-    prospection = SelectField('Prospection', choices=Labels.getLabels("Prospection"))
-    type_orga = SelectField('Secteur', choices=Labels.getLabels("Secteur"))
+    year = SelectField('Année', choices=Labels.get_labels("Année"))
+    sector = SelectField('Filière', choices=Labels.get_labels("Filière"))
+    prospection = SelectField('Prospection', choices=Labels.get_labels("Prospection"))

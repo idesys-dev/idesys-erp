@@ -23,8 +23,12 @@ def create_app(config_filename=None):
         app.config['GOOGLE_CLIENT_ID'] = os.environ['GOOGLE_CLIENT_ID']
     else:
         app.config.from_pyfile(config_filename)
-
+    
     MongoEngine(app)
+    
+    #Launch seeder
+    if app.config['ENV'] == 'development' :
+        starter_db()
    
 
     with app.app_context():
@@ -46,10 +50,6 @@ def create_app(config_filename=None):
 
     create_admin(app)
 
-    #Launch seeder
-    if app.config['ENV'] == 'development':
-        starter_db()
-
     # pylint: disable=unused-variable
     # Flask-Login helper to retrieve a user from our db
     @login_manager.user_loader
@@ -67,4 +67,6 @@ def create_app(config_filename=None):
 
 if __name__ == "__main__":
     app = create_app()
+    
     app.run(host=os.environ['FLASK_RUN_HOST'], ssl_context='adhoc')
+   

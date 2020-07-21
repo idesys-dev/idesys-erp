@@ -5,10 +5,13 @@ from models.documents import Documents
 from models.missions import Missions
 from models.phases import Phases
 from models.user import User
+from models.organization import Organization
+
 
 class Study(me.Document):
     number = me.IntField(required=True)
     name = me.StringField(required=True)
+    id_organization = me.ReferenceField(Organization)
     id_follower_quality = me.ReferenceField(User)
     id_follower_study = me.ReferenceField(User)
     description = me.StringField(required=True)

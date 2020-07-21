@@ -1,7 +1,8 @@
 from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
-from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, LabelsForm, CreateContact
+from wtforms import SelectField
+from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
 import models as mo
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
@@ -96,11 +97,16 @@ def utility_processor():
 
 @studies_bp.route('/create-study', methods=['GET', 'POST'])
 def createStudy():
+    print("route createStudy")
+
     # We declare all forms we describe in the forms.py
+    formLabel = LabelsForm(request.form)
+    formProspectChoice = ProspectChoice(request.form)
     formCreateStudy = CreateStudy(request.form)
     formSubmit = TypeCreate(request.form)
-    formProspectChoice = ProspectChoice(request.form)
-    formLabel = LabelsForm(request.form)
+    if request.method == 'GET':
+        formProspectChoice = ProspectChoice(request.form)
+        
 
     if request.method == 'POST':
         if request.form['btn'] == 'Valider' and formSubmit.structure_save.data == 'Non':
@@ -109,15 +115,15 @@ def createStudy():
 
         if request.form['btn'] ==  'Enregistrer':
             etu = mo.study.Study(
-                number = 1,
-                organisme = formProspectChoice.prospect_choice.data,
+                number = 12, #change needed
                 name = formCreateStudy.study_name.data,
-                follower_quality = formCreateStudy.follower_quality.data,
-                follower_study = formCreateStudy.follower_study.data,
+                id_organization = formProspectChoice.prospect_choice.data,
+                id_follower_quality = formCreateStudy.follower_quality.data,
+                id_follower_study = formCreateStudy.follower_study.data,
                 description = formCreateStudy.description.data,
                 application_fees = 100,
                 state = "Début",
-                list_labels = [formLabel.year.data, formLabel.sector.data, formLabel.prospection.data, formLabel.type_orga.data] )
+                list_labels = [formLabel.year.data, formLabel.sector.data, formLabel.prospection.data] )
             etu.save()
 
             return redirect(url_for("index"))
