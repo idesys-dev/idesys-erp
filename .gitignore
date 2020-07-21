@@ -7,3 +7,4 @@ htmlcov
 idesys-erp-7323070a412e.json
 env
 .env
+templates/assets/node_modules

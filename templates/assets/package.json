@@ -1,0 +1,27 @@
+{
+  "name": "idesys-erp-assets",
+  "version": "1.0.0",
+  "description": "",
+  "main": " ",
+  "dependencies": {
+    "startbootstrap-sb-admin-2": "^4.1.1"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.10",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-header": "^2.0.9",
+    "gulp-minify": "^3.1.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-sourcemaps": "^2.6.5"
+  },
+  "scripts": {
+    "watch": "gulp watch",
+    "build": "gulp build"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}

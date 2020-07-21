@@ -22,7 +22,7 @@ stop: ## Stop the project
 	$(DOCKER_COMPOSE) down
 
 lint: ## Linter
-	$(DOCKER_COMPOSE) exec -T server python3 -m prospector --profile /code/.prospector.yaml
+	$(DOCKER_COMPOSE) exec -T server python3 -m prospector --profile /code/.prospector.yaml || true
 
 test: ## Launch Test
 	$(DOCKER_COMPOSE) exec -T server pytest -v
@@ -30,6 +30,23 @@ test: ## Launch Test
 
 generate-secret: ## Generate secret token
 	$(DOCKER_COMPOSE) exec server python secret.py
+
+
+
+##
+## Assets
+## -----
+##
+
+install-assets: ## Install dependencies npm assets
+	$(DOCKER_COMPOSE) exec -T server sh -c "cd templates/assets && npm install"
+
+build-assets: install-assets  ## Build assets
+	$(DOCKER_COMPOSE) exec -T server sh -c "cd templates/assets && npm run build"
+
+watch-assets: install-assets ## Build & watch assets
+	$(DOCKER_COMPOSE) exec -T server sh -c "cd templates/assets && npm run watch"
+
 
 
 ##

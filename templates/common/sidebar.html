@@ -12,24 +12,6 @@
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
-      <!-- Login -->
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('auth_bp.user')}}">
-          <img src="{{current_user.profile_pic}}" alt="Google profile pic" height="40" class="mr-4"></img>
-          <span>{{current_user.name}}</span></a>
-        </li>
-
-      <!-- Logout -->
-      <li class="nav-item ">
-        <a class="nav-link" href="{{ url_for('auth_bp.logout') }}">
-          <i class="fa fa-fw fa-sign-out-alt"></i>
-          <span>Se déconnecter</span></a>
-      </li>
-
-
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0">
-
       <!-- A FAIRE -->
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
