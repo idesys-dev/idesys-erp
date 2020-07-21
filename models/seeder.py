@@ -1,17 +1,18 @@
 import models as mo
+from models.phases import Phases
+from models.study import Study
 from datetime import date
 
 def starter_db():
-
-    #Drop collections
-    mo.study.Study.drop_collection()
-    mo.organization.Organization.drop_collection()
+    
+    #---------- Drop Collections -----------#
     mo.user.User.drop_collection()
     mo.labels.Labels.drop_collection()
     mo.phases.Phases.drop_collection()
+    mo.organization.Organization.drop_collection()
+    mo.study.Study.drop_collection()
 
 
-    
     #-----------  Users ---------#
     ug = mo.user.User(
         email = "ulysse.guyon@idesys.org",

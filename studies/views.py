@@ -2,7 +2,7 @@ from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, Labels, CreateContact
-from models import organization, study, contact
+import models as mo
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
@@ -26,12 +26,13 @@ def create():
 @studies_bp.route('/nouveau', methods=['GET', 'POST'])
 def nouveau():
     form = CreateStudy(request.form)
-    if request.method == 'POST'and form.validate():
-        org = organization.Organization(
-        name = form.structureName.data,
-        adress = form.adresse.data,
-        city = form.city.data,
-        postal_code = form.postalCode.data)
+    if request.method == 'POST' and form.validate():
+        org = mo.organization.Organization(
+            name = form.structureName.data,
+            adress = form.adresse.data,
+            city = form.city.data,
+            postal_code = form.postalCode.data
+            )
         print(org)
         org.save()
     return render_template('createStudy.html', form=form)
@@ -46,10 +47,10 @@ def prospect():
 @studies_bp.route('/dashboard', methods=['GET', 'POST'])
 @studies_bp.route('/dashboard?tab=<string:tab>', methods=['GET', 'POST'])
 def dashboard(tab='all'):
-    listCategory = []
-    for i in labels.Labels.objects :
-        if i.category not in listCategory :
-            listCategory.append(i.category)
+    list_category = []
+    for i in mo.labels.Labels.objects :
+        if i.category not in list_category :
+            list_category.append(i.category)
 
     if tab == 'all' :
         title = "Toutes les études"
@@ -66,13 +67,13 @@ def dashboard(tab='all'):
         title = "Error 404 : tab not found"    
     
     return render_template('dashboard.html',
-            study=study.Study.objects,
-            labels=labels.Labels.objects,
-            listCategory=listCategory,
+            study=mo.study.Study.objects,
+            labels=mo.labels.Labels.objects,
+            list_category=list_category,
             title=title,
             tab=tab )
 
-
+#Context function
 @studies_bp.context_processor
 def utility_processor():
     def get_info(id_study):
@@ -81,7 +82,7 @@ def utility_processor():
         if id_study == '':
             return "Id non valide"
 
-        sty = study.Study.get(id_study)
+        sty = mo.study.Study.get(id_study)
 
         for i in sty.list_phases:
             total_price += i.price_jeh * i.nb_jeh
@@ -91,6 +92,8 @@ def utility_processor():
                 "tot_jeh": tot_jeh}
 
     return dict(get_info=get_info)
+
+
 @studies_bp.route('/create-study', methods=['GET', 'POST'])
 def createStudy():
     # We declare all forms we describe in the forms.py
@@ -105,7 +108,7 @@ def createStudy():
             return redirect(url_for(".createProspect"))
 
         if request.form['btn'] ==  'Enregistrer':
-            etu = study.Study(
+            etu = mo.study.Study(
                 number = 1,
                 organisme = formProspectChoice.prospect_choice.data,
                 name = formCreateStudy.study_name.data,
@@ -133,7 +136,7 @@ def createProspect():
 
     if request.method == 'POST':
         if request.form['btn'] ==  'Enregistrer':
-            org = organization.Organization(
+            org = mo.organization.Organization(
                 name = formCreateProspect.structure_name.data,
                 type_structure = formCreateProspect.structure_type.data,
                 adresse = formCreateProspect.adresse.data,
@@ -142,7 +145,7 @@ def createProspect():
                 sector = formCreateProspect.sector.data )
             org.save()
 
-            cont = contact.Contact(
+            cont = mo.contact.Contact(
                 id_organisme = org,
                 first_name = formCreateContact.first_name.data,
                 name = formCreateContact.name.data,

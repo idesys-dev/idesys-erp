@@ -48,8 +48,8 @@ def create_app(config_filename=None):
     create_admin(app)
 
     #Launch seeder
-    #if app.config['FLASK_ENV'] == 'development':
-    starter_db()
+    if app.config['ENV'] == 'development':
+        starter_db()
 
     # pylint: disable=unused-variable
     # Flask-Login helper to retrieve a user from our db

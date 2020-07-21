@@ -75,8 +75,3 @@ class CreateContact(Form):
         v.Length(min=0, max=14),
         v.DataRequired()
     ])
-
-#class Labels(Form):
-#   year = SelectField('Année', choices=Labels.getLabels("Année"))
-#   sector = SelectField('Filière', choices=Labels.getLabels("Filière"))
-#   prospection = SelectField('Prospection', choices=Labels.getLabels("Prospection"))
