@@ -9,11 +9,8 @@ class Coordinates(me.Document):
     mail_contact = me.StringField(required=True)
     web_site = me.StringField(required=True)
     school = me.StringField(required=True)
-    siret = me.StringField(required=True) #ang ?
-
-    code_ape = me.StringField(required=True) #ang ?
-    num_urssaf = me.StringField(required=True) #ang ?
-    vat_number = me.StringField(required=True)#fr :TVA
-    check = me.StringField(required=True)#fr : ordre des chèques
-
-    
+    siret = me.StringField(required=True)
+    code_ape = me.StringField(required=True)
+    num_urssaf = me.StringField(required=True)
+    vat_number = me.StringField(required=True)
+    check = me.StringField(required=True)

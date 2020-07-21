@@ -1,16 +1,29 @@
 import models as mo
-from models.phases import Phases
-from models.study import Study
 from datetime import date
 
 def starter_db():
-    
+    print(mo.phases)
     #---------- Drop Collections -----------#
     mo.user.User.drop_collection()
     mo.labels.Labels.drop_collection()
-    mo.phases.Phases.drop_collection()
+    mo.roles.Roles.drop_collection()
     mo.organization.Organization.drop_collection()
+
     mo.study.Study.drop_collection()
+    mo.phases.Phases.drop_collection()
+
+    #-----------  Role ---------#
+    rq = mo.roles.Roles(
+        name="Responsable Qualité"
+    ).save()
+
+    rs = mo.roles.Roles(
+        name="Responsable Etude"
+    ).save()
+
+    ri = mo.roles.Roles(
+        name="Intervenant"
+    ).save()
 
 
     #-----------  Users ---------#
@@ -22,7 +35,8 @@ def starter_db():
         postal_code = "99999",
         city = "Trouville",
         graduation_classes = "5A",
-        mandate = True
+        mandate = True,
+        role = rq.id
     ).save()
 
     pt = mo.user.User(
@@ -33,7 +47,8 @@ def starter_db():
         postal_code = "505050",
         city = "Deauville",
         graduation_classes = "4A",
-        mandate = True
+        mandate = True,
+        role = rs.id
     ).save()
 
 
@@ -45,7 +60,8 @@ def starter_db():
         postal_code = "505050",
         city = "Deauville",
         graduation_classes = "5A",
-        mandate = False
+        mandate = False,
+        role = ri.id
     ).save()
 
     am = mo.user.User(
@@ -57,6 +73,7 @@ def starter_db():
         city = "Deauville",
         graduation_classes = "5A",
         mandate = False,
+        role = ri.id
     ).save()
 
     #---------- Labels -----------#
@@ -186,7 +203,7 @@ def starter_db():
         last_name = "Baudoin",
         job="Travail",
         email="celine.baudoin@grbonnefon.com",
-        tel="0699999999"
+        phone="0699999999"
     )
 
     mo.organization.Organization(

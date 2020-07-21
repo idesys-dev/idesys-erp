@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
-from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, Labels, CreateContact
+from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, LabelsForm, CreateContact
 import models as mo
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
@@ -100,7 +100,7 @@ def createStudy():
     formCreateStudy = CreateStudy(request.form)
     formSubmit = TypeCreate(request.form)
     formProspectChoice = ProspectChoice(request.form)
-    formLabel = Labels(request.form)
+    formLabel = LabelsForm(request.form)
 
     if request.method == 'POST':
         if request.form['btn'] == 'Valider' and formSubmit.structure_save.data == 'Non':
@@ -117,7 +117,7 @@ def createStudy():
                 description = formCreateStudy.description.data,
                 application_fees = 100,
                 state = "Début",
-                list_labels = [formLabel.year.data, formLabel.sector.data, formLabel.prospection.data] )
+                list_labels = [formLabel.year.data, formLabel.sector.data, formLabel.prospection.data, formLabel.type_orga.data] )
             etu.save()
 
             return redirect(url_for("index"))
@@ -136,23 +136,22 @@ def createProspect():
 
     if request.method == 'POST':
         if request.form['btn'] ==  'Enregistrer':
-            org = mo.organization.Organization(
-                name = formCreateProspect.structure_name.data,
-                type_structure = formCreateProspect.structure_type.data,
-                adresse = formCreateProspect.adresse.data,
-                city = formCreateProspect.city.data,
-                postal_code = formCreateProspect.postal_code.data,
-                sector = formCreateProspect.sector.data )
-            org.save()
-
-            cont = mo.contact.Contact(
-                id_organisme = org,
+            cont = mo.contacts.Contacts(
                 first_name = formCreateContact.first_name.data,
-                name = formCreateContact.name.data,
+                last_name = formCreateContact.name.data,
                 job = formCreateContact.position.data,
                 email = formCreateContact.email.data,
                 phone = formCreateContact.phone.data )
-            cont.save()
+
+            org = mo.organization.Organization(
+                name = formCreateProspect.structure_name.data,
+                adress = formCreateProspect.adresse.data,
+                city = formCreateProspect.city.data,
+                postal_code = formCreateProspect.postal_code.data,
+                list_labels = [formCreateProspect.sector.data],
+                list_contacts=[cont])
+            org.save()
+
 
             return redirect(url_for(".createStudy"))
 

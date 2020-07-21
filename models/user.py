@@ -17,7 +17,7 @@ class User(UserMixin, me.Document):
     city = me.StringField(required=False)
     graduation_classes = me.StringField(required=False)
     mandate = me.BooleanField(required=False)
-    list_role = me.ListField(me.ReferenceField(Roles))
+    role = me.ReferenceField(Roles)
     list_label = me.ListField(me.ReferenceField(Labels))
     list_documents = me.ListField(me.ReferenceField(Documents))
 
@@ -41,3 +41,18 @@ class User(UserMixin, me.Document):
     @staticmethod
     def get(user_id):
         return User.objects(google_id=user_id).first()
+
+    #Get admin(True) or intervener(False)
+    @staticmethod 
+    def get_admin_intervener(type_user):
+        users = [("Aucun", "Aucun")]
+        for i in User.objects:
+            if i.role is not None : 
+                #Case of interverner
+                if not type_user and i.role.name == "Intervenant":
+                    users.append((i.id, i.name))
+                #Case of admins    
+                elif type_user and i.role.name != "Intervenant":
+                    users.append((i.id, i.name))
+
+        return users

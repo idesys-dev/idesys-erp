@@ -7,7 +7,6 @@ from flask_login import LoginManager, login_required
 from flask_mongoengine import MongoEngine
 
 # Internal imports
-import models as mo
 from models.seeder import starter_db
 
 def create_app(config_filename=None):

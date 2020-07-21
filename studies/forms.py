@@ -2,6 +2,7 @@ from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms import validators as v
 from models.labels import Labels
+from models.user import User
 from models.organization import Organization
 
 class TypeCreate(Form):
@@ -9,28 +10,19 @@ class TypeCreate(Form):
         ("Oui", "Oui"),
         ("Non", "Non")])
 
-
 class ProspectChoice(Form):
     prospect_choice = SelectField('Sélectionner l\'organisme déjà existant', choices=Organization.getOrganization())
-
 
 class CreateStudy(Form):
     study_name = StringField('Nom de l\'étude', [
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-    follower_study = SelectField('Suiveur d\'étude', choices=[
-        ("Aucun", "Aucun"),
-        ("Paul Terrassin", "Paul Terrassin"),
-        ("David Thibaut", "David Thibaut")])
-    follower_quality = SelectField('Suiveur qualité', choices=[
-        ("Aucun", "Aucun"),
-        ("Ulysse Guyon", "Ulysse Guyon"),
-        ("Antoine Zuber", "Antoine Zuber")])
+    follower_study = SelectField('Suiveur d\'étude', choices=User.get_admin_intervener(True))
+    follower_quality = SelectField('Suiveur qualité', choices=User.get_admin_intervener(True))
     description = TextAreaField('Description', [
         v.DataRequired()
     ])
-
 
 class CreateProspect(Form):
     structure_name = StringField('Nom de la structure', [
@@ -41,7 +33,7 @@ class CreateProspect(Form):
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-    adress = StringField('Adresse', [
+    adresse = StringField('Adresse', [
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
@@ -75,3 +67,9 @@ class CreateContact(Form):
         v.Length(min=0, max=14),
         v.DataRequired()
     ])
+
+class LabelsForm(Form):
+    year = SelectField('Année', choices=Labels.getLabels("Année"))
+    sector = SelectField('Filière', choices=Labels.getLabels("Filière"))
+    prospection = SelectField('Prospection', choices=Labels.getLabels("Prospection"))
+    type_orga = SelectField('Secteur', choices=Labels.getLabels("Secteur"))
