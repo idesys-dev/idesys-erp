@@ -14,5 +14,5 @@ class Labels(me.Document):
         my_labels = []
         for item in Labels.objects:
             if item.category == typeLabel:
-                my_labels.append((item.label, item.label))
+                my_labels.append((item.id, item.label))
         return my_labels

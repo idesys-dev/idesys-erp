@@ -11,7 +11,7 @@ class TypeCreate(Form):
         ("Non", "Non")])
 
 class ProspectChoice(Form):
-    prospect_choice = SelectField('Sélectionner l\'organisme déjà existant', choices=Organization.get_organization())
+    prospect_choice = SelectField('Sélectionner l\'organisme déjà existant')
 
 class CreateStudy(Form):
     study_name = StringField('Nom de l\'étude', [

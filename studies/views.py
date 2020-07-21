@@ -13,36 +13,6 @@ def restrict_bp_to_admins():
         return redirect(url_for('auth_bp.login'))
     return None
 
-@studies_bp.route('/create', methods=['GET', 'POST'])
-def create():
-    form = TypeCreate(request.form)
-    if request.method == 'POST'and form.validate():
-        if form.structureSave.data == 'Non':
-            return redirect(url_for('.nouveau'))
-
-        return redirect(url_for('.prospect'))
-
-    return render_template('createStudy.html', form=form)
-
-@studies_bp.route('/nouveau', methods=['GET', 'POST'])
-def nouveau():
-    form = CreateStudy(request.form)
-    if request.method == 'POST' and form.validate():
-        org = mo.organization.Organization(
-            name = form.structureName.data,
-            adress = form.adresse.data,
-            city = form.city.data,
-            postal_code = form.postalCode.data
-            )
-        print(org)
-        org.save()
-    return render_template('createStudy.html', form=form)
-
-@studies_bp.route('/prospect', methods=['GET', 'POST'])
-def prospect():
-    form = ProspectChoice(request.form)
-    return render_template('createStudy.html', form=form)
-
 #Study dashboard
 #Tabs
 @studies_bp.route('/dashboard', methods=['GET', 'POST'])
@@ -97,17 +67,17 @@ def utility_processor():
 
 @studies_bp.route('/create-study', methods=['GET', 'POST'])
 def createStudy():
-    print("route createStudy")
-
     # We declare all forms we describe in the forms.py
     formLabel = LabelsForm(request.form)
-    formProspectChoice = ProspectChoice(request.form)
     formCreateStudy = CreateStudy(request.form)
     formSubmit = TypeCreate(request.form)
-    if request.method == 'GET':
-        formProspectChoice = ProspectChoice(request.form)
-        
 
+    #Edit prospect
+    list_prospect = mo.organization.Organization.objects
+    formProspectChoice = ProspectChoice(request.form, obj=list_prospect)
+    formProspectChoice.prospect_choice.choices = [(g.id, g.name) for g in list_prospect.order_by('name')]
+
+    
     if request.method == 'POST':
         if request.form['btn'] == 'Valider' and formSubmit.structure_save.data == 'Non':
             # If the prospect doesn't exist, we create it
