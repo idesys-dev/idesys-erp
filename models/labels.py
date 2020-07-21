@@ -5,7 +5,7 @@ class Label(me.Document):
     label = me.StringField(required=True)
 
     @staticmethod
-    def getLabels(typeLabel):
+    def get_labels(typeLabel):
         mesLabels = [("Aucun", "Aucun")]
         for item in Label.objects:
             if item.category == typeLabel:

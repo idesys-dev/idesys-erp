@@ -9,7 +9,7 @@ class Organization(me.Document):
     sector = me.StringField(required=True)
 
     @staticmethod
-    def getOrganization():
+    def get_organization():
         prospect = [("Aucun", "Aucun")]
         for item in Organization.objects:
             prospect.append((item.name, item.name))

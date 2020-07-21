@@ -11,7 +11,7 @@ class TypeCreate(Form):
 
 
 class ProspectChoice(Form):
-    prospect_choice = SelectField('Sélectionner l\'organisme déjà existant', choices=Organization.getOrganization())
+    prospect_choice = SelectField('Sélectionner l\'organisme déjà existant', choices=Organization.get_organization())
 
 
 class CreateStudy(Form):
@@ -52,7 +52,7 @@ class CreateProspect(Form):
     postal_code = IntegerField('Code postal', [
         v.DataRequired()
     ])
-    sector = SelectField('Secteur d\'activité', choices=Label.getLabels("Secteur"))
+    sector = SelectField('Secteur d\'activité', choices=Label.get_labels("Secteur"))
 
 class CreateContact(Form):
     name = StringField('Nom', [
@@ -77,6 +77,6 @@ class CreateContact(Form):
     ])
 
 class Labels(Form):
-    year = SelectField('Année', choices=Label.getLabels("Année"))
-    sector = SelectField('Filière', choices=Label.getLabels("Filière"))
-    prospection = SelectField('Prospection', choices=Label.getLabels("Prospection"))
+    year = SelectField('Année', choices=Label.get_labels("Année"))
+    sector = SelectField('Filière', choices=Label.get_labels("Filière"))
+    prospection = SelectField('Prospection', choices=Label.get_labels("Prospection"))
