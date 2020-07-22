@@ -39,17 +39,6 @@ def starter_db():
         role = rq.id
     ).save()
 
-    user.User(
-        email = "antoine.zuber@idesys.org",
-        name = "Antoine ZUBER",
-        google_id="",
-        adress = "Quelque Part",
-        postal_code = "99999",
-        city = "",
-        graduation_classes = "5A",
-        mandate = True,
-        role = rq.id
-    ).save()
 
     pt = user.User(
         email = "paul.terrassin@idesys.org",
