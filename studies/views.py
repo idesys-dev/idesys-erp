@@ -29,13 +29,11 @@ def dashboard(tab='all'):
         title = "En cours"
 
     elif tab == 'finished':
-        title = "Terminées"
+        title = "Terminees"
 
     elif tab == 'failed':
-        title = "Avortées"
-    else :
-        title = "Error 404 : tab not found"    
-    
+        title = "Avortees"
+   
     return render_template('dashboard.html',
             study=mo.study.Study.objects,
             labels=mo.labels.Labels.objects,
