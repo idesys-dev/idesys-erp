@@ -2,6 +2,7 @@ import mongoengine as me
 
 class Phases(me.Document):
     name = me.StringField(required=True)
+    description = me.StringField(required=False)
     lenght_week = me.IntField(required=True)
     nb_jeh = me.IntField(required=True)
     price_jeh = me.IntField(required=True)
