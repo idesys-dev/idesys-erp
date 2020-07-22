@@ -133,7 +133,6 @@ def createProspect():
     formCreateContact=formCreateContact )
 
 @studies_bp.route('/<num_study>', methods=['GET', 'POST'])
-@studies_bp.route('/<num_study>/phases', methods=['GET', 'POST'])
-def phases(num_study=None):
-    study = mo.study.Study(number=num_study).first()
-    return render_template('phases.html', study = study)
+def see_study(num_study=None):
+    study = mo.study.Study.objects(number=num_study).first()
+    return render_template('see_study.html', study = study)
