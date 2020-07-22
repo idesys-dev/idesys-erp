@@ -21,6 +21,26 @@ def test_labels_get():
     lbl2 = mo.labels.Labels.get(lbl.id)
     assert lbl2.category == "Cat"
 
+def test_labels_get_labels():
+    mo.labels.Labels.drop_collection()
+    lbl1 = mo.labels.Labels(
+        label="1",
+        category = "Cat"
+    ).save()
+
+    lbl2 = mo.labels.Labels(
+        label="2",
+        category = "Cat"
+    ).save()
+
+    mo.labels.Labels(
+        label="3",
+        category = "Dog"
+    ).save()
+
+    test2 = mo.labels.Labels.get_labels("Cat")
+    assert test2 == [(lbl1.id,"1"),(lbl2.id,"2")]
+
 def test_phases_get():
     var_temp = "Test"
     test = mo.phases.Phases(

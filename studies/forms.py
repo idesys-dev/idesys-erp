@@ -3,7 +3,6 @@ from wtforms.fields.html5 import EmailField, TelField
 from wtforms import validators as v
 from models.labels import Labels
 from models.user import User
-from models.organization import Organization
 
 class TypeCreate(Form):
     structure_save = SelectField('L\'organisme est-il déjà défini ?', choices=[

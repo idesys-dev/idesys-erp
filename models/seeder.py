@@ -191,7 +191,7 @@ def starter_db():
         list_phases = [phase_bonnefon_3.id]
     )
 
-   #Contact & organization
+    #Contact & organization
     celine = contacts.Contacts(
         first_name = "Céline",
         last_name = "Baudoin",

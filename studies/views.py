@@ -1,7 +1,6 @@
 from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
-from wtforms import SelectField
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
 import models as mo
 
@@ -16,7 +15,7 @@ def restrict_bp_to_admins():
 #Study dashboard
 #Tabs
 @studies_bp.route('/dashboard', methods=['GET', 'POST'])
-@studies_bp.route('/dashboard?tab=<string:tab>', methods=['GET', 'POST'])
+@studies_bp.route('/dashboard/<tab>', methods=['GET', 'POST'])
 def dashboard(tab='all'):
     list_category = []
     for i in mo.labels.Labels.objects :
