@@ -131,3 +131,8 @@ def createProspect():
     return render_template('createProspect.html',
     formCreateProspect=formCreateProspect,
     formCreateContact=formCreateContact )
+
+@studies_bp.route('/<num_study>', methods=['GET', 'POST'])
+@studies_bp.route('/<num_study>/phases', methods=['GET', 'POST'])
+def phases(num_study=None):
+    return render_template('phases.html', num_study=num_study)
