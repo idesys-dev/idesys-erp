@@ -1,6 +1,6 @@
 from models import phases, study, roles, organization, labels, user, missions, contacts
 from datetime import date
-
+# pylint:disable=too-many-locals
 def starter_db():
     print("Begin seeder")
     #---------- Drop Collections -----------#
