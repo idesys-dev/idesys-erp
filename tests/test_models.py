@@ -55,3 +55,33 @@ def test_study_get():
     ).save()
     test2 = mo.study.Study.get(test.id)
     assert test2.number == 0
+
+def test_organization_get():
+    test = mo.organization.Organization(
+        name="test",
+        adress="",
+        city="",
+        postal_code=0
+    ).save()
+
+    test2 = mo.organization.Organization.get(test.id)
+    assert test2.name == "test"
+
+def test_organization_get_organization():
+    mo.organization.Organization.drop_collection()
+    o1 = mo.organization.Organization(
+        name="o1",
+        adress="",
+        city="",
+        postal_code=0
+    ).save()
+
+    o2 = mo.organization.Organization(
+        name="o2",
+        adress="",
+        city="",
+        postal_code=0
+    ).save()
+
+    test2 = mo.organization.Organization.get_organization()
+    assert test2 == [(o1.id,"o1"),(o2.id,"o2")]

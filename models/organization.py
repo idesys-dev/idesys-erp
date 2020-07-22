@@ -3,7 +3,6 @@ from models.labels import Labels
 from models.contacts import Contacts
 
 class Organization(me.Document):
-    print("Initial for models")
     name = me.StringField(required=True)
     adress = me.StringField(required=True)
     city = me.StringField(required=True)
@@ -17,7 +16,6 @@ class Organization(me.Document):
 
     @staticmethod
     def get_organization():
-        print("get_orga")
         list_orga = []
         for item in Organization.objects:
             list_orga.append((item.id, item.name))
