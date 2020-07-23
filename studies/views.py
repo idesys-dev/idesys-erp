@@ -66,7 +66,7 @@ def utility_processor():
 
 
 @studies_bp.route('/create-study', methods=['GET', 'POST'])
-def createStudy():
+def create_study():
     # We declare all forms we describe in the forms.py
     formLabel = LabelsForm(request.form)
     formCreateStudy = CreateStudy(request.form)
@@ -81,7 +81,7 @@ def createStudy():
     if request.method == 'POST':
         if request.form['btn'] == 'Valider' and formSubmit.structure_save.data == 'Non':
             # If the prospect doesn't exist, we create it
-            return redirect(url_for(".createProspect"))
+            return redirect(url_for(".create_prospect"))
 
         if request.form['btn'] ==  'Enregistrer':
             etu = mo.study.Study(
@@ -106,7 +106,7 @@ def createStudy():
     formProspectChoice=formProspectChoice )
 
 @studies_bp.route('/create-prospect', methods=['GET', 'POST'])
-def createProspect():
+def create_prospect():
     formCreateProspect = CreateProspect(request.form)
     formCreateContact = CreateContact(request.form)
 
@@ -128,7 +128,7 @@ def createProspect():
                 list_contacts=[cont])
             org.save()
 
-            return redirect(url_for(".createStudy"))
+            return redirect(url_for(".create_study"))
 
     return render_template('createProspect.html',
     formCreateProspect=formCreateProspect,
@@ -136,6 +136,6 @@ def createProspect():
 
 #@studies_bp.route('/<num_study>/summary', methods=['GET', 'POST'])
 @studies_bp.route('/<num_study>/summary/<vision>', methods=['GET', 'POST'])
-def summaryStudy(num_study=None, vision="planning"):
+def summary_study(num_study=None, vision="planning"):
     study = mo.study.Study.objects(number=num_study).first()
     return render_template('recapStudy.html', study=study, vision=vision)
