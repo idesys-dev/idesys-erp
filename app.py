@@ -7,6 +7,7 @@ from flask_login import LoginManager, login_required
 from flask_mongoengine import MongoEngine
 
 # Internal imports
+from models.seeder import starter_db
 
 def create_app(config_filename=None):
     load_dotenv()
@@ -22,14 +23,19 @@ def create_app(config_filename=None):
         app.config['GOOGLE_CLIENT_ID'] = os.environ['GOOGLE_CLIENT_ID']
     else:
         app.config.from_pyfile(config_filename)
-
+    
     MongoEngine(app)
+    
+    #Launch seeder
+    if app.config['ENV'] == 'development' :
+        starter_db()
+   
 
     with app.app_context():
         from auth.views import auth_blueprint
         from documents.views import documents_bp
         from studies.views import studies_bp
-    from auth.models.user import User
+    from models.user import User
     from admin import create_admin
 
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
@@ -61,4 +67,6 @@ def create_app(config_filename=None):
 
 if __name__ == "__main__":
     app = create_app()
+    
     app.run(host=os.environ['FLASK_RUN_HOST'], ssl_context='adhoc')
+   

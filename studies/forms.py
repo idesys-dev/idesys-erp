@@ -1,36 +1,30 @@
 from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms import validators as v
-from models.labels import Label
-from models.organization import Organization
+from models.labels import Labels
+from models.user import User
 
 class TypeCreate(Form):
     structure_save = SelectField('L\'organisme est-il déjà défini ?', choices=[
         ("Oui", "Oui"),
         ("Non", "Non")])
 
-
 class ProspectChoice(Form):
-    prospect_choice = SelectField('Sélectionner l\'organisme déjà existant', choices=Organization.get_organization())
-
+    prospect_choice = SelectField('Sélectionner l\'organisme déjà existant')
 
 class CreateStudy(Form):
     study_name = StringField('Nom de l\'étude', [
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-    follower_study = SelectField('Suiveur d\'étude', choices=[
-        ("Aucun", "Aucun"),
-        ("Paul Terrassin", "Paul Terrassin"),
-        ("David Thibaut", "David Thibaut")])
-    follower_quality = SelectField('Suiveur qualité', choices=[
-        ("Aucun", "Aucun"),
-        ("Ulysse Guyon", "Ulysse Guyon"),
-        ("Antoine Zuber", "Antoine Zuber")])
+
+    follower_study = SelectField('Suiveur d\'étude', choices=User.get_admin_intervener(True))
+
+    follower_quality = SelectField('Suiveur qualité', choices=User.get_admin_intervener(True))
+
     description = TextAreaField('Description', [
         v.DataRequired()
     ])
-
 
 class CreateProspect(Form):
     structure_name = StringField('Nom de la structure', [
@@ -52,7 +46,8 @@ class CreateProspect(Form):
     postal_code = IntegerField('Code postal', [
         v.DataRequired()
     ])
-    sector = SelectField('Secteur d\'activité', choices=Label.get_labels("Secteur"))
+
+    sector = SelectField('Secteur d\'activité', choices=Labels.get_labels("Secteur"))
 
 class CreateContact(Form):
     name = StringField('Nom', [
@@ -76,7 +71,7 @@ class CreateContact(Form):
         v.DataRequired()
     ])
 
-class Labels(Form):
-    year = SelectField('Année', choices=Label.get_labels("Année"))
-    sector = SelectField('Filière', choices=Label.get_labels("Filière"))
-    prospection = SelectField('Prospection', choices=Label.get_labels("Prospection"))
+class LabelsForm(Form):
+    year = SelectField('Année', choices=Labels.get_labels("Année"))
+    sector = SelectField('Filière', choices=Labels.get_labels("Filière"))
+    prospection = SelectField('Prospection', choices=Labels.get_labels("Prospection"))

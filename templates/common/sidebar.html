@@ -4,7 +4,7 @@
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <div class="sidebar-brand-icon">
-          <img src="../static/img/logoblanc.png" height="45">
+          <img src="{{url_for('static',filename='img/logoblanc.png')}}" height="45">
         </div>
         <div class="sidebar-brand-text mx-3">IdéSYS ERP</div>
       </a>
@@ -12,10 +12,9 @@
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
-
       <!-- A FAIRE -->
       <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
@@ -35,14 +34,15 @@
           <i class="fas fa-fw fa-cog"></i>
           <span>Suivi d'étude</span></a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="/">Voir les études</a>
-            <a class="collapse-item" href="{{ url_for('studies_bp.createStudy')}}">Créer une étude</a>
+          <div class="bg-white py-2 collapse-inner animated--grow-in rounded">
+            <a class="collapse-item" href="{{ url_for('studies_bp.dashboard', tab='all') }}"">Voir les études</a>
+            <a class="collapse-item" href="{{ url_for('studies_bp.createStudy') }}">Créer une étude</a>
             <a class="collapse-item" href="/">Chiffre d'affaire</a>
           </div>
         </div>
       </li>
 
+      
       <!-- A FAIRE -->
       <!-- Nav Item - Prospection -->
       <li class="nav-item">
@@ -74,6 +74,11 @@
           <i class="fas fa-fw fa-folder-open "></i>
           <span>Administration</span></a>
       </li>
+    
+      <!-- Bouton pour faire apparaitre -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+      
     </ul>
-
     <!-- End of Sidebar -->
