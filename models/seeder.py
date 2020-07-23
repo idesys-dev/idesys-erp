@@ -157,7 +157,7 @@ def starter_db():
         lenght_week = 8,
         nb_jeh = 5,
         price_jeh = 300,
-        phase_number = 1,
+        phase_number = 2,
         control_point = False,
         bill = False
     ).save()
@@ -167,7 +167,7 @@ def starter_db():
         lenght_week = 8,
         nb_jeh = 3,
         price_jeh = 330,
-        phase_number = 1,
+        phase_number = 3,
         control_point = False,
         bill = False
     ).save()
@@ -207,7 +207,7 @@ def starter_db():
         postal_code="202020",
         list_labels = [],
         list_contacts = [celine]
-    ).save() 
+    ).save()
 
     #Create Study
     study.Study(

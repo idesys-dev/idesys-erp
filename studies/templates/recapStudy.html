@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="container-fluid">
-  <a href="{{ url_for('studies_bp.dashboard', tab='all') }}">Retour</a>
+  <p><a href="{{ url_for('studies_bp.dashboard', tab='all') }}" class="text-decoration-none text-primary"><i class="fas fa-chevron-left"></i> Retour</a></p>
   <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-clipboard-list"></i> Suivi d'Étude</h1>
   <br>
 
@@ -160,14 +160,74 @@
   <br>
   <br>
 
+  {% if vision == 'planning' %}
+
   <ul class="nav nav-pills nav-fill">
     <li class="nav-item">
-      <a class="nav-link active" href="#">Vision Planning</a>
+      <a class="nav-link active" href="{{url_for('studies_bp.summaryStudy', num_study=study.number, vision='planning')}}">Vision Planning</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-secondary" href="#">Vision budget</a>
+      <a class="nav-link text-secondary" href="{{url_for('studies_bp.summaryStudy', num_study=study.number, vision='budget')}}">Vision budget</a>
     </li>
   </ul>
+
   <br>
+
+  <p> Affichage du planning </p>
+
+  {% endif %}
+
+  {% if vision == 'budget' %}
+
+  <ul class="nav nav-pills nav-fill">
+    <li class="nav-item">
+      <a class="nav-link text-secondary" href="{{url_for('studies_bp.summaryStudy', num_study=study.number, vision='planning')}}">Vision Planning</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="{{url_for('studies_bp.summaryStudy', num_study=study.number, vision='budget')}}">Vision budget</a>
+    </li>
+  </ul>
+
+  <br>
+
+  <table class="table table-bordered table-striped text-center">
+
+    <thead class="text-white">
+      <tr class="bg-primary">
+        <td>N°</td>
+        <td>Phase</td>
+        <td>Nombre JEH</td>
+        <td>Prix JEH</td>
+        <td>Total</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in study.list_phases %}
+      <tr>
+        <td>{{i.phase_number}}</td>
+        <td>{{i.name}}</td>
+        <td>{{i.nb_jeh}}</td>
+        <td>{{i.price_jeh}} €</td>
+        <td>{{i.nb_jeh*i.price_jeh}} €</td>
+      </tr>
+      {% endfor %}
+      <tr class="bg-warning">
+        <th scope="row">Sous Total</th>
+        <th colspan="4" class="text-center">{{info["price"]}} €</th>
+      </tr>
+      <tr>
+        <td>Frais de dossier</td>
+        <td colspan="4">{{study.application_fees}} €</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr class="bg-success">
+        <th scope="row">Total</th>
+        <th colspan="4" class="text-center">{{info["price"] + study.application_fees}} €</th>
+      </tr>
+    </tfoot>
+  </table>
+
+  {% endif %}
 </div>
 {% endblock %}

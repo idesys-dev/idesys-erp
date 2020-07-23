@@ -128,14 +128,14 @@ def createProspect():
                 list_contacts=[cont])
             org.save()
 
-
             return redirect(url_for(".createStudy"))
 
     return render_template('createProspect.html',
     formCreateProspect=formCreateProspect,
     formCreateContact=formCreateContact )
 
-@studies_bp.route('/<num_study>/summary', methods=['GET', 'POST'])
-def summaryStudy(num_study=None):
+#@studies_bp.route('/<num_study>/summary', methods=['GET', 'POST'])
+@studies_bp.route('/<num_study>/summary/<vision>', methods=['GET', 'POST'])
+def summaryStudy(num_study=None, vision="planning"):
     study = mo.study.Study.objects(number=num_study).first()
-    return render_template('recapStudy.html', study=study)
+    return render_template('recapStudy.html', study=study, vision=vision)
