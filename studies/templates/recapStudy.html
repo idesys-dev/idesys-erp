@@ -17,16 +17,27 @@
       <a class="nav-link active" href="#">Récapitulatif</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">Phases</a>
+      <a class="nav-link text-secondary" href="#">Phases</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">Missions</a>
+      <a class="nav-link text-secondary" href="#">Missions</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">Documents</a>
+      <a class="nav-link text-secondary" href="#">Documents</a>
     </li>
   </ul>
   <!-- End studies nav -->
+
+  <br>
+
+  <div class="row">
+    <div class="col">
+      <i class="fas fa-pen"></i><a href="#" class="text-primary"> Modifier les informations de l'étude</a>
+    </div>
+    <div class="col">
+      <i class="fas fa-plus"></i><a href="#" class="text-primary"> Ajouter un contact</a>
+    </div>
+  </div>
 
   <br>
 
@@ -121,6 +132,22 @@
       </div>
     </div>
 
+    <div class="col">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Prochain document</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">Convention d'Étude</div>
+            </div>
+            <div class="col-auto">
+              <i class="far fa-file fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
   <br>
   <span>Labels</span> <br>
@@ -135,9 +162,9 @@
       <a class="nav-link active" href="#">Vision Planning</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">Vision budget</a>
+      <a class="nav-link text-secondary" href="#">Vision budget</a>
     </li>
   </ul>
-
+  <br>
 </div>
 {% endblock %}
