@@ -1,16 +1,22 @@
 import mongoengine as me
+from models.labels import Labels
+from models.contacts import Contacts
 
 class Organization(me.Document):
     name = me.StringField(required=True)
-    type_structure = me.StringField(required=True)
-    adresse = me.StringField(required=True)
+    adress = me.StringField(required=True)
     city = me.StringField(required=True)
     postal_code = me.IntField(required=True)
-    sector = me.StringField(required=True)
+    list_labels = me.ListField(me.ReferenceField(Labels))
+    list_contacts = me.EmbeddedDocumentListField(Contacts)
 
     @staticmethod
-    def getOrganization():
-        prospect = [("Aucun", "Aucun")]
+    def get(orga_id):
+        return Organization.objects(id=orga_id).first()    
+
+    @staticmethod
+    def get_organization():
+        list_orga = []
         for item in Organization.objects:
-            prospect.append((item.name, item.name))
-        return prospect
+            list_orga.append((item.id, item.name))
+        return list_orga

@@ -1,0 +1,157 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-6">
+    <h2>Étude - Tableau de bord</h2>
+    <hr>
+    <!-- Button Add Study -->
+    <a href="{{ url_for('studies_bp.createStudy') }}" class="btn btn-primary mb-2">
+      <span class="icon text-white-50">
+        <i class="fas fa-fw fa-plus-circle"></i>
+      </span>
+      <span class="text">Ajouter une étude</span>
+    </a>
+
+  </div>
+
+
+  <div class="col-6">
+    <!-- Search -->
+    <span>Rechercher une étude</span>
+    <form class="d-none d-sm-inline-block form-inline ml-5  navbar-search">
+      <div class="input-group">
+        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search"
+          aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button">
+            <i class="fas fa-search fa-sm"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Buttons labels search -->
+    <ul class="list-inline mt-4 ">
+      {% for i in listCategory %}
+      <div class="dropdown list-inline-item mb-2">
+        <button class="btn btn-secondary dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          {{i}}
+        </button>
+        <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton" style="">
+          {% for j in labels %}
+          {% if i == j.category %}
+          <a class="dropdown-item" href="#">{{j.label}}</a>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </ul>
+
+  </div>
+</div>
+
+
+
+<!-- Tabs -->
+<div class="card text-center">
+  <div class="card-header">
+    <ul class="nav nav-pills card-header-pills">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('studies_bp.dashboard') }}">Toutes</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('studies_bp.dashboard', tab='progressing') }}">En cours</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('studies_bp.dashboard', tab='finished') }}">Terminées</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('studies_bp.dashboard', tab='failed') }}">Avortés</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Studies -->
+  <div class="card-body">
+
+    {% set ns = namespace(found=false) %}
+    {% for i in study %}
+    {% if (tab == i.state) or (tab == 'all') %}
+    {% set ns.found = true %}
+
+    <!-- Def row -->
+    <div class=" card text-left shadow mb-2 border-left-secondary">
+      <div class="card-body pl-2 pt-2 row">
+
+        <!-- Part 1 : title description labels-->
+        <div class="col-md-6 ">
+          <h6 class="font-weight-bold text-primary pl-2 pt-2">{{i.number}} : {{i.name}}</h6>
+          <span>{{i.description}} : {{i.state}}</span>
+
+        </div>
+
+
+        <!-- Part 2 : fallower, quality, intervener-->
+        <div class="col-md-3 text-center py-0">
+          <p><small>Qualité : </small>{{i.id_follower_quality.name}}</p>
+          <p><small>Suiveur : </small>{{i.id_follower_study.name}}</p>
+          <div class="dropdown list-inline-item mb-2">
+            <button class="btn btn-secondary dropdown-toggle " type="button" id="dropdownMenuButton"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Intervenant(s)
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">
+              {% for j in i.list_missions %}
+              <a class="dropdown-item" href="#">{{j.id_intervener.name}}</a>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-md-2 text-center">
+          <span>{{i.state}}</span>
+        </div>
+
+        <div class="col-md-1 text-center align-self-middle">
+          {% set info = get_info(i.id) %}
+          <span>Prix</span>
+          <span class="text-primary">{{info["price"]}} €</span>
+          <hr>
+          <span>Nb JEH</span>
+          <span class="text-primary">{{info["tot_jeh"]}}</span>
+
+        </div>
+        <!-- End row -->
+      </div>
+      <div class="card-footer d-flex">
+        <ul class="list-group list-group-horizontal-md">
+          {% for j in i.list_labels %}
+          <li class="bg-secondary text-white list-group-item py-1"><small>{{j.label}}</small></li>
+          {% endfor %}
+        </ul>
+        <!-- See study-->
+        <a href="#" class="btn btn-primary ml-auto">
+          <span class="text">Consulter</span>
+        </a>
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+
+    <!-- Error : not found -->
+    {% if not ns.found %}
+    <div class=" card bg-danger text-center mb-2 ">
+      <div class="card-body">
+        <span class="text-white"> Error 404 : No study find !</span>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
