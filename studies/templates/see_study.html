@@ -5,54 +5,54 @@
 {% block content %}
 <h2>Étude {{study.number}} - {{study.name}}</h2>
 
-<!-- Studies nav -->
-<ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
-  <li class="nav-item" role="presentation">
-    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#recap" role="tab" aria-controls="recap"
-      aria-selected="true">Récapitulatif</a>
-  </li>
-  <li class="nav-item" role="presentation">
-    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#phase" role="tab" aria-controls="phase"
-      aria-selected="false">Phases</a>
-  </li>
-  <li class="nav-item" role="presentation">
-    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#missions" role="tab" aria-controls="mission"
-      aria-selected="false">Missions</a>
-  </li>
-  <li class="nav-item" role="presentation">
-    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents"
-      aria-selected="false">Documents</a>
-  </li>
-</ul>
-<!-- End studies nav -->
+<!-- Tabs -->
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-pills nav-fill card-header-pills">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('studies_bp.dashboard') }}">Récapitulatif</a>
+      </li>
+      <li class="nav-item ">
+        <a class="nav-link active" href="{{ url_for('studies_bp.phases', num_study=study.number) }}">Phases</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('studies_bp.dashboard', tab='finished') }}">Missions</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('studies_bp.dashboard', tab='failed') }}">Document</a>
+      </li>
+    </ul>
+  </div>
+  <!-- End studies nav -->
 
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="recap" role="tabpanel" aria-labelledby="recap-tab">Récap</div>
   <!-- Show phases-->
-  <div class="tab-pane fade" id="phase" role="tabpanel" aria-labelledby="phase-tab">
+  <div class="card-body">
+    <!-- Button : Edit / See JEH Maker / import JEH Maker -->
+    
     {% for i in study.list_phases %}
     <!-- Def row -->
     <div class=" card text-left shadow mt-2 border-left-secondary">
       <div class="card-body row">
 
-        <!-- Part 1 : title description labels-->
-        <div class="col-md-6 ">
+        <!-- Part 1 : title description-->
+        <div class="col-md-8 ">
           <h6 class="font-weight-bold text-primary">{{i.phase_number}} : {{i.name}}</h6>
           <span>Description : {{i.description}}</span>
         </div>
+
+        <!-- Part 2 : title description-->
+        <div class="col-md-4 text-center">
+          <ul class="list-inline">
+            <h4 class = "list-inline-item"><span class="badge badge-info">{{i.price_jeh*i.nb_jeh}} €</span></h4>
+            <h4 class = "list-inline-item"><span class="badge badge-info">{{i.lenght_week}} sem</span></h4>
+            <h4 class = "list-inline-item"><span class="badge badge-info">{{i.nb_jeh}} JEH</span></h4>
+          </ul>
+        </div>
+
       </div>
     </div>
     {% endfor %}
-
+  </div>
   <!-- End phases-->
-  </div>
-
-  <div class="tab-pane fade" id="missions" role="tabpanel" aria-labelledby="missions-tab">
-    Missions
-  </div>
-
-  <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
-    Documents
-  </div>
 </div>
 {% endblock %}
