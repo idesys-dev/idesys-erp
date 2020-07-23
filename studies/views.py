@@ -33,7 +33,7 @@ def dashboard(tab='all'):
 
     elif tab == 'failed':
         title = "Avortees"
-   
+
     return render_template('dashboard.html',
             study=mo.study.Study.objects,
             labels=mo.labels.Labels.objects,
@@ -47,6 +47,7 @@ def utility_processor():
     def get_info(id_study):
         total_price = 0
         tot_jeh = 0
+        total_length = 0
         if id_study == '':
             return "Id non valide"
 
@@ -55,9 +56,11 @@ def utility_processor():
         for i in sty.list_phases:
             total_price += i.price_jeh * i.nb_jeh
             tot_jeh += i.nb_jeh
-        
-        return {"price":total_price, 
-                "tot_jeh": tot_jeh}
+            total_length += i.lenght_week
+
+        return {"price":total_price,
+                "tot_jeh": tot_jeh,
+                "tot_weeks": total_length}
 
     return dict(get_info=get_info)
 
@@ -74,7 +77,7 @@ def createStudy():
     formProspectChoice = ProspectChoice(request.form, obj=list_prospect)
     formProspectChoice.prospect_choice.choices = [(g.id, g.name) for g in list_prospect.order_by('name')]
 
-    
+
     if request.method == 'POST':
         if request.form['btn'] == 'Valider' and formSubmit.structure_save.data == 'Non':
             # If the prospect doesn't exist, we create it
@@ -132,7 +135,7 @@ def createProspect():
     formCreateProspect=formCreateProspect,
     formCreateContact=formCreateContact )
 
-@studies_bp.route('/recap-study', methods=['GET', 'POST'])
-def recapStudy():
-    
-    return render_template('recapStudy.html')
+@studies_bp.route('/<num_study>/summary', methods=['GET', 'POST'])
+def summaryStudy(num_study=None):
+    study = mo.study.Study.objects(number=num_study).first()
+    return render_template('recapStudy.html', study=study)

@@ -8,6 +8,7 @@
 
 {% block content %}
 <div class="container-fluid">
+  <a href="{{ url_for('studies_bp.dashboard', tab='all') }}">Retour</a>
   <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-clipboard-list"></i> Suivi d'Étude</h1>
   <br>
 
@@ -48,10 +49,10 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="font-weight-bold text-primary text-uppercase mb-1">124 : [WEB] - Refonte sites web</div>
-              <div class="mb-0 text-gray-800">Suiveur d'Étude : Paul Terrassin</div>
-              <div class="mb-0 text-gray-800">Suiveur Qualité : Ulysse Guyon</div>
-              <div class="mb-0 text-gray-800">Description :</div>
+              <div class="font-weight-bold text-primary text-uppercase mb-1"> {{study.number}} : {{study.name}}</div>
+              <div class="mb-0 text-gray-800">Suiveur d'Étude : {{study.id_follower_study.name}}</div>
+              <div class="mb-0 text-gray-800">Suiveur Qualité : {{study.id_follower_quality.name}}</div>
+              <div class="mb-0 text-gray-800">Description : {{study.description}}.</div>
             </div>
             <div class="col-auto col-offset-15">
               <i class="fab fa-wpforms fa-2x fa-2x text-gray-300"></i>
@@ -66,10 +67,11 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="font-weight-bold text-primary text-uppercase mb-1">Mme. Gisèle Fontaine</div>
-              <div class="mb-0 text-gray-800">Marketing & Communication</div>
-              <div class="mb-0 text-gray-800">02.40.40.40.40</div>
-              <div class="mb-0 text-gray-800">gisele.fontaine@groupebonnefon.com</div>
+              <div class="font-weight-bold text-primary text-uppercase mb-1">{{study.id_organization.name}}</div>
+              <div class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].first_name}} {{study.id_organization.list_contacts[0].last_name}}</div>
+              <div class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].job}}</div>
+              <div class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].phone}}</div>
+              <div class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].email}}</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-address-card fa-2x text-gray-300"></i>
@@ -83,6 +85,7 @@
 
   <br>
 
+  {% set info = get_info(study.id) %}
   <div class="row">
     <div class="col">
       <div class="card border-left-success shadow h-100 py-2">
@@ -90,7 +93,7 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Prix de l'étude</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">2800 €</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{info["price"]}} €</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -106,7 +109,7 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Nombre de JEH</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">8 JEH</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{info["tot_jeh"]}} JEH</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-chart-bar fa-2x text-gray-300"></i>
@@ -122,7 +125,7 @@
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
               <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Durée étude</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">21 semaines</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{info["tot_weeks"]}} semaines</div>
             </div>
             <div class="col-auto">
               <i class="far fa-calendar fa-2x text-gray-300"></i>
@@ -151,9 +154,9 @@
   </div>
   <br>
   <span>Labels</span> <br>
-  <span class="badge badge-info">Informatique</span>
-  <span class="badge badge-info">Demande spontanée</span>
-  <span class="badge badge-info">Web</span>
+  {% for i in study.list_labels %}
+    <span class="badge badge-info">{{i.label}}</span>
+  {% endfor %}
   <br>
   <br>
 
