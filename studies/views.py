@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
-from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
+from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm, CreateMission
 import models as mo
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
@@ -134,8 +134,19 @@ def create_prospect():
     formCreateProspect=formCreateProspect,
     formCreateContact=formCreateContact )
 
-#@studies_bp.route('/<num_study>/summary', methods=['GET', 'POST'])
 @studies_bp.route('/<num_study>/summary/<vision>', methods=['GET', 'POST'])
 def summary_study(num_study=None, vision="planning"):
     study = mo.study.Study.objects(number=num_study).first()
-    return render_template('recapStudy.html', study=study, vision=vision)
+
+    return render_template('recapStudy.html',
+    study=study,
+    vision=vision)
+
+@studies_bp.route('/<num_study>/missions', methods=['GET', 'POST'])
+def missions(num_study=None):
+    study = mo.study.Study.objects(number=num_study).first()
+    form_create_mission = CreateMission(request.form)
+
+    return render_template('missions.html',
+    study=study,
+    form_create_mission=form_create_mission)

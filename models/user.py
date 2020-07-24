@@ -11,7 +11,7 @@ class User(UserMixin, me.Document):
     profile_pic = me.StringField()
     google_id = me.StringField(required=True)
 
-    #Ajout pour la db 
+    #Ajout pour la db
     adress = me.StringField(required=False)
     postal_code = me.StringField(required=False)
     city = me.StringField(required=False)
@@ -41,18 +41,17 @@ class User(UserMixin, me.Document):
     @staticmethod
     def get(user_id):
         return User.objects(google_id=user_id).first()
-    
+
     @staticmethod
-    #Get admin(True) or intervener(False) 
+    #Get admin(True) or intervener(False)
     def get_admin_intervener(type_user):
-        print("get_admin_intervener")
         users = [("Aucun", "Aucun")]
         for i in User.objects:
-            if i.role is not None : 
+            if i.role is not None :
                 #Case of interverner
                 if not type_user and i.role.name == "Intervenant":
                     users.append((i.id, i.name))
-                #Case of admins    
+                #Case of admins
                 elif type_user and i.role.name != "Intervenant":
                     users.append((i.id, i.name))
         return users

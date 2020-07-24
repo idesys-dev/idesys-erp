@@ -136,7 +136,7 @@
           {% endfor %}
         </ul>
         <!-- See study-->
-        <a href="{{url_for('studies_bp.summary_study', num_study=i.number, vision='planning')}}" class="btn btn-primary ml-auto">
+        <a href="{{ url_for('studies_bp.summary_study', num_study=i.number, vision='planning') }}" class="btn btn-primary ml-auto">
           <span class="text">Consulter</span>
         </a>
       </div>

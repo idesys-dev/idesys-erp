@@ -1,0 +1,97 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}{{ _type }}{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <p><a href="{{ url_for('studies_bp.dashboard', tab='all') }}" class="text-decoration-none text-primary"><i class="fas fa-chevron-left"></i> Retour</a></p>
+  <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-clipboard-list"></i> Suivi d'Étude</h1>
+  <br>
+
+  <!-- Studies nav -->
+  <ul class="nav nav-pills nav-fill">
+    <li class="nav-item">
+      <a class="nav-link text-secondary" href="{{ url_for('studies_bp.summary_study', num_study=study.number, vision='planning') }}">Récapitulatif</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-secondary" href="#">Phases</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="{{ url_for('studies_bp.missions', num_study=study.number) }}">Missions</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-secondary" href="#">Documents</a>
+    </li>
+  </ul>
+  <!-- End studies nav -->
+  <br>
+
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#test">Ajouter une mission</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="test" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Ajouter une mission</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Start Container -->
+          {% from "_formhelpers.html" import render_field %}
+          <form method="post" class="phases">
+            <div class="row">
+              <!-- Start Row  -->
+              <div class="col">
+                <!-- Start Col -->
+                <dl>
+                  {% for field in form_create_mission %}
+                  {{ render_field(field, class='form-control') }}
+                  {% endfor %}
+                </dl>
+                <!--End Col -->
+              </div>
+              <!-- End Row -->
+            </div>
+              <p><input type="submit" name="btn" value="Enregistrer" class='btn btn btn-success btn-block'></p>
+          </form>
+          <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Annuler</button>
+        </div>
+        <!-- End Container -->
+      </div>
+    </div>
+  </div>
+
+  <br><br>
+
+  {% for i in study.list_missions %}
+  <div class="card border-left-secondary shadow h-100">
+    <div class="card-header text-center">
+      {{i.name}}
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          {{i.description}}
+        </div>
+        <div class="col">
+          <div class="mb-0 text-gray-800">Intervenant : {{i.id_intervener.name}}</div>
+          <div class="mb-0 text-gray-800">Début : {{i.begin_date}}</div>
+          <div class="mb-0 text-gray-800">Fin : {{i.end_date}}</div>
+          <div class="mb-0 text-gray-800">Durée : {{i.end_date - i.begin_date}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  {% endfor %}
+
+</div>
+{% endblock %}

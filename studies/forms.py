@@ -75,3 +75,10 @@ class LabelsForm(Form):
     year = SelectField('Année', choices=Labels.get_labels("Année"))
     sector = SelectField('Filière', choices=Labels.get_labels("Filière"))
     prospection = SelectField('Prospection', choices=Labels.get_labels("Prospection"))
+
+class CreateMission(Form):
+    mission_name = StringField('Nom de la mission', [
+        v.Length(min=0, max=50),
+        v.DataRequired()
+    ])
+    intervenant = SelectField('Suiveur qualité', choices=User.get_admin_intervener(False))
