@@ -195,7 +195,11 @@ def starter_db():
     # Mails
     mail1 = mail.Mail(
         id_user=ug.id,
-        body="this is the body of my email"
+        subject="hello (subject :) )",
+        from_="ulysse.guyon@idesys.org",
+        to="r.dal@some.think",
+        body="this is the body of my email",
+        date="Sun, 26 Jul 2020 07:31:24 +0000",
     ).save()
 
     #Contact & organization

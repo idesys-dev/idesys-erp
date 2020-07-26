@@ -5,7 +5,8 @@ from models.organization import Organization
 from models.mail import Mail
 from external_apis.gsuite_api import credentials, gmail
 
-organizations_bp = Blueprint('organizations_bp', __name__, template_folder='templates')
+organizations_bp = Blueprint('organizations_bp', __name__,
+    template_folder='templates')
 
 @organizations_bp.before_request
 def restrict_bp_to_admins():
@@ -25,16 +26,12 @@ def fetch_emails():
     creds = credentials.get_delegated_credentials(scopes, current_user.email)
     messages_body = gmail.get_mails(creds, Organization.get_all_mails_contact())
     for message in messages_body:
-        if isinstance(message['mail_to_keep'], str):
-            message['mail_to_keep'] = [message['mail_to_keep']]
-            for organization in Organization.objects:
-                for contact in organization.list_contacts:
-                    if contact.email in message['mail_to_keep']:
-                        body = Mail.decode_body(message)
-                        mail = Mail(id_user=current_user.id,
-                            body=body)
-                        mail.save()
-                        contact.mails.append(mail.id)
-                        organization.save()
+        for organization in Organization.objects:
+            for contact in organization.list_contacts:
+                if contact.email in message['mail_to_keep']:
+                    mail = Mail.create_mail_instance(message, current_user.id)
+                    mail.save()
+                    contact.mails.append(mail.id)
+                    organization.save()
 
     return redirect(url_for('.list_organization'))

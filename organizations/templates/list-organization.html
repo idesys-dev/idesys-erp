@@ -23,8 +23,22 @@
                   <li>
                     <div>
                       <p><em>{{mail.id_user.name}}</em></p>
-                      <p><strong>{{mail.subject}}</strong></p>
-                      <p>{{mail.body}}</p>
+                      <div>
+                        <!-- mail header -->
+                        <p>Objet: <strong>{{mail.subject}}</strong></p>
+                        <p><em>Enoyé par :</em> {{mail.from_}}</p>
+                        <p><em>Enoyé à :</em> {{mail.to}}</p>
+                        {% if mail.cc %}
+                          <p><em>En copie :</em> {{mail.cc}}</p>
+                        {% endif %}
+                        {% if mail.bcc %}
+                          <p><em>En copie cachée :</em> {{mail.bcc}}</p>
+                        {% endif %}
+                      </div>
+                      <div>
+                        <!-- mail body -->
+                        <p>{{mail.body | safe}}</p>
+                      </div>
                     </div>
                   </li>
                 {% endfor %}

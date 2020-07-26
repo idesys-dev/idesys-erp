@@ -7,7 +7,11 @@ from googleapiclient.discovery import build
 # from googleapiclient.http import BatchHttpRequest
 from apiclient import errors
 
-HEADERS = ['To', 'From', 'Cc', 'Bcc']
+TO = 'To'
+FROM = 'From'
+CC = "Cc"
+BCC = "Bcc"
+HEADERS = [TO, FROM, CC, BCC]
 
 def get_mails(creds, contact_mails):
     gmail_service = build('gmail', 'v1', credentials=creds)
@@ -50,7 +54,8 @@ def get_mail_metadada(gmail_service, messages_ids, contact_mails):
                 metadataHeaders=HEADERS).execute()
             for header in message_metadata['payload']['headers']:
                 if header['name'] in HEADERS:
-                    mail_to_keep = email_in_header(header['value'], contact_mails)
+                    mail_to_keep = email_in_header(header['value'],
+                        contact_mails)
                     if mail_to_keep:
                         message_metadata['mail_to_keep'] = mail_to_keep
                         messages_metadata.append(message_metadata)
@@ -66,6 +71,7 @@ def get_mail_bodys(gmail_service, messages_metadata):
         for message in messages_metadata:
             message_body = gmail_service.users().messages().get(
                 userId="me", id=message['id'], format="full").execute()
+
             message_body['mail_to_keep'] = message['mail_to_keep']
             messages_body.append(message_body)
     except errors.HttpError as error:
@@ -75,17 +81,14 @@ def get_mail_bodys(gmail_service, messages_metadata):
 
 def email_in_header(header_value, contact_mails):
     if isinstance(header_value, str):
-        email = parse_email_str(header_value)
+        header_value = [header_value]
+
+    email_list = parse_email_list(header_value)
+    mail_to_keep = []
+    for email in email_list:
         if email in contact_mails:
-            return email
-    if isinstance(header_value, list):
-        email_list = parse_email_list(header_value)
-        keep_email = []
-        for email in email_list:
-            if email in contact_mails:
-                keep_email.append(email)
-        return keep_email or None
-    return None
+            mail_to_keep.append(email)
+    return mail_to_keep
 
 def parse_email_str(email):
     if '<' in email and '>' in email:
