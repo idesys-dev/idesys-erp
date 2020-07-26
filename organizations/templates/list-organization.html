@@ -1,0 +1,44 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-6">
+    <h2>Organisations</h2>
+
+    <p><a href="{{ url_for('organizations_bp.fetch_emails') }}">Récupérer les mails</a>.</p>
+
+    <div>
+      {% for organisation in organisations %}
+      <div>
+        <p>{{organisation.name}}</p>
+        <ul>
+          {% for contact in organisation.list_contacts %}
+          <li>
+            <div>
+              <p>{{contact.first_name}} {{contact.last_name}} : {{contact.email}}</p>
+              <ul>
+                {% for mail in contact.mails %}
+                  <li>
+                    <div>
+                      <p><em>{{mail.id_user.name}}</em></p>
+                      <p><strong>{{mail.subject}}</strong></p>
+                      <p>{{mail.body}}</p>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}
