@@ -24,7 +24,8 @@ def list_organization():
 def fetch_emails():
     scopes = ['https://www.googleapis.com/auth/gmail.readonly']
     creds = credentials.get_delegated_credentials(scopes, current_user.email)
-    messages_body = gmail.get_mails(creds, Organization.get_all_mails_contact())
+    messages_body, gmail_history_id = gmail.get_mails(creds,
+        Organization.get_all_mails_contact(), current_user.gmail_history_id)
     for message in messages_body:
         for organization in Organization.objects:
             for contact in organization.list_contacts:
@@ -33,5 +34,8 @@ def fetch_emails():
                     mail.save()
                     contact.mails.append(mail.id)
                     organization.save()
+    if gmail_history_id != -1:
+        current_user.gmail_history_id = gmail_history_id
+        current_user.save()
 
     return redirect(url_for('.list_organization'))

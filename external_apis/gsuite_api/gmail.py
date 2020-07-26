@@ -11,19 +11,66 @@ TO = 'To'
 FROM = 'From'
 CC = "Cc"
 BCC = "Bcc"
-HEADERS = [TO, FROM, CC, BCC]
+HEADERS_EMAIL_ADDRESS = [TO, FROM, CC, BCC]
 
-def get_mails(creds, contact_mails):
+SENT = 'SENT'
+INBOX = 'INBOX'
+HEADER_LABELS = [SENT, INBOX]
+
+def get_mails(creds, contact_mails, start_history_id):
+    if not start_history_id:
+        start_history_id = '1'
     gmail_service = build('gmail', 'v1', credentials=creds)
 
-    messages_ids = get_mail_ids(gmail_service)
+    messages_body, gmail_history_id = partial_sync(
+        gmail_service, contact_mails, start_history_id)
 
+    if messages_body is False:
+        return full_sync(gmail_service, contact_mails)
+
+    return messages_body, gmail_history_id
+
+def partial_sync(gmail_service, contact_mails, start_history_id='1'):
+    try:
+        history = gmail_service.users().history().list(userId="me",
+            startHistoryId=start_history_id,
+            historyTypes="messageAdded").execute()
+        changes = history['history'] if 'history' in history else []
+        while 'nextPageToken' in history:
+            page_token = history['nextPageToken']
+            history = (gmail_service.users().history().list(userId="me",
+                startHistoryId=start_history_id,
+                pageToken=page_token).execute())
+            changes.extend(history['history'])
+    except errors.HttpError as error:
+        print('partial_sync: An error occurred: %s' % error)
+        return False, '1'
+    else:
+        changes_message = []
+        for history_item in changes:
+            for message in history_item['messagesAdded']:
+                changes_message.append(message['message'])
+        return get_bodys_from_ids(gmail_service, changes_message, contact_mails)
+
+
+def full_sync(gmail_service, contact_mails):
+    messages_ids = get_mail_ids(gmail_service)
+    return get_bodys_from_ids(gmail_service, messages_ids, contact_mails)
+
+
+def get_bodys_from_ids(gmail_service, messages_ids, contact_mails):
     messages_metadata = get_mail_metadada(
         gmail_service, messages_ids, contact_mails)
 
     messages_body = get_mail_bodys(gmail_service, messages_metadata)
 
-    return messages_body
+    if messages_metadata:
+        # messages_metadata is not empty
+        history_id = messages_metadata[0]['historyId']
+    else:
+        history_id = -1
+
+    return messages_body, history_id
 
 def get_mail_ids(gmail_service):
     messages_ids = []
@@ -40,42 +87,52 @@ def get_mail_ids(gmail_service):
             messages_ids.extend(response['messages'])
 
     except errors.HttpError as error:
-        print('An error occurred: %s' % error)
+        print('get_mail_ids: An error occurred: %s' % error)
 
     return messages_ids
 
 def get_mail_metadada(gmail_service, messages_ids, contact_mails):
     messages_metadata = []
 
-    try:
-        for message in messages_ids[:50]:
+    for message in messages_ids[:50]: # DEBUG
+        try:
             message_metadata = gmail_service.users().messages().get(
                 userId="me", id=message['id'], format="metadata",
-                metadataHeaders=HEADERS).execute()
-            for header in message_metadata['payload']['headers']:
-                if header['name'] in HEADERS:
-                    mail_to_keep = email_in_header(header['value'],
-                        contact_mails)
-                    if mail_to_keep:
-                        message_metadata['mail_to_keep'] = mail_to_keep
-                        messages_metadata.append(message_metadata)
-    except errors.HttpError as error:
-        print('An error occurred: %s' % error)
+                # metadataHeaders=HEADERS_EMAIL_ADDRESS
+                ).execute()
+        except errors.HttpError as error:
+            print('get_mail_metadada: An error occurred: %s' % error)
+        else:
+            message_metadata = process_metadata(message_metadata, contact_mails)
+            if message_metadata:
+                messages_metadata.append(message_metadata)
 
     return messages_metadata
+
+def process_metadata(message_metadata, contact_mails):
+    if SENT in message_metadata['labelIds'] or \
+        INBOX in message_metadata['labelIds']:
+        for header in message_metadata['payload']['headers']:
+            if header['name'] in HEADERS_EMAIL_ADDRESS:
+                mail_to_keep = email_in_header(header['value'],
+                    contact_mails)
+                if mail_to_keep:
+                    message_metadata['mail_to_keep'] = mail_to_keep
+                    return message_metadata
+    return None
 
 def get_mail_bodys(gmail_service, messages_metadata):
     messages_body = []
 
-    try:
-        for message in messages_metadata:
+    for message in messages_metadata:
+        try:
             message_body = gmail_service.users().messages().get(
                 userId="me", id=message['id'], format="full").execute()
-
+        except errors.HttpError as error:
+            print('get_mail_bodys: An error occurred: %s' % error)
+        else:
             message_body['mail_to_keep'] = message['mail_to_keep']
             messages_body.append(message_body)
-    except errors.HttpError as error:
-        print('An error occurred: %s' % error)
 
     return messages_body
 
