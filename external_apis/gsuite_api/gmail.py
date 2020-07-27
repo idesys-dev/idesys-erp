@@ -4,7 +4,6 @@ See https://developers.google.com/gmail/api/quickstart/python
 
 
 from googleapiclient.discovery import build
-# from googleapiclient.http import BatchHttpRequest
 from apiclient import errors
 
 TO = 'To'
@@ -92,20 +91,27 @@ def get_mail_ids(gmail_service):
     return messages_ids
 
 def get_mail_metadada(gmail_service, messages_ids, contact_mails):
+    MAX_REQUEST = 100  # maximum number of requests in a batch
     messages_metadata = []
 
-    for message in messages_ids:
-        try:
-            message_metadata = gmail_service.users().messages().get(
-                userId="me", id=message['id'], format="metadata",
-                # metadataHeaders=HEADERS_EMAIL_ADDRESS
-                ).execute()
-        except errors.HttpError as error:
-            print('get_mail_metadada: An error occurred: %s' % error)
-        else:
-            message_metadata = process_metadata(message_metadata, contact_mails)
+    def message_callback(_, response, exception):
+        if exception is None:
+            message_metadata = process_metadata(response, contact_mails)
             if message_metadata:
                 messages_metadata.append(message_metadata)
+
+    length = len(messages_ids)
+    k = 0
+    while k < int(length / MAX_REQUEST) if length > 100 else k < length:
+        batch = gmail_service.new_batch_http_request(callback=message_callback)
+        i = 0
+        while i < MAX_REQUEST if length > 100 else k < length:
+            batch.add(gmail_service.users().messages().get(
+                userId="me", id=messages_ids[k]['id'], format="metadata",
+                metadataHeaders=HEADERS_EMAIL_ADDRESS))
+            i += 1
+            k += 1
+        batch.execute()
 
     return messages_metadata
 
@@ -157,31 +163,3 @@ def parse_email_list(emails):
     for email in emails:
         email_list.append(parse_email_str(email))
     return email_list
-
-
-# def get_mail_bodyss_(gmail_service, messages_ids, contacts):
-#     messages_metadata = []
-#
-#     def message_callback(request_id, response, exception):
-#         if exception is not None:
-#             # Do something with the exception.
-#             pass
-#         else:
-#             # Do something with the response.
-#             print(response)
-#
-#
-#     length = len(messages_ids)
-#     k = 0
-#     while k < length:
-#         batch = BatchHttpRequest()
-#         i = 0
-#         while i < 1000:
-#             batch.add(gmail_service.users().messages().get(
-#                 userId="me", id=messages_ids[k]['id'], format="metadata"),
-#                 message_callback)
-#             k += 1
-#             i += 1
-#         batch.execute()
-#
-#     return messages_metadata
