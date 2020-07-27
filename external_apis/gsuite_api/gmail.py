@@ -94,7 +94,7 @@ def get_mail_ids(gmail_service):
 def get_mail_metadada(gmail_service, messages_ids, contact_mails):
     messages_metadata = []
 
-    for message in messages_ids[:50]: # DEBUG
+    for message in messages_ids:
         try:
             message_metadata = gmail_service.users().messages().get(
                 userId="me", id=message['id'], format="metadata",
