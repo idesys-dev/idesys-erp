@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
-from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
+from studies.forms import CreatePhases, TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
 import models as mo
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
@@ -58,9 +58,9 @@ def utility_processor():
         
         return {"price":total_price, 
                 "tot_jeh": tot_jeh}
-
+    
+   
     return dict(get_info=get_info)
-
 
 @studies_bp.route('/create-study', methods=['GET', 'POST'])
 def createStudy():
@@ -134,6 +134,81 @@ def createProspect():
 
 #Study - Phases
 @studies_bp.route('/<num_study>/phases', methods=['GET', 'POST'])
-def phases(num_study=None):
+@studies_bp.route('/<num_study>/phases/edit=<edit>', methods=['GET', 'POST'])
+def phases(num_study=None, edit=False):
     study = mo.study.Study.objects(number=num_study).first()
-    return render_template('see_study.html', study = study)
+    #Form to create new phases 
+    form_create_phase = CreatePhases(request.form)
+    
+    list_form = []
+    for i in study.list_phases :
+            form = CreatePhases(request.form)
+            list_form.append(form)
+
+    #Forms to edit phases
+    if request.method == 'GET':
+        for j in range(len(study.list_phases)) :
+            i = study.list_phases[j]
+            form = list_form[j]
+
+            form.name.data = i.name
+            form.description.data = i.description
+            form.lenght_week.data = i.lenght_week
+            form.nb_jeh.data = i.nb_jeh
+            form.price_jeh.data = i.price_jeh
+            form.phase_number.data = i.phase_number
+            form.control_point.data = i.control_point
+            form.bill.data = i.bill
+
+    #Request to create a phase
+    if request.method == 'POST':
+        if request.form['btn'] ==  'Enregistrer':
+            phs = mo.phases.Phases(
+                name = form_create_phase.name.data,
+                description = form_create_phase.description.data,
+                lenght_week = form_create_phase.lenght_week.data,
+                nb_jeh = form_create_phase.nb_jeh.data,
+                price_jeh = form_create_phase.price_jeh.data,
+                phase_number = form_create_phase.phase_number.data,
+                control_point = form_create_phase.control_point.data,
+                bill = form_create_phase.bill.data,
+                ).save()
+            #add link to mission
+            study.list_phases.append(phs.id)
+            study.save()
+            return redirect(url_for('studies_bp.phases', num_study = study.number))
+        
+        #Request to delete a phase
+        if request.form['btn'] ==  'Supprimer':
+            id_delete = request.form['hidden']
+            phs_del = mo.phases.Phases.get(id_delete)
+            #need to link with mission here
+            study.list_phases.remove(phs_del)
+            study.save()
+            phs_del.delete()
+
+            return redirect(url_for('studies_bp.phases', num_study = study.number))
+
+        #Request to eidt a phase
+        if request.form['btn'] ==  'Modifier':
+            id_edit = request.form['hidden2']
+            phs_edit = mo.phases.Phases.get(id_edit)
+            form = list_form[int(request.form['hidden3'])]
+           
+            phs_edit.name = form.name.data
+            phs_edit.description = form.description.data
+            phs_edit.lenght_week = form.lenght_week.data
+            phs_edit.nb_jeh = form.nb_jeh.data
+            phs_edit.price_jeh = form.price_jeh.data
+            phs_edit.phase_number = form.phase_number.data
+            phs_edit.control_point = form.control_point.data
+            phs_edit.bill = form.bill.data 
+   
+            phs_edit.save()
+
+            return redirect(url_for('studies_bp.phases', num_study = study.number))
+
+    return render_template('phases.html', study = study, edit=edit, 
+                            form_create_phase = form_create_phase,
+                            list_form = list_form )
+

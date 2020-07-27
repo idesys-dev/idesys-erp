@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField
+from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField, BooleanField, Field
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms import validators as v
 from models.labels import Labels
@@ -75,3 +75,29 @@ class LabelsForm(Form):
     year = SelectField('Année', choices=Labels.get_labels("Année"))
     sector = SelectField('Filière', choices=Labels.get_labels("Filière"))
     prospection = SelectField('Prospection', choices=Labels.get_labels("Prospection"))
+
+class CreatePhases(Form):
+    name = StringField('Nom', [
+        v.Length(min=0, max=50),
+        v.DataRequired(),
+    ])
+    description = TextAreaField('Description', [
+        v.Length(min=0, max=150),
+        v.DataRequired()
+    ])
+    lenght_week = IntegerField('Nombre de semaine', [
+        v.DataRequired()
+    ])
+    nb_jeh = IntegerField('Nombre de JEH', [
+        v.DataRequired()
+    ])
+    price_jeh = IntegerField('Prix d\'une JEH', [
+        v.DataRequired()
+    ])
+    phase_number = IntegerField('Num phase', [
+        v.DataRequired()
+    ])
+    control_point = BooleanField('Point de controle', [
+    ])
+    bill = BooleanField('Facture', [
+    ])

@@ -1,0 +1,206 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}{{study.name}}{% endblock %}
+
+{% block content %}
+<h2>Étude {{study.number}} - {{study.name}}</h2>
+
+<!-- Tabs -->
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-pills nav-fill card-header-pills">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('studies_bp.dashboard') }}">Récapitulatif</a>
+      </li>
+      <li class="nav-item ">
+        <a class="nav-link active" href="{{ url_for('studies_bp.phases', num_study=study.number) }}">Phases</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('studies_bp.dashboard', tab='finished') }}">Missions</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('studies_bp.dashboard', tab='failed') }}">Document</a>
+      </li>
+    </ul>
+  </div>
+  <!-- End studies nav -->
+
+
+  <!-- Show phases-->
+  <div class="card-body">
+    <!-- Button : Edit / See JEH Maker / import JEH Maker -->
+    <ul class="list-inline">
+      {% if edit %}
+      <a href="{{ url_for('studies_bp.phases', num_study=study.number) }}" class="btn btn-primary list-inline-item">
+        <span class="text py-2">Voir les phases</span>
+      </a>
+      {% else %}
+      <a href="{{ url_for('studies_bp.phases', num_study=study.number , edit=True) }}"
+        class="btn btn-primary list-inline-item">
+        <span class="text py-2">Modifier les phases</span>
+      </a>
+      {% endif %}
+      <a href="{{ url_for('studies_bp.phases', num_study=0) }}" class="btn btn-primary list-inline-item">
+        <span class="text py-2">JEH Maker</span>
+      </a>
+    </ul>
+
+    <!-- Cards list of phases -->
+    {% set ns = namespace(num=0) %}
+    {% for i in study.list_phases %}
+    <!-- Def row -->
+    <div class=" card text-left shadow mt-2 border-left-secondary">
+      <div class="card-body row">
+        <!-- Part 1 : title description-->
+        <div class="col-md-8 ">
+          <h6 class="font-weight-bold text-primary">{{i.phase_number}} : {{i.name}}</h6>
+          <span>Description : {{i.description}}</span>
+        </div>
+
+        <!-- Part 2 : title description-->
+        <div class="col-md-4 text-center">
+          <ul class="list-inline">
+            <h4 class="list-inline-item"><span class="badge badge-info">{{i.price_jeh*i.nb_jeh}} €</span></h4>
+            <h4 class="list-inline-item"><span class="badge badge-info">{{i.lenght_week}} sem</span></h4>
+            <h4 class="list-inline-item"><span class="badge badge-info">{{i.nb_jeh}} JEH</span></h4>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Button to edit or delete a phase-->
+    {% if edit %}
+    <div class="d-flex mb-3 mt-1 list-inline ml-auto">
+      <!-- Edit button -->
+      <a href="" class="btn btn-secondary list-inline-item ml-auto" data-toggle="modal" data-target="#edit{{i.id}}">
+        <i class="fa fa-pencil-alt " aria-hidden="true"></i>
+      </a>
+      <!-- Delete button -->
+      <a href="" class="btn btn-danger list-inline-item" data-toggle="modal" data-target="#delete{{i.id}}">
+        <i class="fa fa-trash-alt " aria-hidden="true"></i>
+      </a>
+    </div>
+
+    <!-- Modal to delete phase -->
+    <div class="modal fade" id="delete{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Suppression de phase</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" class="phases">
+              <p> Etes vous sur de supprimer la phase : {{i.name}} ?</p>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <p><input type="submit" name="btn" value="Supprimer" class='btn btn btn-danger btn-block'></p>
+                <input type="hidden" name="hidden" value="{{i.id}}">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Modal to edit phase -->
+    <div class="modal fade" id="edit{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modifier une phase</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Start Container -->
+            {% from "_formhelpers.html" import render_field %}
+            <form method="post" class="phases">
+              <div class="row">
+                <!-- Start Row  -->
+                <div class="col">
+                  <!-- Start Col -->
+                  <dl>
+                    {% for field in list_form[ns.num] %}
+                    {{ render_field(field, class='form-control') }}
+                    {% endfor %}
+                  </dl>
+                  <!--End Col -->
+                </div>
+                <!-- End Row -->
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                <p><input type="submit" name="btn" value="Modifier" class='btn btn btn-success btn-block'></p>
+                <input type="hidden" name="hidden2" value="{{i.id}}">
+                <input type="hidden" name="hidden3" value="{{ns.num}}">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% set ns.num = ns.num + 1 %}
+    {% endfor %}
+    <!-- End phases-->
+  </div>
+</div>
+<!-- End cards content-->
+
+<!-- Button to add a phase trigger modal-->
+{% if edit %}
+<div class="d-flex mt-3">
+  <button type="button" class="btn btn-success mx-auto" data-toggle="modal" data-target="#test">
+    <i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
+    <span class="text py-2">Ajouter une nouvelle phase</span>
+  </button>
+</div>
+{% endif%}
+
+<!-- Modal to add phase -->
+<div class="modal fade" id="test" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Ajouter / Modifier une phase</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Start Container -->
+        {% from "_formhelpers.html" import render_field %}
+        <form method="post" class="phases">
+          <div class="row">
+            <!-- Start Row  -->
+            <div class="col">
+              <!-- Start Col -->
+              <dl>
+                {% for field in form_create_phase %}
+                {{ render_field(field, class='form-control') }}
+                {% endfor %}
+              </dl>
+              <!--End Col -->
+            </div>
+            <!-- End Row -->
+          </div>
+          <div class="modal-footer">
+            <p><input type="submit" name="btn" value="Enregistrer" class='btn btn btn-success btn-block'></p>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
