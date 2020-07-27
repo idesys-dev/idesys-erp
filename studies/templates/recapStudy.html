@@ -11,11 +11,11 @@
   <p><a href="{{ url_for('studies_bp.dashboard', tab='all') }}" class="text-decoration-none text-primary"><i class="fas fa-chevron-left"></i> Retour</a></p>
   <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-clipboard-list"></i> Suivi d'Étude</h1>
   <br>
-  
+
   <!-- Studies nav -->
   <ul class="nav nav-pills nav-fill">
     <li class="nav-item">
-      <a class="nav-link active" href="#">Récapitulatif</a>
+      <a class="nav-link active" href="{{ url_for('studies_bp.summary_study', num_study=study.number, vision='planning') }}">Récapitulatif</a>
     </li>
     <li class="nav-item">
       <a class="nav-link text-secondary" href="#">Phases</a>
