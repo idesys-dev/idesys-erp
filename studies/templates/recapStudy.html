@@ -11,7 +11,7 @@
   <p><a href="{{ url_for('studies_bp.dashboard', tab='all') }}" class="text-decoration-none text-primary"><i class="fas fa-chevron-left"></i> Retour</a></p>
   <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-clipboard-list"></i> Suivi d'Étude</h1>
   <br>
-
+  
   <!-- Studies nav -->
   <ul class="nav nav-pills nav-fill">
     <li class="nav-item">
@@ -49,10 +49,10 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="font-weight-bold text-primary text-uppercase mb-1"> {{study.number}} : {{study.name}}</div>
-              <div class="mb-0 text-gray-800">Suiveur d'Étude : {{study.id_follower_study.name}}</div>
-              <div class="mb-0 text-gray-800">Suiveur Qualité : {{study.id_follower_quality.name}}</div>
-              <div class="mb-0 text-gray-800">Description : {{study.description}}.</div>
+              <p class="font-weight-bold text-primary text-uppercase mb-1"> {{study.number}} : {{study.name}}</p>
+              <p class="mb-0 text-gray-800">Suiveur d'Étude : {{study.id_follower_study.name}}</p>
+              <p class="mb-0 text-gray-800">Suiveur Qualité : {{study.id_follower_quality.name}}</p>
+              <p class="mb-0 text-gray-800">Description : {{study.description}}.</p>
             </div>
             <div class="col-auto col-offset-15">
               <i class="fab fa-wpforms fa-2x fa-2x text-gray-300"></i>
@@ -67,11 +67,11 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="font-weight-bold text-primary text-uppercase mb-1">{{study.id_organization.name}}</div>
-              <div class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].first_name}} {{study.id_organization.list_contacts[0].last_name}}</div>
-              <div class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].job}}</div>
-              <div class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].phone}}</div>
-              <div class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].email}}</div>
+              <p class="font-weight-bold text-primary text-uppercase mb-1">{{study.id_organization.name}}</p>
+              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].first_name}} {{study.id_organization.list_contacts[0].last_name}}</p>
+              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].job}}</p>
+              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].phone}}</p>
+              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].email}}</p>
             </div>
             <div class="col-auto">
               <i class="fas fa-address-card fa-2x text-gray-300"></i>
@@ -92,8 +92,8 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Prix de l'étude</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{info["price"]}} €</div>
+              <p class="text-xs font-weight-bold text-primary text-uppercase mb-1">Prix de l'étude</p>
+              <p class="h5 mb-0 font-weight-bold text-gray-800">{{info["price"]}} €</p>
             </div>
             <div class="col-auto">
               <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -108,8 +108,8 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Nombre de JEH</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{info["tot_jeh"]}} JEH</div>
+              <p class="text-xs font-weight-bold text-primary text-uppercase mb-1">Nombre de JEH</p>
+              <p class="h5 mb-0 font-weight-bold text-gray-800">{{info["tot_jeh"]}} JEH</p>
             </div>
             <div class="col-auto">
               <i class="fas fa-chart-bar fa-2x text-gray-300"></i>
@@ -124,8 +124,8 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Durée étude</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{info["tot_weeks"]}} semaines</div>
+              <p class="text-xs font-weight-bold text-primary text-uppercase mb-1">Durée étude</p>
+              <p class="h5 mb-0 font-weight-bold text-gray-800">{{info["tot_weeks"]}} semaines</p>
             </div>
             <div class="col-auto">
               <i class="far fa-calendar fa-2x text-gray-300"></i>
@@ -140,8 +140,8 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Prochain document</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">Convention d'Étude</div>
+              <p class="text-xs font-weight-bold text-primary text-uppercase mb-1">Prochain document</p>
+              <p class="h5 mb-0 font-weight-bold text-gray-800">Convention d'Étude</p>
             </div>
             <div class="col-auto">
               <i class="far fa-file fa-2x text-gray-300"></i>
@@ -153,7 +153,7 @@
 
   </div>
   <br>
-  <span>Labels</span> <br>
+  <p>Labels</p>
   {% for i in study.list_labels %}
     <span class="badge badge-info">{{i.label}}</span>
   {% endfor %}
