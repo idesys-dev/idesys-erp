@@ -3,6 +3,8 @@
 {% block title %}{{study.name}}{% endblock %}
 
 {% block content %}
+<p><a href="{{ url_for('studies_bp.dashboard', tab='all') }}" class="text-decoration-none text-primary"><i
+      class="fas fa-chevron-left"></i> Retour</a></p>
 <h2>Étude {{study.number}} - {{study.name}}</h2>
 
 <!-- Tabs -->
@@ -42,44 +44,6 @@
       </button>
     </ul>
 
-    <!-- Modal to see JEH Maker  -->
-    <div class="modal fade" id="ajoutjeh" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">JEH Maker</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form method="post" class="phases">
-
-              {% if study.link_jeh == None %}
-              <p> Ajouter un JEH Maker : <input type="url" name="link-jeh"></p>
-              {% else %}
-              <p> Consulter le JEH Maker <a href="{{study.link_jeh}}" target="_blank"> ici.</a> </p>
-              <p> Mettre à jour le JEH Maker : <input type="url" name="link-jeh"></p>
-              <p class ="text-danger text-center">Mettre à jour effaceras toutes les phases !</p>
-              {% endif %}
-
-              <div class="modal-footer">
-                <!-- Cancel button -->
-                <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Annuler</button>
-                <!-- JEH Maker link button -->
-                <a href="https://jeh-maker.idesys.org/#/" target="_blank"><button type="button" class="btn btn-info">
-                  JEH Maker</button></a>
-                <!-- Add JEH Maker button -->
-                <p><input type="submit" name="btn" value="Ajouter JEH" class='btn btn btn-success btn-block'></p>
-              </div>
-            </form>
-
-
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Cards list of phases -->
     {% set ns = namespace(num=0) %}
@@ -96,7 +60,7 @@
           <span>Description : {{i.description}}</span>
         </div>
 
-        <!-- Part 2 : title description-->
+        <!-- Part 2 : bages with info  -->
         <div class="col-md-4 text-center my-auto ">
           <ul class="list-inline">
             <h4 class="list-inline-item"><span class="badge badge-info">{{i.price_jeh*i.nb_jeh}} €</span></h4>
@@ -143,12 +107,12 @@
           </div>
         </div>
       </div>
-    </div>
+    </div><!-- End modal delete -->
 
 
     <!-- Modal to edit phase -->
-    <div class="modal fade" id="edit{{i.id}}" data-backdrop="static" role="dialog" aria-labelledby="exampleModalLongTitle"
-      aria-hidden="true">
+    <div class="modal fade" id="edit{{i.id}}" data-backdrop="static" role="dialog"
+      aria-labelledby="exampleModalLongTitle" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -170,18 +134,18 @@
                     {{ render_field(form.name, class='form-control') }}
                     {{ render_field(form.description, class='form-control') }}
                     <div class="row">
-                    <div class="col">
-                      {{ render_field(form.lenght_week, class='form-control') }}
-                      {{ render_field(form.price_jeh, class='form-control') }}
-                      {{ render_field(form.nb_jeh, class='form-control') }}
+                      <div class="col">
+                        {{ render_field(form.lenght_week, class='form-control') }}
+                        {{ render_field(form.price_jeh, class='form-control') }}
+                        {{ render_field(form.nb_jeh, class='form-control') }}
+                      </div>
+                      <div class="col">
+                        {{ render_field(form.control_point, class='form-control') }}
+                        {{ render_field(form.bill, class='form-control') }}
+                        {{ render_field(form.phase_number, class='form-control') }}
+
+                      </div>
                     </div>
-                    <div class="col">
-                      {{ render_field(form.control_point, class='form-control') }}
-                      {{ render_field(form.bill, class='form-control') }}
-                      {{ render_field(form.phase_number, class='form-control') }}
-                      
-                    </div>
-                  </div>
                   </dl>
                   <!--End Col -->
                 </div>
@@ -197,7 +161,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> <!-- End modal edit-->
     {% set ns.num = ns.num + 1 %}
     {% endfor %}
     <!-- End phases-->
@@ -206,7 +170,8 @@
     {% if not ne.found %}
     <div class=" card bg-danger text-center my-2 ">
       <div class="card-body">
-        <span class="text-white font-weight-bold"> Error 404 : No phases found. Essayer d'abord d'importer un JEH Maker !</span>
+        <span class="text-white font-weight-bold"> Error 404 : No phases found. Essayer d'abord d'importer un JEH Maker
+          !</span>
       </div>
     </div>
     {% endif %}
@@ -222,6 +187,42 @@
   </div> <!-- End cards body-->
 </div> <!-- End cards -->
 
+<!-- Modal to see JEH Maker  -->
+<div class="modal fade" id="ajoutjeh" data-backdrop="static" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">JEH Maker</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" class="phases">
+
+          {% if study.link_jeh == None %}
+          <p> Ajouter un JEH Maker : <input type="url" name="link-jeh"></p>
+          {% else %}
+          <p> Consulter le JEH Maker <a href="{{study.link_jeh}}" target="_blank"> ici.</a> </p>
+          <p> Mettre à jour le JEH Maker : <input type="url" name="link-jeh"></p>
+          <p class="text-danger text-center">Mettre à jour effaceras toutes les phases !</p>
+          {% endif %}
+
+          <div class="modal-footer">
+            <!-- Cancel button -->
+            <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Annuler</button>
+            <!-- JEH Maker link button -->
+            <a href="https://jeh-maker.idesys.org/#/" target="_blank"><button type="button" class="btn btn-info">
+                JEH Maker</button></a>
+            <!-- Add JEH Maker button -->
+            <p><input type="submit" name="btn" value="Ajouter JEH" class='btn btn btn-success btn-block'></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> <!-- End modal JEH -->
 
 
 <!-- Modal to add phase -->
@@ -244,9 +245,22 @@
             <div class="col">
               <!-- Start Col -->
               <dl>
-                {% for field in form_create_phase %}
-                {{ render_field(field, class='form-control') }}
-                {% endfor %}
+                {% set form = form_create_phase %}
+                {{ render_field(form.name, class='form-control') }}
+                {{ render_field(form.description, class='form-control') }}
+                <div class="row">
+                  <div class="col">
+                    {{ render_field(form.lenght_week, class='form-control') }}
+                    {{ render_field(form.price_jeh, class='form-control') }}
+                    {{ render_field(form.nb_jeh, class='form-control') }}
+                  </div>
+                  <div class="col">
+                    {{ render_field(form.control_point, class='form-control') }}
+                    {{ render_field(form.bill, class='form-control') }}
+                    {{ render_field(form.phase_number, class='form-control') }}
+
+                  </div>
+                </div>
               </dl>
               <!--End Col -->
             </div>

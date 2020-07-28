@@ -149,12 +149,16 @@ def createProspect():
 
 #Study - Phases
 @studies_bp.route('/<num_study>/phases', methods=['GET', 'POST'])
-@studies_bp.route('/<num_study>/phases/edit=<edit>', methods=['GET', 'POST'])
 def phases(num_study=None, edit=False):
     study = mo.study.Study.objects(number=num_study).first()
+    
     #Form to create new phases 
     form_create_phase = CreatePhases(request.form)
     
+    #Sort phases by phase_number attribut 
+    study.list_phases.sort( key = lambda x : x.phase_number)
+
+    #Initiate forms to edit phases
     list_form = []
     for i in study.list_phases :
         form = CreatePhases(request.form)
@@ -261,6 +265,7 @@ def phases(num_study=None, edit=False):
 
 
 
+#Convert JEH Maker link to json objects
 def jeh_link_to_json(link_jeh):
     #First clean up link 
     num = 0
@@ -274,3 +279,4 @@ def jeh_link_to_json(link_jeh):
     #Then decode and convert
     obj = json.loads(b64.b64decode(link_jeh))
     return obj
+
