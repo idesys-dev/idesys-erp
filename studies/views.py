@@ -1,5 +1,9 @@
+import os
+import sys
+
 from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
+import hubspot
 
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
 import models as mo
@@ -72,10 +76,21 @@ def create_study():
     formCreateStudy = CreateStudy(request.form)
     formSubmit = TypeCreate(request.form)
 
+    client = hubspot.Client.create(api_key=os.environ['HUPSPOT_TOKEN'])
+
+    def get_name(c):
+        s = c.id+") "
+        print(c, file=sys.stderr)
+        if c.properties['firstname']:
+            s += c.properties['firstname']+" "
+        if c.properties['lastname']:
+            s += c.properties['lastname']
+        return s
+
     #Edit prospect
-    list_prospect = mo.organization.Organization.objects
+    list_prospect = client.crm.contacts.get_all()
     formProspectChoice = ProspectChoice(request.form, obj=list_prospect)
-    formProspectChoice.prospect_choice.choices = [(g.id, g.name) for g in list_prospect.order_by('name')]
+    formProspectChoice.prospect_choice.choices = [(g.id, get_name(g)) for g in list_prospect]
 
 
     if request.method == 'POST':
@@ -87,7 +102,7 @@ def create_study():
             etu = mo.study.Study(
                 number = 12, #change needed
                 name = formCreateStudy.study_name.data,
-                id_organization = formProspectChoice.prospect_choice.data,
+                id_hubspot = formProspectChoice.prospect_choice.data,
                 id_follower_quality = formCreateStudy.follower_quality.data,
                 id_follower_study = formCreateStudy.follower_study.data,
                 description = formCreateStudy.description.data,
@@ -138,4 +153,9 @@ def create_prospect():
 @studies_bp.route('/<num_study>/summary/<vision>', methods=['GET', 'POST'])
 def summary_study(num_study=None, vision="planning"):
     study = mo.study.Study.objects(number=num_study).first()
-    return render_template('recapStudy.html', study=study, vision=vision)
+
+    client = hubspot.Client.create(api_key=os.environ['HUPSPOT_TOKEN'])
+    contact = client.crm.contacts.basic_api.get_by_id(study.id_hubspot,associations=['company'], properties=['jobtitle', 'firstname', 'lastname', 'phone','email'])
+    company = client.crm.companies.basic_api.get_by_id(contact.associations['companies'].results[0].id)
+    print(contact, file=sys.stderr)
+    return render_template('recapStudy.html', study=study, vision=vision, contact=contact, company=company)

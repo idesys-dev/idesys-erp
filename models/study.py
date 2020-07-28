@@ -12,6 +12,7 @@ class Study(me.Document):
     number = me.IntField(required=True)
     name = me.StringField(required=True)
     id_organization = me.ReferenceField(Organization)
+    id_hubspot = me.StringField()
     id_follower_quality = me.ReferenceField(User)
     id_follower_study = me.ReferenceField(User)
     description = me.StringField(required=True)

@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 from flask import Flask, render_template
 from flask_login import LoginManager, login_required
 from flask_mongoengine import MongoEngine
+import hubspot
+import sys
+import time
 
 # Internal imports
 from models.seeder import starter_db
@@ -61,6 +64,19 @@ def create_app(config_filename=None):
     def index():
         return render_template('pages/index.html')
     # pylint: enable=unused-variable
+
+
+    @app.route("/contacts")
+    def contacts():
+        client = hubspot.Client.create(api_key=os.environ['HUPSPOT_TOKEN'])
+        all_contacts = client.crm.contacts.get_all()
+        contact= client.crm.contacts.basic_api.get_by_id(151,associations=['company'])
+        company= client.crm.companies.basic_api.get_by_id(4045666091)
+        print(company, file=sys.stderr)
+
+        return render_template('pages/contact.html', contacts=all_contacts)
+
+
 
     return app
 

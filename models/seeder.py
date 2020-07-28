@@ -215,6 +215,7 @@ def starter_db():
         name="[WEB] - Bonnefon",
         id_organization = bnf.id,
         id_follower_study=pt.id,
+        id_hubspot = "151",
         id_follower_quality=ug.id,
         description="Refonte de 6 sites web en WordPress",
         application_fees=100,
