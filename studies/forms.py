@@ -1,5 +1,5 @@
 from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField
-from wtforms.fields.html5 import EmailField, TelField
+from wtforms.fields.html5 import EmailField, TelField, DateField
 from wtforms import validators as v
 from models.labels import Labels
 from models.user import User
@@ -81,4 +81,8 @@ class CreateMission(Form):
         v.Length(min=0, max=50),
         v.DataRequired()
     ])
-    intervenant = SelectField('Suiveur qualité', choices=User.get_admin_intervener(False))
+    intervenant = SelectField('Intervenant', choices=User.get_admin_intervener(False))
+    description = TextAreaField('Description de la mission', [v.DataRequired()])
+    date_start = DateField('Date de début', format='%d-%m-%Y')
+    date_end = DateField('Date de fin', format='%d-%m-%Y')
+    #skills = SelectField('Compétences', choices=Labels.get_labels("Competence"))

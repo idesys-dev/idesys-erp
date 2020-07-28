@@ -30,10 +30,41 @@
   <!-- End studies nav -->
   <br>
 
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#test">Ajouter une mission</button>
+  <p><button type="button" class="btn btn-primary w-25" data-toggle="modal" data-target="#modify">Modifier les missions</button></p>
+
+  {% set inc = 0 %}
+  {% for i in study.list_missions %}
+  <div class="card border-left-secondary shadow">
+    <div class="card-header text-center">
+      {{i.name}}
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-xl-9"><p class="col text-justify overflow-auto"> {{i.description}} </div>
+        <div class="col">
+          <h5><span class="text-md"><span class="badge badge-info w-100">{{i.id_intervener.name}}</span></h5>
+          <h5>
+            <div class="row">
+              <div class="col"><span class="badge badge-info w-100">{{list_dates[inc][0]}}</span></div>
+
+              <div class="col"><span class="badge badge-info w-100">{{list_dates[inc][1]}}</span></div>
+            </div>
+          </h5>
+          <h5><span class="badge badge-info w-100">{{list_dates[inc][2]}} semaines</span></h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  {% set inc = inc + 1 %}
+  {% endfor %}
+
+  <div class="text-center">
+    <p><button type="button" class="btn btn-success w-25" data-toggle="modal" data-target="#add">Ajouter une mission</button></p>
+  </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="test" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+  <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -45,6 +76,7 @@
         </div>
         <div class="modal-body">
           <!-- Start Container -->
+
           {% from "_formhelpers.html" import render_field %}
           <form method="post" class="phases">
             <div class="row">
@@ -53,7 +85,35 @@
                 <!-- Start Col -->
                 <dl>
                   {% for field in form_create_mission %}
-                  {{ render_field(field, class='form-control') }}
+                    {{ render_field(field, class='form-control') }}
+                  {% endfor %}
+
+                  <hr>
+
+                  <h5>Compétences</h5>
+                  <div class="form-group">
+                    <select class="form-control" name="skills">
+                      {% for item in choices %}
+                        <option>{{item[1]}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <hr>
+
+                  <h5>Phases</h5>
+                  {% for my_phase in study.list_phases %}
+                  <p class="font-weight-bold">{{my_phase.name}}</p>
+                  <div class="row">
+                    <div class="col">
+                      <input required type="number" placeholder="Nombre de JEH" class="form-control input-sm"></input>
+                    </div>
+                    <span> / </span>
+                    <div class="col">
+                      <input type="number" placeholder="{{my_phase.nb_jeh}} JEH" readonly="displayed" class="form-control input-sm text-center"></input>
+                    </div>
+                  </div>
+                  <br>
                   {% endfor %}
                 </dl>
                 <!--End Col -->
@@ -68,30 +128,6 @@
       </div>
     </div>
   </div>
-
-  <br><br>
-
-  {% for i in study.list_missions %}
-  <div class="card border-left-secondary shadow h-100">
-    <div class="card-header text-center">
-      {{i.name}}
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col text-justify overflow-auto">
-          {{i.description}}
-        </div>
-        <div class="col">
-          <div class="mb-0 text-gray-800">Intervenant : {{i.id_intervener.name}}</div>
-          <div class="mb-0 text-gray-800">Début : {{i.begin_date}}</div>
-          <div class="mb-0 text-gray-800">Fin : {{i.end_date}}</div>
-          <div class="mb-0 text-gray-800">Durée : {{i.end_date - i.begin_date}}</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <br>
-  {% endfor %}
 
 </div>
 {% endblock %}

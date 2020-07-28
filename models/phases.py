@@ -12,3 +12,11 @@ class Phases(me.Document):
     @staticmethod
     def get(phases_id):
         return Phases.objects(id=phases_id).first()
+
+    @staticmethod
+    def get_list_phases(study_id):
+        list_phases = []
+        for i in study_id.list_phases:
+            list_phases.append(i)
+
+        return list_phases

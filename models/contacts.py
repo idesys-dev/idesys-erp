@@ -6,3 +6,4 @@ class Contacts(me.EmbeddedDocument):
     job = me.StringField(required=True)
     email = me.EmailField(required=True)
     phone = me.StringField(required=False)
+    mails = me.ListField()

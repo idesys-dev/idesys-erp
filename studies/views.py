@@ -3,6 +3,7 @@ from flask_login import current_user
 
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm, CreateMission
 import models as mo
+from models.labels import Labels
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
@@ -63,7 +64,6 @@ def utility_processor():
                 "tot_weeks": total_length}
 
     return dict(get_info=get_info)
-
 
 @studies_bp.route('/create-study', methods=['GET', 'POST'])
 def create_study():
@@ -146,7 +146,19 @@ def summary_study(num_study=None, vision="planning"):
 def missions(num_study=None):
     study = mo.study.Study.objects(number=num_study).first()
     form_create_mission = CreateMission(request.form)
+    choices=Labels.get_labels("Competence")
+
+    list_dates = []
+
+    for element in study.list_missions:
+        underlist = []
+        underlist.append(element.begin_date.strftime("%d/%m/%Y"))
+        underlist.append(element.end_date.strftime("%d/%m/%Y"))
+        underlist.append(int((element.end_date - element.begin_date).days / 7))
+        list_dates.append(underlist)
 
     return render_template('missions.html',
     study=study,
-    form_create_mission=form_create_mission)
+    form_create_mission=form_create_mission,
+    list_dates=list_dates,
+    choices=choices)
