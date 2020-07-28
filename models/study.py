@@ -17,6 +17,7 @@ class Study(me.Document):
     description = me.StringField(required=True)
     application_fees = me.IntField(required=True)
     state = me.StringField(required=True)
+    link_jeh = me.StringField(required=False)
     list_documents = me.ListField(me.ReferenceField(Documents))
     list_labels = me.ListField(me.ReferenceField(Labels))
     list_missions = me.EmbeddedDocumentListField(Missions)

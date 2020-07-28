@@ -92,6 +92,7 @@ class CreatePhases(Form):
         v.DataRequired()
     ])
     price_jeh = IntegerField('Prix d\'une JEH', [
+        v.NumberRange(min=80, max=400, message="JEH compris entre 80 & 400 €"),
         v.DataRequired()
     ])
     phase_number = IntegerField('Num phase', [

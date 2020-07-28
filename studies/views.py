@@ -1,6 +1,9 @@
 from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
+#Import for jeh -> phase
+import base64 as b64
+import json 
 from studies.forms import CreatePhases, TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
 import models as mo
 
@@ -142,8 +145,8 @@ def phases(num_study=None, edit=False):
     
     list_form = []
     for i in study.list_phases :
-            form = CreatePhases(request.form)
-            list_form.append(form)
+        form = CreatePhases(request.form)
+        list_form.append(form)
 
     #Forms to edit phases
     if request.method == 'GET':
@@ -160,8 +163,9 @@ def phases(num_study=None, edit=False):
             form.control_point.data = i.control_point
             form.bill.data = i.bill
 
-    #Request to create a phase
     if request.method == 'POST':
+
+        #Request to create a phase
         if request.form['btn'] ==  'Enregistrer':
             phs = mo.phases.Phases(
                 name = form_create_phase.name.data,
@@ -182,14 +186,13 @@ def phases(num_study=None, edit=False):
         if request.form['btn'] ==  'Supprimer':
             id_delete = request.form['hidden']
             phs_del = mo.phases.Phases.get(id_delete)
-            #need to link with mission here
             study.list_phases.remove(phs_del)
             study.save()
             phs_del.delete()
 
             return redirect(url_for('studies_bp.phases', num_study = study.number))
 
-        #Request to eidt a phase
+        #Request to editt a phase
         if request.form['btn'] ==  'Modifier':
             id_edit = request.form['hidden2']
             phs_edit = mo.phases.Phases.get(id_edit)
@@ -208,7 +211,54 @@ def phases(num_study=None, edit=False):
 
             return redirect(url_for('studies_bp.phases', num_study = study.number))
 
-    return render_template('phases.html', study = study, edit=edit, 
+        #Request to add a JEH Maker link 
+        if request.form['btn'] ==  'Ajouter JEH':
+            link = request.form['link-jeh']
+            study.link_jeh = link
+            study.save()
+
+            #JSON from JEh
+            obj = jeh_link_to_json(link)
+            list_phase_json = obj['phases']
+
+            #Drop current phase 
+            for phase in study.list_phases :
+                phase.delete()
+            
+            study.list_phases = []
+
+            #Create new phases 
+            for i in list_phase_json :
+                phs = mo.phases.Phases(
+                    phase_number = i["id"],
+                    name = i["title"],
+                    nb_jeh = i["nbJeh"],
+                    price_jeh = i["jeh"],
+                    lenght_week = 1
+                ).save()
+
+                study.list_phases.append(phs)
+                study.save()
+
+
+            return redirect(url_for('studies_bp.phases', num_study = study.number))
+
+    return render_template('phases.html', study = study, 
                             form_create_phase = form_create_phase,
                             list_form = list_form )
 
+
+
+def jeh_link_to_json(link_jeh):
+    #First clean up link 
+    num = 0
+    for i in range(len(link_jeh)) :
+        if link_jeh[i] == '/':
+            num += 1
+        if num == 5 :
+            link_jeh = link_jeh[i+1:]
+            break
+    
+    #Then decode and convert
+    obj = json.loads(b64.b64decode(link_jeh))
+    return obj
