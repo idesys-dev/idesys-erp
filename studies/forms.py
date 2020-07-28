@@ -85,7 +85,7 @@ class CreatePhases(Form):
         v.Length(min=0, max=150),
         v.DataRequired()
     ])
-    lenght_week = IntegerField('Nombre de semaine', [
+    lenght_week = IntegerField('Durée en semaine', [
         v.DataRequired()
     ])
     nb_jeh = IntegerField('Nombre de JEH', [
@@ -95,7 +95,7 @@ class CreatePhases(Form):
         v.NumberRange(min=80, max=400, message="JEH compris entre 80 & 400 €"),
         v.DataRequired()
     ])
-    phase_number = IntegerField('Num phase', [
+    phase_number = IntegerField('Numéro de phase', [
         v.DataRequired()
     ])
     control_point = BooleanField('Point de controle', [

@@ -61,9 +61,21 @@ def utility_processor():
         
         return {"price":total_price, 
                 "tot_jeh": tot_jeh}
-    
-   
-    return dict(get_info=get_info)
+        
+    def check_number_phase(list_phases):
+        error = False
+        list_number = []
+        for i in list_phases:
+            list_number.append(i.phase_number)
+
+        num = 1
+        while num < len(list_phases)+1 :
+            if num not in list_number:
+                error = True 
+            num +=1
+        return error
+        
+    return dict(get_info=get_info, check_number_phase = check_number_phase)
 
 @studies_bp.route('/create-study', methods=['GET', 'POST'])
 def createStudy():

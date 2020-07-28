@@ -166,16 +166,29 @@
                 <div class="col">
                   <!-- Start Col -->
                   <dl>
-                    {% for field in list_form[ns.num] %}
-                    {{ render_field(field, class='form-control') }}
-                    {% endfor %}
+                    {% set form = list_form[ns.num] %}
+                    {{ render_field(form.name, class='form-control') }}
+                    {{ render_field(form.description, class='form-control') }}
+                    <div class="row">
+                    <div class="col">
+                      {{ render_field(form.lenght_week, class='form-control') }}
+                      {{ render_field(form.price_jeh, class='form-control') }}
+                      {{ render_field(form.nb_jeh, class='form-control') }}
+                    </div>
+                    <div class="col">
+                      {{ render_field(form.control_point, class='form-control') }}
+                      {{ render_field(form.bill, class='form-control') }}
+                      {{ render_field(form.phase_number, class='form-control') }}
+                      
+                    </div>
+                  </div>
                   </dl>
                   <!--End Col -->
                 </div>
                 <!-- End Row -->
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                 <p><input type="submit" name="btn" value="Modifier" class='btn btn btn-success btn-block'></p>
                 <input type="hidden" name="hidden2" value="{{i.id}}">
                 <input type="hidden" name="hidden3" value="{{ns.num}}">
@@ -191,9 +204,18 @@
 
     <!-- Error : no phase found -->
     {% if not ne.found %}
-    <div class=" card bg-danger text-center mb-2 ">
+    <div class=" card bg-danger text-center my-2 ">
       <div class="card-body">
-        <span class="text-white"> Error 404 : No phases found. Essayer d'abord d'importer un JEH Maker !</span>
+        <span class="text-white font-weight-bold"> Error 404 : No phases found. Essayer d'abord d'importer un JEH Maker !</span>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Error : number don't match -->
+    {% if  check_number_phase(study.list_phases) %}
+    <div class=" card bg-danger text-center my-2 ">
+      <div class="card-body">
+        <span class="text-white font-weight-bold"> Error phases number ! </span>
       </div>
     </div>
     {% endif %}
