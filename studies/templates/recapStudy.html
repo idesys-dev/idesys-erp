@@ -32,10 +32,10 @@
   <br>
 
   <div class="row">
-    <div class="col">
+    <div class="col-sm">
       <i class="fas fa-pen"></i><a href="#" class="text-primary"> Modifier les informations de l'étude</a>
     </div>
-    <div class="col">
+    <div class="col-sm">
       <i class="fas fa-plus"></i><a href="#" class="text-primary"> Ajouter un contact</a>
     </div>
   </div>
@@ -44,7 +44,7 @@
 
   <div class="row">
 
-    <div class="col">
+    <div class="col-sm">
       <div class="card border-left-secondary shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
@@ -62,7 +62,7 @@
       </div>
     </div>
 
-    <div class="col">
+    <div class="col-sm">
       <div class="card border-left-secondary shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
@@ -87,7 +87,7 @@
 
   {% set info = get_info(study.id) %}
   <div class="row">
-    <div class="col">
+    <div class="col-sm">
       <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
@@ -103,7 +103,7 @@
       </div>
     </div>
 
-    <div class="col">
+    <div class="col-sm">
       <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
@@ -119,7 +119,7 @@
       </div>
     </div>
 
-    <div class="col">
+    <div class="col-sm">
       <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
@@ -135,7 +135,7 @@
       </div>
     </div>
 
-    <div class="col">
+    <div class="col-sm">
       <div class="card border-left-success shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">
@@ -194,8 +194,8 @@
 
     <thead class="text-white">
       <tr class="bg-primary">
-        <td>N°</td>
-        <td>Phase</td>
+        <td class="d-none d-sm-block">N°</td>
+        <td >Phase</td>
         <td>Nombre JEH</td>
         <td>Prix JEH</td>
         <td>Total</td>
@@ -204,7 +204,7 @@
     <tbody>
       {% for i in study.list_phases %}
       <tr>
-        <td>{{i.phase_number}}</td>
+        <td class="d-none d-sm-block">{{i.phase_number}}</td>
         <td>{{i.name}}</td>
         <td>{{i.nb_jeh}}</td>
         <td>{{i.price_jeh}} €</td>
