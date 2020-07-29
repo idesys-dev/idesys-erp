@@ -194,7 +194,8 @@ def starter_db():
         end_date= date(2020,7,20),
         list_competences = [comp1.id, comp2.id],
         list_documents = [],
-        list_phases = [phase_bonnefon_1.id,phase_bonnefon_2.id]
+        list_phases = [phase_bonnefon_1.id,phase_bonnefon_2.id],
+        list_nb_jeh = [1, 1]
     )
 
     mis_bonnefon_2 = missions.Missions(
@@ -208,7 +209,8 @@ def starter_db():
         end_date= date(2020,7,20),
         list_competences = [comp1.id, comp2.id],
         list_documents = [],
-        list_phases = [phase_bonnefon_3.id]
+        list_phases = [phase_bonnefon_3.id],
+        list_nb_jeh = [1]
     )
 
     #Contact & organization

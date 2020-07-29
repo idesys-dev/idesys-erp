@@ -78,7 +78,7 @@
           <!-- Start Container -->
 
           {% from "_formhelpers.html" import render_field %}
-          <form method="post" class="phases">
+          <form method="post">
             <div class="row">
               <!-- Start Row  -->
               <div class="col">
@@ -90,23 +90,12 @@
 
                   <hr>
 
-                  <h5>Compétences</h5>
-                  <div class="form-group">
-                    <select class="form-control" name="skills">
-                      {% for item in choices %}
-                        <option>{{item[1]}}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-
-                  <hr>
-
                   <h5>Phases</h5>
                   {% for my_phase in study.list_phases %}
                   <p class="font-weight-bold">{{my_phase.name}}</p>
                   <div class="row">
                     <div class="col">
-                      <input required type="number" placeholder="Nombre de JEH" class="form-control input-sm"></input>
+                      <input type="number" name="{{my_phase.name}}" value="{{my_phase}}" max="{{my_phase.nb_jeh}}" placeholder="Nombre de JEH" class="form-control input-sm" required></input>
                     </div>
                     <span> / </span>
                     <div class="col">

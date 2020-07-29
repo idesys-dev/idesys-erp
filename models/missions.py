@@ -13,3 +13,4 @@ class Missions(me.EmbeddedDocument):
     list_competences = me.ListField(me.ReferenceField(Labels))
     list_documents = me.ListField(me.ReferenceField(Documents))
     list_phases = me.ListField(me.ReferenceField(Phases))
+    list_nb_jeh = me.ListField(required=True)

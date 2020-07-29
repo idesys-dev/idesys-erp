@@ -85,4 +85,3 @@ class CreateMission(Form):
     description = TextAreaField('Description de la mission', [v.DataRequired()])
     date_start = DateField('Date de début', format='%d-%m-%Y')
     date_end = DateField('Date de fin', format='%d-%m-%Y')
-    #skills = SelectField('Compétences', choices=Labels.get_labels("Competence"))
