@@ -1,8 +1,10 @@
-from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField, BooleanField, Field
+from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField, BooleanField, Field, SubmitField
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms import validators as v
 from models.labels import Labels
 from models.user import User
+from flask_wtf import FlaskForm
+
 
 class TypeCreate(Form):
     structure_save = SelectField('L\'organisme est-il déjà défini ?', choices=[
@@ -76,7 +78,7 @@ class LabelsForm(Form):
     sector = SelectField('Filière', choices=Labels.get_labels("Filière"))
     prospection = SelectField('Prospection', choices=Labels.get_labels("Prospection"))
 
-class CreatePhases(Form):
+class CreatePhases(FlaskForm):
     name = StringField('Nom', [
         v.Length(min=0, max=50),
         v.DataRequired(),
@@ -86,6 +88,7 @@ class CreatePhases(Form):
         v.DataRequired()
     ])
     lenght_week = IntegerField('Durée en semaine', [
+
         v.DataRequired()
     ])
     nb_jeh = IntegerField('Nombre de JEH', [
@@ -102,3 +105,4 @@ class CreatePhases(Form):
     ])
     bill = BooleanField('Facture', [
     ])
+

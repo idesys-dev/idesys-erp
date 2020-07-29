@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, url_for, redirect
+from flask import Blueprint, request, render_template, url_for, redirect, flash
 from flask_login import current_user
 
 #Import for jeh -> phase
@@ -151,6 +151,7 @@ def createProspect():
 @studies_bp.route('/<num_study>/phases', methods=['GET', 'POST'])
 def phases(num_study=None, edit=False):
     study = mo.study.Study.objects(number=num_study).first()
+    error = True
     
     #Form to create new phases 
     form_create_phase = CreatePhases(request.form)
@@ -163,6 +164,7 @@ def phases(num_study=None, edit=False):
     for i in study.list_phases :
         form = CreatePhases(request.form)
         list_form.append(form)
+
 
     #Forms to edit phases
     if request.method == 'GET':
@@ -179,10 +181,13 @@ def phases(num_study=None, edit=False):
             form.control_point.data = i.control_point
             form.bill.data = i.bill
 
+            error = False
+            
+          
     if request.method == 'POST':
 
         #Request to create a phase
-        if request.form['btn'] ==  'Enregistrer':
+        if form_create_phase.validate_on_submit():
             phs = mo.phases.Phases(
                 name = form_create_phase.name.data,
                 description = form_create_phase.description.data,
@@ -256,14 +261,18 @@ def phases(num_study=None, edit=False):
                 study.list_phases.append(phs)
                 study.save()
 
-
             return redirect(url_for('studies_bp.phases', num_study = study.number))
+
+    if  error : 
+        flash("Something went wrong")
 
     return render_template('phases.html', study = study, 
                             form_create_phase = form_create_phase,
                             list_form = list_form )
 
 
+
+    
 
 #Convert JEH Maker link to json objects
 def jeh_link_to_json(link_jeh):

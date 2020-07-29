@@ -252,13 +252,12 @@
                   <div class="col">
                     {{ render_field(form.lenght_week, class='form-control') }}
                     {{ render_field(form.price_jeh, class='form-control') }}
-                    {{ render_field(form.nb_jeh, class='form-control') }}
+                    {{ render_field(form.nb_jeh, class='form-control', min=1) }}
                   </div>
                   <div class="col">
                     {{ render_field(form.control_point, class='form-control') }}
                     {{ render_field(form.bill, class='form-control') }}
                     {{ render_field(form.phase_number, class='form-control') }}
-
                   </div>
                 </div>
               </dl>
@@ -267,8 +266,8 @@
             <!-- End Row -->
           </div>
           <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
             <p><input type="submit" name="btn" value="Enregistrer" class='btn btn btn-success btn-block'></p>
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
           </div>
         </form>
       </div>
