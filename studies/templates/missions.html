@@ -32,7 +32,6 @@
 
   <p><button type="button" class="btn btn-primary w-25" data-toggle="modal" data-target="#modify">Modifier les missions</button></p>
 
-  {% set inc = 0 %}
   {% for i in study.list_missions %}
   <div class="card border-left-secondary shadow">
     <div class="card-header text-center">
@@ -45,18 +44,17 @@
           <h5><span class="text-md"><span class="badge badge-info w-100">{{i.id_intervener.name}}</span></h5>
           <h5>
             <div class="row">
-              <div class="col"><span class="badge badge-info w-100">{{list_dates[inc][0]}}</span></div>
+              <div class="col"><span class="badge badge-info w-100">{{list_dates[loop.index-1][0]}}</span></div>
 
-              <div class="col"><span class="badge badge-info w-100">{{list_dates[inc][1]}}</span></div>
+              <div class="col"><span class="badge badge-info w-100">{{list_dates[loop.index-1][1]}}</span></div>
             </div>
           </h5>
-          <h5><span class="badge badge-info w-100">{{list_dates[inc][2]}} semaines</span></h5>
+          <h5><span class="badge badge-info w-100">{{list_dates[loop.index-1][2]}} semaines</span></h5>
         </div>
       </div>
     </div>
   </div>
   <br>
-  {% set inc = inc + 1 %}
   {% endfor %}
 
   <div class="text-center">
@@ -95,7 +93,7 @@
                   <p class="font-weight-bold">{{my_phase.name}}</p>
                   <div class="row">
                     <div class="col">
-                      <input type="number" name="{{my_phase.name}}" value="{{my_phase}}" max="{{my_phase.nb_jeh}}" placeholder="Nombre de JEH" class="form-control input-sm" required></input>
+                      <input type="number" name="{{my_phase.name}}" value="{{my_phase}}" min=0 max="{{my_phase.nb_jeh}}" placeholder="Nombre de JEH" class="form-control input-sm" required></input>
                     </div>
                     <span> / </span>
                     <div class="col">

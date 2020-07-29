@@ -177,6 +177,8 @@ def missions(num_study=None):
             sty.list_missions.append(my_mission)
             sty.save()
 
+            return redirect(url_for('studies_bp.missions', num_study=num_study)) # We force the page to refresh
+
     return render_template('missions.html',
     study=sty,
     form_create_mission=form_create_mission,
