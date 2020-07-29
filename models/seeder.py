@@ -186,7 +186,7 @@ def starter_db():
     mis_bonnefon_1 = missions.Missions(
         id_intervener = sr.id,
         name = "Mission Simon",
-        description = "L'objectif de cette missions est de réaliser les maquettes"
+        description = "L'objectif de cette mission est de réaliser les maquettes"
         "des sites webs pour qu'elles soient ergonomiques et responsives. Une fois le design réalisé, il faudra migrer et"
         "développer les sites sous WordPress en ajoutant de nouvelles fonctionnalités. Enfin, la dernière partie sera une"
         "phase de SEO pour améliorer le référencement sur Internet.",
@@ -194,23 +194,26 @@ def starter_db():
         end_date= date(2020,7,20),
         list_competences = [comp1.id, comp2.id],
         list_documents = [],
-        list_phases = [phase_bonnefon_1.id,phase_bonnefon_2.id],
-        list_nb_jeh = [1, 1]
+        list_phases = [phase_bonnefon_1.id,phase_bonnefon_2.id, phase_bonnefon_3.id],
+        list_nb_jeh = [3, 2, 0]
     )
 
     mis_bonnefon_2 = missions.Missions(
         id_intervener = am.id,
         name = "Mission Alex",
-        description = "L'objectif de cette missions est de réaliser les maquettes"
+        description = "L'objectif de cette mission est de réaliser les maquettes"
         "des sites webs pour qu'elles soient ergonomiques et responsives. Une fois le design réalisé, il faudra migrer et"
+        "développer les sites sous WordPress en ajoutant de nouvelles fonctionnalités. Enfin, la dernière partie sera une"
+        "développer les sites sous WordPress en ajoutant de nouvelles fonctionnalités. Enfin, la dernière partie sera une"
+        "développer les sites sous WordPress en ajoutant de nouvelles fonctionnalités. Enfin, la dernière partie sera une"
         "développer les sites sous WordPress en ajoutant de nouvelles fonctionnalités. Enfin, la dernière partie sera une"
         "phase de SEO pour améliorer le référencement sur Internet.",
         begin_date = date(2020,6,15),
         end_date= date(2020,7,20),
         list_competences = [comp1.id, comp2.id],
         list_documents = [],
-        list_phases = [phase_bonnefon_3.id],
-        list_nb_jeh = [1]
+        list_phases = [phase_bonnefon_1.id,phase_bonnefon_2.id, phase_bonnefon_3.id],
+        list_nb_jeh = [1, 1, 2]
     )
 
     #Contact & organization

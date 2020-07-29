@@ -30,31 +30,77 @@
   <!-- End studies nav -->
   <br>
 
-  <p><button type="button" class="btn btn-primary w-25" data-toggle="modal" data-target="#modify">Modifier les missions</button></p>
-
   {% for i in study.list_missions %}
-  <div class="card border-left-secondary shadow">
-    <div class="card-header text-center">
-      {{i.name}}
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col-xl-9"><p class="col text-justify overflow-auto"> {{i.description}} </div>
-        <div class="col">
-          <h5><span class="text-md"><span class="badge badge-info w-100">{{i.id_intervener.name}}</span></h5>
-          <h5>
-            <div class="row">
-              <div class="col"><span class="badge badge-info w-100">{{list_dates[loop.index-1][0]}}</span></div>
+  <!-- Loop in missions to display cards -->
+    <div class="card border-left-secondary shadow">
+      <div class="card-header text-center">
+        <span class="font-weight-bold">Nom de la mission :</span>
+        <span>{{ i.name }}</span>
+      </div>
+      <div class="card-body">
+        <!-- Start card body -->
+        <div class="row">
+          <!-- Start row -->
+          <div class="col-xl-9"><p class="text-justify overflow-auto">
+            <span class="font-weight-bold">Description :</span>
+            <span>{{ i.description }}</span>
+          </div>
+          <div class="col">
+            <!-- Start col -->
+            <h5><span class="text-md"><span class="badge badge-info w-100">{{ i.id_intervener.name }}</span></h5>
+            <h5>
+              <div class="row">
+                <div class="col"><span class="badge badge-info w-100">{{ list_dates[loop.index-1][0] }}</span></div>
+                <div class="col"><span class="badge badge-info w-100">{{ list_dates[loop.index-1][1] }}</span></div>
+              </div>
+            </h5>
 
-              <div class="col"><span class="badge badge-info w-100">{{list_dates[loop.index-1][1]}}</span></div>
-            </div>
-          </h5>
-          <h5><span class="badge badge-info w-100">{{list_dates[loop.index-1][2]}} semaines</span></h5>
+            {% set ns = namespace(price = 0) %}
+            {% for j in i.list_nb_jeh %}
+              {% set ns.price = ns.price + (j * i.list_phases[loop.index-1].price_jeh) %}
+            {% endfor %}
+            <h5>
+              <div class="row">
+                <div class="col"><span class="badge badge-info w-100">{{ list_dates[loop.index-1][2] }} semaines</span></div>
+                <div class="col"><span class="badge badge-info w-100">{{ ns.price }} euros</span></div>
+              </div>
+            </h5>
+          <!-- End col -->
+          </div>
+        <!-- End row -->
         </div>
+
+        {% for phase in study.list_phases %}
+        <!-- Loop in phases to display progressbar -->
+          <div class="row">
+          <!-- Start row -->
+            <div class="col-xl-2">
+              <span class="text-justify">{{ phase.name }}</span>
+            </div>
+            <div class="col">
+            <!-- Start col -->
+              <div class="progress mt-1">
+                <!-- We display the progress bar only if we got more than 1 JEH (can't divise by zero) -->
+                {% if i.list_nb_jeh[loop.index-1] != 0 %}
+                  {% set value_progress_bar = (i.list_nb_jeh[loop.index-1] / phase.nb_jeh) * 100 %}
+                  <div class="progress-bar" role="progressbar" style="width: {{value_progress_bar}}%;" aria-valuemin="0" aria-valuemax="100">{{value_progress_bar|round(1)}} %</div>
+                {% endif %}
+              </div>
+            <!-- End col -->
+            </div>
+            <div class="col-xl-1">
+              <span>{{ i.list_nb_jeh[loop.index-1] }} JEH / {{ phase.nb_jeh }}</span>
+            </div>
+          <!-- End row -->
+          </div>
+        <!-- End loop for phases-->
+        {% endfor %}
+      <!-- End card body -->
       </div>
     </div>
-  </div>
-  <br>
+
+    <br>
+  <!-- End loop missions -->
   {% endfor %}
 
   <div class="text-center">
@@ -74,7 +120,6 @@
         </div>
         <div class="modal-body">
           <!-- Start Container -->
-
           {% from "_formhelpers.html" import render_field %}
           <form method="post">
             <div class="row">
@@ -90,17 +135,30 @@
 
                   <h5>Phases</h5>
                   {% for my_phase in study.list_phases %}
-                  <p class="font-weight-bold">{{my_phase.name}}</p>
-                  <div class="row">
-                    <div class="col">
-                      <input type="number" name="{{my_phase.name}}" value="{{my_phase}}" min=0 max="{{my_phase.nb_jeh}}" placeholder="Nombre de JEH" class="form-control input-sm" required></input>
+
+                    {% set ns = namespace(rest_jeh = my_phase.nb_jeh) %}
+                    {% for x in study.list_missions %}
+                      {% for y in x.list_phases %}
+                        {% if my_phase == y %}
+                          {% set ns.rest_jeh = ns.rest_jeh - x.list_nb_jeh[loop.index-1] %}
+                        {% endif %}
+                      {% endfor %}
+                    {% endfor %}
+
+                    <p class="font-weight-bold">{{my_phase.name}}</p>
+                    {% if my_phase.nb_jeh > ns.rest_jeh %}
+                      <p>{{ my_phase.nb_jeh - ns.rest_jeh }} phases déjà attribuée(s).</p>
+                    {% endif %}
+                    <div class="row">
+                      <div class="col">
+                        <input type="number" name="{{my_phase.name}}" value="{{my_phase}}" min=0 max="{{ns.rest_jeh}}" placeholder="Nombre de JEH" class="form-control input-sm" required></input>
+                      </div>
+                      <span> / </span>
+                      <div class="col">
+                        <input type="number" placeholder="{{my_phase.nb_jeh}} JEH" readonly="displayed" class="form-control input-sm text-center"></input>
+                      </div>
                     </div>
-                    <span> / </span>
-                    <div class="col">
-                      <input type="number" placeholder="{{my_phase.nb_jeh}} JEH" readonly="displayed" class="form-control input-sm text-center"></input>
-                    </div>
-                  </div>
-                  <br>
+                    <br>
                   {% endfor %}
                 </dl>
                 <!--End Col -->

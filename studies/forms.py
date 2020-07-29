@@ -82,6 +82,9 @@ class CreateMission(Form):
         v.DataRequired()
     ])
     intervenant = SelectField('Intervenant', choices=User.get_admin_intervener(False))
-    description = TextAreaField('Description de la mission', [v.DataRequired()])
+    description = TextAreaField('Description de la mission', [
+        v.Length(min=100, max=1000),
+        v.DataRequired()
+    ])
     date_start = DateField('Date de début', format='%d-%m-%Y')
     date_end = DateField('Date de fin', format='%d-%m-%Y')

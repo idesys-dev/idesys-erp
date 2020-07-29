@@ -163,7 +163,7 @@ def missions(num_study=None):
             for my_phase in sty.list_phases:
                 # We store the phase object and the number of jeh enter by the user
                 list_phases.append(my_phase)
-                list_jeh.append(request.form[str(my_phase.name)])
+                list_jeh.append(int(request.form[str(my_phase.name)]))
 
             my_mission = mo.missions.Missions(
                     id_intervener = form_create_mission.intervenant.data,
