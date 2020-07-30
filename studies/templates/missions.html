@@ -31,6 +31,7 @@
   <br>
 
   {% for i in study.list_missions %}
+
   <!-- Loop in missions to display cards -->
     <div class="card border-left-secondary shadow">
       <div class="card-header text-center">
@@ -95,19 +96,57 @@
           </div>
         <!-- End loop for phases-->
         {% endfor %}
+        <div class="text-right">
+          <!-- Edit button -->
+          <a href="" class="btn btn-secondary ml-1 my-1" data-toggle="modal" data-target="#edit{{i.name}}">
+            <i class="fa fa-pencil-alt " aria-hidden="true"></i>
+          </a>
+          <!-- Delete button -->
+          <a href="" class="btn btn-danger ml-1 my-1" data-toggle="modal" data-target="#delete{{i.id}}">
+            <i class="fa fa-trash-alt " aria-hidden="true"></i>
+          </a>
+          {% set ns = namespace(test = i) %}
+          {{i.name}}{{ns.test.name}}
+        </div>
       <!-- End card body -->
       </div>
     </div>
 
     <br>
+
+    <!-- Modal to delete phase -->
+    <div class="modal fade" id="delete{{ns.test.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Suppression de la mission</h5>
+            {{i.name}}{{ns.test.name}}
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" class="phases">
+              <p> Etes vous sur de supprimer la mission : {{ ns.test.name }} ?</p>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <p><input type="submit" name="btn" value="Supprimer" class='btn btn btn-danger btn-block'></p>
+                <input type="hidden" name="hidden" value="{{ns.test.name}}">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div><!-- End modal delete -->
   <!-- End loop missions -->
   {% endfor %}
 
   <div class="text-center">
-    <p><button type="button" class="btn btn-success w-25" data-toggle="modal" data-target="#add">Ajouter une mission</button></p>
+    <p><button type="button" class="btn btn-success col-xl-3 col-md-3 col-xs-1" data-toggle="modal" data-target="#add">Ajouter une mission</button></p>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal add mission -->
   <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
     aria-hidden="true">
     <div class="modal-dialog" role="document">

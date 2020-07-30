@@ -3,6 +3,7 @@ from flask_login import current_user
 
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm, CreateMission
 import models as mo
+#from models.missions import Missions
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
