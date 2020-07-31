@@ -151,21 +151,20 @@ def createProspect():
 @studies_bp.route('/<num_study>/phases', methods=['GET', 'POST'])
 def phases(num_study=None, edit=False):
     study = mo.study.Study.objects(number=num_study).first()
-    error = True
     
     #Form to create new phases 
-    form_create_phase = CreatePhases(request.form)
+    form_create_phase = CreatePhases()
     
-    #Sort phases by phase_number attribut 
+    #Sort phases by phase_number attribute 
     study.list_phases.sort( key = lambda x : x.phase_number)
 
     #Initiate forms to edit phases
     list_form = []
     for i in study.list_phases :
-        form = CreatePhases(request.form)
+        form = CreatePhases()
         list_form.append(form)
 
-
+    
     #Forms to edit phases
     if request.method == 'GET':
         for j in range(len(study.list_phases)) :
@@ -181,28 +180,33 @@ def phases(num_study=None, edit=False):
             form.control_point.data = i.control_point
             form.bill.data = i.bill
 
-            error = False
             
           
     if request.method == 'POST':
 
         #Request to create a phase
-        if form_create_phase.validate_on_submit():
-            phs = mo.phases.Phases(
-                name = form_create_phase.name.data,
-                description = form_create_phase.description.data,
-                lenght_week = form_create_phase.lenght_week.data,
-                nb_jeh = form_create_phase.nb_jeh.data,
-                price_jeh = form_create_phase.price_jeh.data,
-                phase_number = form_create_phase.phase_number.data,
-                control_point = form_create_phase.control_point.data,
-                bill = form_create_phase.bill.data,
-                ).save()
-            #add link to mission
-            study.list_phases.append(phs.id)
-            study.save()
+        if request.form['btn'] ==  'Enregistrer':
+            if form_create_phase.validate_on_submit():
+                phs = mo.phases.Phases(
+                    name = form_create_phase.name.data,
+                    description = form_create_phase.description.data,
+                    lenght_week = form_create_phase.lenght_week.data,
+                    nb_jeh = form_create_phase.nb_jeh.data,
+                    price_jeh = form_create_phase.price_jeh.data,
+                    phase_number = form_create_phase.phase_number.data,
+                    control_point = form_create_phase.control_point.data,
+                    bill = form_create_phase.bill.data,
+                    ).save()
+                #add link to mission
+                study.list_phases.append(phs.id)
+                study.save()
+
+                flash("Phase created !")
+            else:
+                flash("Impossible to create phase, wrong data")
+
             return redirect(url_for('studies_bp.phases', num_study = study.number))
-        
+
         #Request to delete a phase
         if request.form['btn'] ==  'Supprimer':
             id_delete = request.form['hidden']
@@ -212,23 +216,28 @@ def phases(num_study=None, edit=False):
             phs_del.delete()
 
             return redirect(url_for('studies_bp.phases', num_study = study.number))
-
-        #Request to editt a phase
+        
+        #Request to edit a phase
         if request.form['btn'] ==  'Modifier':
             id_edit = request.form['hidden2']
             phs_edit = mo.phases.Phases.get(id_edit)
             form = list_form[int(request.form['hidden3'])]
-           
-            phs_edit.name = form.name.data
-            phs_edit.description = form.description.data
-            phs_edit.lenght_week = form.lenght_week.data
-            phs_edit.nb_jeh = form.nb_jeh.data
-            phs_edit.price_jeh = form.price_jeh.data
-            phs_edit.phase_number = form.phase_number.data
-            phs_edit.control_point = form.control_point.data
-            phs_edit.bill = form.bill.data 
-   
-            phs_edit.save()
+            
+            if form.validate_on_submit():
+                phs_edit.name = form.name.data
+                phs_edit.description = form.description.data
+                phs_edit.lenght_week = form.lenght_week.data
+                phs_edit.nb_jeh = form.nb_jeh.data
+                phs_edit.price_jeh = form.price_jeh.data
+                phs_edit.phase_number = form.phase_number.data
+                phs_edit.control_point = form.control_point.data
+                phs_edit.bill = form.bill.data 
+
+                phs_edit.save()
+                flash("Phase edited !")
+
+            else:
+                flash("Impossible to edit phase, wrong data")
 
             return redirect(url_for('studies_bp.phases', num_study = study.number))
 
@@ -262,17 +271,11 @@ def phases(num_study=None, edit=False):
                 study.save()
 
             return redirect(url_for('studies_bp.phases', num_study = study.number))
-
-    if  error : 
-        flash("Something went wrong")
+        
 
     return render_template('phases.html', study = study, 
-                            form_create_phase = form_create_phase,
-                            list_form = list_form )
-
-
-
-    
+                        form_create_phase = form_create_phase,
+                        list_form = list_form )
 
 #Convert JEH Maker link to json objects
 def jeh_link_to_json(link_jeh):

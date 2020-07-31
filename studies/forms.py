@@ -79,30 +79,30 @@ class LabelsForm(Form):
     prospection = SelectField('Prospection', choices=Labels.get_labels("Prospection"))
 
 class CreatePhases(FlaskForm):
-    name = StringField('Nom', [
-        v.Length(min=0, max=50),
-        v.DataRequired(),
+    name = StringField('Nom', validators=[
+        v.Length(min=5, max=50, message="Entre 5 et 50 caractères"),
+        v.DataRequired()
     ])
-    description = TextAreaField('Description', [
+    description = TextAreaField('Description',  validators=[
         v.Length(min=0, max=150),
         v.DataRequired()
     ])
-    lenght_week = IntegerField('Durée en semaine', [
-
+    lenght_week = IntegerField('Durée en semaine',  validators=[
         v.DataRequired()
     ])
-    nb_jeh = IntegerField('Nombre de JEH', [
+    nb_jeh = IntegerField('Nombre de JEH',  validators=[
         v.DataRequired()
     ])
-    price_jeh = IntegerField('Prix d\'une JEH', [
+    price_jeh = IntegerField('Prix d\'une JEH',  validators=[
         v.NumberRange(min=80, max=400, message="JEH compris entre 80 & 400 €"),
         v.DataRequired()
     ])
-    phase_number = IntegerField('Numéro de phase', [
+    phase_number = IntegerField('Numéro de phase',  validators=[
         v.DataRequired()
     ])
-    control_point = BooleanField('Point de controle', [
-    ])
-    bill = BooleanField('Facture', [
-    ])
+
+    control_point = BooleanField('Point de controle')
+
+    bill = BooleanField('Facture')
+
 

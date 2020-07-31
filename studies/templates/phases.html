@@ -53,32 +53,34 @@
 
     <!-- Def row -->
     <div class=" card text-left shadow mt-2 border-left-secondary">
-      <div class="card-body row">
-        <!-- Part 1 : title description-->
-        <div class="col-md-7 ">
-          <h6 class="font-weight-bold text-primary">Phase {{i.phase_number}} : {{i.name}}</h6>
-          <span>Description : {{i.description}}</span>
-        </div>
+      <div class="card-body">
+        <div class="row">
+          <!-- Part 1 : title description-->
+          <div class="col-md-7 ">
+            <h6 class="font-weight-bold text-primary">Phase {{i.phase_number}} : {{i.name}}</h6>
+            <span>Description : {{i.description}}</span>
+          </div>
 
-        <!-- Part 2 : bages with info  -->
-        <div class="col-md-4 text-center my-auto ">
-          <ul class="list-inline">
-            <h4 class="list-inline-item"><span class="badge badge-info">{{i.price_jeh*i.nb_jeh}} €</span></h4>
-            <h4 class="list-inline-item"><span class="badge badge-info">{{i.lenght_week}} sem</span></h4>
-            <h4 class="list-inline-item"><span class="badge badge-info">{{i.nb_jeh}} JEH</span></h4>
-          </ul>
-        </div>
+          <!-- Part 2 : bages with info  -->
+          <div class="col-md-4 text-center my-auto ">
+            <ul class="list-inline">
+              <h4 class="list-inline-item"><span class="badge badge-info">{{i.price_jeh*i.nb_jeh}} €</span></h4>
+              <h4 class="list-inline-item"><span class="badge badge-info">{{i.lenght_week}} sem</span></h4>
+              <h4 class="list-inline-item"><span class="badge badge-info">{{i.nb_jeh}} JEH</span></h4>
+            </ul>
+          </div>
 
-        <!-- Button to edit or delete a phase-->
-        <div class="col-md-1 ml-auto my-auto">
-          <!-- Edit button -->
-          <a href="" class="btn btn-secondary ml-1 my-1" data-toggle="modal" data-target="#edit{{i.id}}">
-            <i class="fa fa-pencil-alt " aria-hidden="true"></i>
-          </a>
-          <!-- Delete button -->
-          <a href="" class="btn btn-danger ml-1 my-1" data-toggle="modal" data-target="#delete{{i.id}}">
-            <i class="fa fa-trash-alt " aria-hidden="true"></i>
-          </a>
+          <!-- Button to edit or delete a phase-->
+          <div class="col-md-1 ml-auto my-auto">
+            <!-- Edit button -->
+            <a href="" class="btn btn-secondary ml-1 my-1" data-toggle="modal" data-target="#edit{{i.id}}">
+              <i class="fa fa-pencil-alt " aria-hidden="true"></i>
+            </a>
+            <!-- Delete button -->
+            <a href="" class="btn btn-danger ml-1 my-1" data-toggle="modal" data-target="#delete{{i.id}}">
+              <i class="fa fa-trash-alt " aria-hidden="true"></i>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -131,6 +133,8 @@
                   <!-- Start Col -->
                   <dl>
                     {% set form = list_form[ns.num] %}
+                    {{ form.csrf_token }}
+
                     {{ render_field(form.name, class='form-control') }}
                     {{ render_field(form.description, class='form-control') }}
                     <div class="row">
@@ -239,13 +243,15 @@
       <div class="modal-body">
         <!-- Start Container -->
         {% from "_formhelpers.html" import render_field %}
-        <form method="post" class="phases">
+        <form method="POST">
           <div class="row">
             <!-- Start Row  -->
             <div class="col">
               <!-- Start Col -->
               <dl>
                 {% set form = form_create_phase %}
+                {{ form.csrf_token }}
+
                 {{ render_field(form.name, class='form-control') }}
                 {{ render_field(form.description, class='form-control') }}
                 <div class="row">
