@@ -7,6 +7,9 @@ import json
 from studies.forms import CreatePhases, TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
 import models as mo
 
+#pylint: disable=too-many-statements
+#pylint: disable=too-many-locals
+
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
 @studies_bp.before_request
@@ -149,7 +152,7 @@ def createProspect():
 
 #Study - Phases
 @studies_bp.route('/<num_study>/phases', methods=['GET', 'POST'])
-def phases(num_study=None, edit=False):
+def phases(num_study=None):
     study = mo.study.Study.objects(number=num_study).first()
     
     #Form to create new phases 
@@ -291,4 +294,3 @@ def jeh_link_to_json(link_jeh):
     #Then decode and convert
     obj = json.loads(b64.b64decode(link_jeh))
     return obj
-

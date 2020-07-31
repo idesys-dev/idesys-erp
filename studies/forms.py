@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField, BooleanField, Field, SubmitField
+from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField, BooleanField
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms import validators as v
 from models.labels import Labels
@@ -104,5 +104,3 @@ class CreatePhases(FlaskForm):
     control_point = BooleanField('Point de controle')
 
     bill = BooleanField('Facture')
-
-
