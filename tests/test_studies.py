@@ -18,3 +18,9 @@ def test_dashoard_tabs(client):
     assert b'Avortees' in failed.data
     assert finished.status_code == 200
     assert b'Terminees' in finished.data
+
+    
+def test_dashoard_tabs_unauth(client):
+    progressing = client.get('studies/dashboard/progressing')
+    assert progressing.status_code == 302
+  
