@@ -30,8 +30,18 @@
   <!-- End studies nav -->
   <br>
 
-  {% for i in study.list_missions %}
+  {% if alert[0] > alert[1]  %}
+    <div class="alert alert-danger text-center" role="alert">
+    {% if alert[0] - alert[1] == 1 %}
+      {{alert[0] - alert[1]}} JEH n'a pas été assignée.
+    {% endif %}
+    {% if alert[0] - alert[1] > 1 %}
+      {{alert[0] - alert[1]}} JEH n'ont pas été assignées.
+    {% endif %}
+    </div>
+  {% endif %}
 
+  {% for i in study.list_missions %}
   <!-- Loop in missions to display cards -->
     <div class="card border-left-secondary shadow">
       <div class="card-header text-center">
@@ -72,7 +82,7 @@
         </div>
 
         {% for phase in study.list_phases %}
-        <!-- Loop in phases to display progressbar -->
+        <!-- Loop in mission to display progressbar -->
           <div class="row">
           <!-- Start row -->
             <div class="col-xl-2">
@@ -94,19 +104,17 @@
             </div>
           <!-- End row -->
           </div>
-        <!-- End loop for phases-->
+        <!-- End loop for mission -->
         {% endfor %}
         <div class="text-right">
           <!-- Edit button -->
-          <a href="" class="btn btn-secondary ml-1 my-1" data-toggle="modal" data-target="#edit{{i.name}}">
+          <a href="" class="btn btn-secondary ml-1 my-1" data-toggle="modal" data-target="#edit{{i.id_mission}}">
             <i class="fa fa-pencil-alt " aria-hidden="true"></i>
           </a>
           <!-- Delete button -->
-          <a href="" class="btn btn-danger ml-1 my-1" data-toggle="modal" data-target="#delete{{i.id}}">
+          <a href="" class="btn btn-danger ml-1 my-1" data-toggle="modal" data-target="#delete{{i.id_mission}}">
             <i class="fa fa-trash-alt " aria-hidden="true"></i>
           </a>
-          {% set ns = namespace(test = i) %}
-          {{i.name}}{{ns.test.name}}
         </div>
       <!-- End card body -->
       </div>
@@ -114,31 +122,101 @@
 
     <br>
 
-    <!-- Modal to delete phase -->
-    <div class="modal fade" id="delete{{ns.test.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    <!-- Modal to delete mission -->
+    <div class="modal fade" id="delete{{i.id_mission}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
       aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">Suppression de la mission</h5>
-            {{i.name}}{{ns.test.name}}
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
             <form method="post" class="phases">
-              <p> Etes vous sur de supprimer la mission : {{ ns.test.name }} ?</p>
+              <p> Etes vous sur de supprimer la mission : <b>{{ i.name }}</b> ?</p>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                 <p><input type="submit" name="btn" value="Supprimer" class='btn btn btn-danger btn-block'></p>
-                <input type="hidden" name="hidden" value="{{ns.test.name}}">
+                <input type="hidden" name="hidden" value="{{i.id_mission}}">
               </div>
             </form>
           </div>
         </div>
       </div>
     </div><!-- End modal delete -->
+
+    <!-- Modal to edit mission -->
+    <div class="modal fade" id="edit{{i.id_mission}}" data-backdrop="static" role="dialog"
+      aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modification de {{i.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Start Container -->
+            {% from "_formhelpers.html" import render_field %}
+            <form method="post" class="phases">
+              <div class="row">
+                <!-- Start Row  -->
+                <div class="col">
+                  <!-- Start Col -->
+                  <dl>
+                    {% set form = list_form[loop.index-1] %}
+                    {% for field in form %}
+                      {{ render_field(field, class='form-control') }}
+                    {% endfor %}
+
+                    <hr>
+
+                    <h5>Phases</h5>
+                    {% for my_phase in study.list_phases %}
+
+                      {% set ns = namespace(rest_jeh = my_phase.nb_jeh) %}
+                      {% for x in study.list_missions %}
+                        {% for y in x.list_phases %}
+                          {% if my_phase == y %}
+                            {% set ns.rest_jeh = ns.rest_jeh - x.list_nb_jeh[loop.index-1] %}
+                          {% endif %}
+                        {% endfor %}
+                      {% endfor %}
+
+                      <p class="font-weight-bold">{{my_phase.name}}</p>
+                      {% if my_phase.nb_jeh > ns.rest_jeh %}
+                        <p>{{ my_phase.nb_jeh - ns.rest_jeh - i.list_nb_jeh[loop.index-1] }} phase(s) déjà attribuée(s). <em>{{ my_phase.nb_jeh - (my_phase.nb_jeh - ns.rest_jeh - i.list_nb_jeh[loop.index-1]) }} JEH restante(s).</em></p>
+                      {% endif %}
+                      <div class="row">
+                        <div class="col">
+                          <input type="number" name="{{my_phase.name}}" value="{{ i.list_nb_jeh[loop.index-1] }}" min=0 max="{{ ns.rest_jeh + i.list_nb_jeh[loop.index-1] }}" placeholder="Nombre de JEH" class="form-control input-sm" required></input>
+                        </div>
+                        <span> / </span>
+                        <div class="col">
+                          <input type="number" placeholder="{{my_phase.nb_jeh}} JEH" readonly="displayed" class="form-control input-sm text-center"></input>
+                        </div>
+                      </div>
+                      {% endfor %}
+                  </dl>
+                  <!--End Col -->
+                </div>
+                <!-- End Row -->
+              </div>
+              <div class="modal-footer">
+                <input type="hidden" name="hidden2" value="{{i.id_mission}}">
+                <input type="hidden" name="hidden3" value="{{loop.index-1}}">
+              </div>
+              <p><input type="submit" name="btn" value="Modifier" class='btn btn btn-success btn-block'></p>
+            </form>
+            <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Annuler</button>
+          </div>
+        </div>
+      </div>
+    </div> <!-- End modal edit-->
+
   <!-- End loop missions -->
   {% endfor %}
 
@@ -186,7 +264,7 @@
 
                     <p class="font-weight-bold">{{my_phase.name}}</p>
                     {% if my_phase.nb_jeh > ns.rest_jeh %}
-                      <p>{{ my_phase.nb_jeh - ns.rest_jeh }} phases déjà attribuée(s).</p>
+                      <p>{{ my_phase.nb_jeh - ns.rest_jeh }} phase(s) déjà attribuée(s). <em>{{ my_phase.nb_jeh - (my_phase.nb_jeh - ns.rest_jeh) }} JEH restante(s).</em></p>
                     {% endif %}
                     <div class="row">
                       <div class="col">

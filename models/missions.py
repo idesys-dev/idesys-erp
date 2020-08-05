@@ -5,6 +5,7 @@ from models.user import User
 from models.labels import Labels
 
 class Missions(me.EmbeddedDocument):
+    id_mission = me.IntField(required=True)
     id_intervener = me.ReferenceField(User)
     name = me.StringField(required=True)
     description = me.StringField(required=True)

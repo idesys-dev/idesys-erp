@@ -5,3 +5,5 @@ doc-warnings: false
 pylint:
   disable:
     - import-outside-toplevel
+    - too-many-locals
+    - too-many-branches

@@ -45,7 +45,7 @@ class User(UserMixin, me.Document):
     @staticmethod
     #Get admin(True) or intervener(False)
     def get_admin_intervener(type_user):
-        users = [("Aucun", "Aucun")]
+        users = [ [(""), ("Aucun")] ]
         for i in User.objects:
             if i.role is not None :
                 #Case of interverner

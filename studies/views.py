@@ -3,7 +3,6 @@ from flask_login import current_user
 
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm, CreateMission
 import models as mo
-#from models.missions import Missions
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
@@ -147,40 +146,94 @@ def missions(num_study=None):
     sty = mo.study.Study.objects(number=num_study).first()
     form_create_mission = CreateMission(request.form)
 
-    list_dates = []
-    for element in sty.list_missions:
-        # Change date format to dd/mm/yyyy
-        underlist = []
-        underlist.append(element.begin_date.strftime("%d/%m/%Y"))
-        underlist.append(element.end_date.strftime("%d/%m/%Y"))
-        underlist.append(int((element.end_date - element.begin_date).days / 7))
-        list_dates.append(underlist)
+    alert = [0, 0]
+    for x in sty.list_phases:
+        alert[0] += x.nb_jeh
+
+    list_form = []
+    list_dates = [ [] for a in range(len(sty.list_missions)) ]
+    for index, element in enumerate(sty.list_missions):
+        # Change date format to dd/mm/yyyy to display
+        list_dates[index].append(element.begin_date.strftime("%d/%m/%Y"))
+        list_dates[index].append(element.end_date.strftime("%d/%m/%Y"))
+        list_dates[index].append(int((element.end_date - element.begin_date).days / 7))
+
+        # Initiate forms to edit missions
+        form = CreateMission(request.form)
+        list_form.append(form)
+
+        # Get information of number of JEH attached and display an alert
+        for y in element.list_nb_jeh:
+            alert[1] += y
+
+    if request.method == 'GET':
+        # Get data from database to fill mission's edit form
+        for j in range(len(sty.list_missions)) :
+            i = sty.list_missions[j]
+            my_form = list_form[j]
+
+            my_form.intervenant.data = (i.id_intervener.id, i.id_intervener.name)
+            my_form.mission_name.data = i.name
+            my_form.description.data = i.description
 
     if request.method == 'POST':
-        if request.form['btn'] ==  'Enregistrer':
-            # If we want to save the mission
-            list_phases = []
-            list_jeh = []
+
+        if request.form['btn'] ==  'Modifier':
+            # Request to edit a mission, we update database with form's data
+            id_mission_edit = int(request.form['hidden2'])
+            my_form = list_form[int(request.form['hidden3'])]
+
+            list_phases_jeh = [ [], [] ]
             for my_phase in sty.list_phases:
                 # We store the phase object and the number of jeh enter by the user
-                list_phases.append(my_phase)
-                list_jeh.append(int(request.form[str(my_phase.name)]))
+                list_phases_jeh[0].append(my_phase)
+                list_phases_jeh[1].append(int(request.form[str(my_phase.name)]))
+
+            sty.list_missions[id_mission_edit-1].name = my_form.mission_name.data
+            sty.list_missions[id_mission_edit-1].description = my_form.description.data
+            sty.list_missions[id_mission_edit-1].begin_date = request.form['date_start']
+            sty.list_missions[id_mission_edit-1].end_date = request.form['date_end']
+            sty.list_missions[id_mission_edit-1].list_phases = list_phases_jeh[0]
+            sty.list_missions[id_mission_edit-1].list_nb_jeh = list_phases_jeh[1]
+
+            sty.save()
+            return redirect(url_for('studies_bp.missions', num_study=num_study)) # We force the page to refresh
+
+        if request.form['btn'] ==  'Supprimer':
+            # Request to delete a mission from database
+            sty.update(pull__list_missions__id_mission = int(request.form['hidden']))
+            return redirect(url_for('studies_bp.missions', num_study=num_study)) # We force the page to refresh
+
+        if request.form['btn'] ==  'Enregistrer':
+            # Request to register a new mission in database
+            list_phases_jeh = [ [], [] ]
+            for my_phase in sty.list_phases:
+                # We store the phase object and the number of jeh enter by the user
+                list_phases_jeh[0].append(my_phase)
+                list_phases_jeh[1].append(int(request.form[str(my_phase.name)]))
+
+            if len(sty.list_missions) == 0:
+                my_id_mission = 1
+            else:
+                my_id_mission = len(sty.list_missions) + 1
 
             my_mission = mo.missions.Missions(
+                    id_mission = my_id_mission,
                     id_intervener = form_create_mission.intervenant.data,
                     name = form_create_mission.mission_name.data,
                     description = form_create_mission.description.data,
                     begin_date = request.form['date_start'],
                     end_date = request.form['date_end'],
-                    list_phases = list_phases,
-                    list_nb_jeh = list_jeh )
+                    list_phases = list_phases_jeh[0],
+                    list_nb_jeh = list_phases_jeh[1] )
 
             sty.list_missions.append(my_mission)
             sty.save()
-
             return redirect(url_for('studies_bp.missions', num_study=num_study)) # We force the page to refresh
 
     return render_template('missions.html',
     study=sty,
     form_create_mission=form_create_mission,
-    list_dates=list_dates)
+    list_dates=list_dates,
+    list_form = list_form,
+    alert = alert)

@@ -184,6 +184,7 @@ def starter_db():
 
     #Missions
     mis_bonnefon_1 = missions.Missions(
+        id_mission = 1,
         id_intervener = sr.id,
         name = "Mission Simon",
         description = "L'objectif de cette mission est de réaliser les maquettes"
@@ -199,6 +200,7 @@ def starter_db():
     )
 
     mis_bonnefon_2 = missions.Missions(
+        id_mission = 2,
         id_intervener = am.id,
         name = "Mission Alex",
         description = "L'objectif de cette mission est de réaliser les maquettes"
