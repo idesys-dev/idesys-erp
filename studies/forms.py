@@ -19,9 +19,9 @@ class CreateStudy(Form):
     ])
 
     follower_study = SelectField('Suiveur d\'étude', choices=User.get_admin_intervener(True))
-    
+
     follower_quality = SelectField('Suiveur qualité', choices=User.get_admin_intervener(True))
-    
+
     description = TextAreaField('Description', [
         v.DataRequired()
     ])

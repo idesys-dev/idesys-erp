@@ -12,7 +12,7 @@ class Organization(me.Document):
 
     @staticmethod
     def get(orga_id):
-        return Organization.objects(id=orga_id).first()    
+        return Organization.objects(id=orga_id).first()
 
     @staticmethod
     def get_organization():
