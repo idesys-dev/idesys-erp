@@ -146,5 +146,9 @@ def summary_study(num_study=None, vision="planning"):
     study = mo.study.Study.objects(number=num_study).first()
 
     contact = Contact.get(study.id_hubspot)
-    company = Company.get(contact.company_id)
+    
+    if contact.company_id:
+        company = Company.get(contact.company_id)
+    else:
+        company = Company("00", "")
     return render_template('recapStudy.html', study=study, vision=vision, contact=contact, company=company, hubspot_id=os.environ['HUBSPOT_ID'])

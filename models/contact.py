@@ -1,11 +1,12 @@
 from utils.hubspot import Hubspot
+import sys
 
 class Contact():
     id = ""
     firstname = ""
     lastname = ""
     jobtitle = ""
-    company_id = ""
+    company_id = None
 
     #pylint: disable=too-many-arguments
     def __init__(
@@ -16,7 +17,7 @@ class Contact():
         jobtitle="",
         email="",
         phone="",
-        company_id=""
+        company_id=None
     ):
         self.id = id_c
         self.firstname = firstname
@@ -40,6 +41,9 @@ class Contact():
             id_c,associations=['company'], properties=['jobtitle', 'firstname', 'lastname', 'phone', 'email']
         )
         properties = contact.properties
+        company_id= None
+        if contact.associations != None and len(contact.associations['companies'].results) > 1:
+            company_id=contact.associations['companies'].results[0].id
         return Contact(
             contact.id,
             properties['firstname'],
@@ -47,7 +51,8 @@ class Contact():
             properties['jobtitle'],
             properties['email'],
             properties['phone'],
-            company_id=contact.associations['companies'].results[0].id)
+            company_id
+            )
 
     @staticmethod
     def get_all():
