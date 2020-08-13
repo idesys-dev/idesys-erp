@@ -19,3 +19,4 @@ slackclient
 flask-admin
 email_validator
 python-dotenv
+hubspot-python
