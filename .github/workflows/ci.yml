@@ -17,6 +17,11 @@ jobs:
        run: cp -f .env.dist .env
      - name: Docker Login
        run: docker login  docker.pkg.github.com -u ${GITHUB_ACTOR} -p ${{secrets.TOKEN}}
+     - name: Docker Build
+       if: {{contains(github.event.pull_request.labels.*.name, 'docker-change')}}
+       run: | 
+        docker-compose build --pull
+        docker-compose push
      - name: Docker Pull
        run: docker-compose pull server || true
      - name: Make Start
