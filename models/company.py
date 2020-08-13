@@ -1,17 +1,14 @@
 from utils.hubspot import Hubspot
-import sys
 
 class Company():
     id = ""
     name = ""
 
-
-    def __init__(self, id, name):
-        self.id = id
+    def __init__(self, id_h, name):
+        self.id = id_h
         self.name = name
 
     @staticmethod
-    def get(id):
-        company = Hubspot().crm.companies.basic_api.get_by_id(id)
-        print(company, file=sys.stderr)
-        return Company(id, company.properties['name'])
+    def get(id_h):
+        company = Hubspot().crm.companies.basic_api.get_by_id(id_h)
+        return Company(id_h, company.properties['name'])

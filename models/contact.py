@@ -1,5 +1,4 @@
 from utils.hubspot import Hubspot
-import sys
 
 class Contact():
     id = ""
@@ -8,8 +7,18 @@ class Contact():
     jobtitle = ""
     company_id = ""
 
-    def __init__(self, id, firstname="", lastname="", jobtitle="", email="", phone="", company_id=""):
-        self.id = id
+    #pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        id_c,
+        firstname="",
+        lastname="",
+        jobtitle="",
+        email="",
+        phone="",
+        company_id=""
+    ):
+        self.id = id_c
         self.firstname = firstname
         self.lastname = lastname
         self.jobtitle = jobtitle
@@ -26,15 +35,21 @@ class Contact():
         return s
 
     @staticmethod
-    def get(id):
-        contact = Hubspot().crm.contacts.basic_api.get_by_id(id,associations=['company'], properties=['jobtitle', 'firstname', 'lastname', 'phone', 'email'])
-        print(contact, file=sys.stderr)
+    def get(id_c):
+        contact = Hubspot().crm.contacts.basic_api.get_by_id(
+            id_c,associations=['company'], properties=['jobtitle', 'firstname', 'lastname', 'phone', 'email']
+        )
         properties = contact.properties
-        return Contact(contact.id, properties['firstname'], properties['lastname'], properties['jobtitle'], properties['email'], properties['phone'], company_id=contact.associations['companies'].results[0].id)
+        return Contact(
+            contact.id,
+            properties['firstname'],
+            properties['lastname'],
+            properties['jobtitle'],
+            properties['email'],
+            properties['phone'],
+            company_id=contact.associations['companies'].results[0].id)
 
     @staticmethod
     def get_all():
-        all = Hubspot().crm.contacts.get_all()
-        return [Contact(contact.id, contact.properties['firstname'], contact.properties['lastname']) for contact in all]
-
-
+        all_contacts = Hubspot().crm.contacts.get_all()
+        return [Contact(contact.id, contact.properties['firstname'], contact.properties['lastname']) for contact in all_contacts]

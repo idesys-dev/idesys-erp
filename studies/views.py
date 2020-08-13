@@ -1,5 +1,4 @@
 import os
-import sys
 
 from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
@@ -148,4 +147,4 @@ def summary_study(num_study=None, vision="planning"):
 
     contact = Contact.get(study.id_hubspot)
     company = Company.get(contact.company_id)
-    return render_template('recapStudy.html', study=study, vision=vision, contact=contact, company=company)
+    return render_template('recapStudy.html', study=study, vision=vision, contact=contact, company=company, hubspot_id=os.environ['HUBSPOT_ID'])
