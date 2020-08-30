@@ -1,4 +1,4 @@
-from models import phases, study, roles, organization, labels, user, missions, contacts
+from models import phases, study, roles, organization, labels, user, missions, contacts, mail
 from datetime import date
 # pylint:disable=too-many-locals
 def starter_db():
@@ -11,6 +11,7 @@ def starter_db():
 
     study.Study.drop_collection()
     phases.Phases.drop_collection()
+    mail.Mail.drop_collection()
 
     #-----------  Role ---------#
     rq = roles.Roles(
@@ -191,6 +192,16 @@ def starter_db():
         list_phases = [phase_bonnefon_3.id]
     )
 
+    # Mails
+    mail1 = mail.Mail(
+        id_user=ug.id,
+        subject="hello (subject :) )",
+        from_="ulysse.guyon@idesys.org",
+        to="r.dal@some.think",
+        body="this is the body of my email",
+        date="Sun, 26 Jul 2020 07:31:24 +0000",
+    ).save()
+
     #Contact & organization
     celine = contacts.Contacts(
         first_name = "Céline",
@@ -200,13 +211,39 @@ def starter_db():
         phone="0699999999"
     )
 
+    john = contacts.Contacts(
+        first_name = "John",
+        last_name = "Doe",
+        job="remote working",
+        email="j.doe98@yopmail.com",
+        phone="0699999991"
+    )
+
+    elon = contacts.Contacts(
+        first_name = "Elon",
+        last_name = "Musk",
+        job="thinker",
+        email="e.musk@yopmail.com",
+        phone="0699999999",
+        mails=[mail1.id]
+    )
+
     bnf = organization.Organization(
         name = "Groupe Bonnefon",
         adress="Adresse du groupe",
         city= "Nantes",
         postal_code="202020",
         list_labels = [],
-        list_contacts = [celine]
+        list_contacts = [celine, john]
+    ).save()
+
+    organization.Organization(
+        name = "Tesla",
+        adress="space",
+        city= "Nantes",
+        postal_code="202020",
+        list_labels = [],
+        list_contacts = [elon]
     ).save()
 
     #Create Study
