@@ -33,7 +33,7 @@ def dashboard(tab='all'):
 
     elif tab == 'failed':
         title = "Avortees"
-   
+
     return render_template('dashboard.html',
             study=mo.study.Study.objects,
             labels=mo.labels.Labels.objects,
@@ -47,6 +47,7 @@ def utility_processor():
     def get_info(id_study):
         total_price = 0
         tot_jeh = 0
+        total_length = 0
         if id_study == '':
             return "Id non valide"
 
@@ -55,15 +56,17 @@ def utility_processor():
         for i in sty.list_phases:
             total_price += i.price_jeh * i.nb_jeh
             tot_jeh += i.nb_jeh
-        
-        return {"price":total_price, 
-                "tot_jeh": tot_jeh}
+            total_length += i.lenght_week
+
+        return {"price":total_price,
+                "tot_jeh": tot_jeh,
+                "tot_weeks": total_length}
 
     return dict(get_info=get_info)
 
 
 @studies_bp.route('/create-study', methods=['GET', 'POST'])
-def createStudy():
+def create_study():
     # We declare all forms we describe in the forms.py
     formLabel = LabelsForm(request.form)
     formCreateStudy = CreateStudy(request.form)
@@ -74,11 +77,11 @@ def createStudy():
     formProspectChoice = ProspectChoice(request.form, obj=list_prospect)
     formProspectChoice.prospect_choice.choices = [(g.id, g.name) for g in list_prospect.order_by('name')]
 
-    
+
     if request.method == 'POST':
         if request.form['btn'] == 'Valider' and formSubmit.structure_save.data == 'Non':
             # If the prospect doesn't exist, we create it
-            return redirect(url_for(".createProspect"))
+            return redirect(url_for(".create_prospect"))
 
         if request.form['btn'] ==  'Enregistrer':
             etu = mo.study.Study(
@@ -103,7 +106,7 @@ def createStudy():
     formProspectChoice=formProspectChoice )
 
 @studies_bp.route('/create-prospect', methods=['GET', 'POST'])
-def createProspect():
+def create_prospect():
     formCreateProspect = CreateProspect(request.form)
     formCreateContact = CreateContact(request.form)
 
@@ -125,9 +128,14 @@ def createProspect():
                 list_contacts=[cont])
             org.save()
 
-
-            return redirect(url_for(".createStudy"))
+            return redirect(url_for(".create_study"))
 
     return render_template('createProspect.html',
     formCreateProspect=formCreateProspect,
     formCreateContact=formCreateContact )
+
+#@studies_bp.route('/<num_study>/summary', methods=['GET', 'POST'])
+@studies_bp.route('/<num_study>/summary/<vision>', methods=['GET', 'POST'])
+def summary_study(num_study=None, vision="planning"):
+    study = mo.study.Study.objects(number=num_study).first()
+    return render_template('recapStudy.html', study=study, vision=vision)

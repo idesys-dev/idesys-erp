@@ -1,0 +1,233 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}{{ _type }}{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <p><a href="{{ url_for('studies_bp.dashboard', tab='all') }}" class="text-decoration-none text-primary"><i class="fas fa-chevron-left"></i> Retour</a></p>
+  <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-clipboard-list"></i> Suivi d'Étude</h1>
+  <br>
+
+  <!-- Studies nav -->
+  <ul class="nav nav-pills nav-fill">
+    <li class="nav-item">
+      <a class="nav-link active" href="{{ url_for('studies_bp.summary_study', num_study=study.number, vision='planning') }}">Récapitulatif</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-secondary" href="#">Phases</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-secondary" href="#">Missions</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-secondary" href="#">Documents</a>
+    </li>
+  </ul>
+  <!-- End studies nav -->
+
+  <br>
+
+  <div class="row">
+    <div class="col-sm">
+      <i class="fas fa-pen"></i><a href="#" class="text-primary"> Modifier les informations de l'étude</a>
+    </div>
+    <div class="col-sm">
+      <i class="fas fa-plus"></i><a href="#" class="text-primary"> Ajouter un contact</a>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="row">
+
+    <div class="col-sm">
+      <div class="card border-left-secondary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <p class="font-weight-bold text-primary text-uppercase mb-1"> {{study.number}} : {{study.name}}</p>
+              <p class="mb-0 text-gray-800">Suiveur d'Étude : {{study.id_follower_study.name}}</p>
+              <p class="mb-0 text-gray-800">Suiveur Qualité : {{study.id_follower_quality.name}}</p>
+              <p class="mb-0 text-gray-800">Description : {{study.description}}.</p>
+            </div>
+            <div class="col-auto col-offset-15">
+              <i class="fab fa-wpforms fa-2x fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <div class="card border-left-secondary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <p class="font-weight-bold text-primary text-uppercase mb-1">{{study.id_organization.name}}</p>
+              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].first_name}} {{study.id_organization.list_contacts[0].last_name}}</p>
+              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].job}}</p>
+              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].phone}}</p>
+              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].email}}</p>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-address-card fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <br>
+
+  {% set info = get_info(study.id) %}
+  <div class="row">
+    <div class="col-sm">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <p class="text-xs font-weight-bold text-primary text-uppercase mb-1">Prix de l'étude</p>
+              <p class="h5 mb-0 font-weight-bold text-gray-800">{{info["price"]}} €</p>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <p class="text-xs font-weight-bold text-primary text-uppercase mb-1">Nombre de JEH</p>
+              <p class="h5 mb-0 font-weight-bold text-gray-800">{{info["tot_jeh"]}} JEH</p>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-chart-bar fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <p class="text-xs font-weight-bold text-primary text-uppercase mb-1">Durée étude</p>
+              <p class="h5 mb-0 font-weight-bold text-gray-800">{{info["tot_weeks"]}} semaines</p>
+            </div>
+            <div class="col-auto">
+              <i class="far fa-calendar fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <p class="text-xs font-weight-bold text-primary text-uppercase mb-1">Prochain document</p>
+              <p class="h5 mb-0 font-weight-bold text-gray-800">Convention d'Étude</p>
+            </div>
+            <div class="col-auto">
+              <i class="far fa-file fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <br>
+  <p>Labels</p>
+  {% for i in study.list_labels %}
+    <span class="badge badge-info">{{i.label}}</span>
+  {% endfor %}
+  <br>
+  <br>
+
+  {% if vision == 'planning' %}
+
+  <ul class="nav nav-pills nav-fill">
+    <li class="nav-item">
+      <a class="nav-link active" href="{{url_for('studies_bp.summary_study', num_study=study.number, vision='planning')}}">Vision Planning</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-secondary" href="{{url_for('studies_bp.summary_study', num_study=study.number, vision='budget')}}">Vision budget</a>
+    </li>
+  </ul>
+
+  <br>
+
+  <p> Affichage du planning </p>
+
+  {% endif %}
+
+  {% if vision == 'budget' %}
+
+  <ul class="nav nav-pills nav-fill">
+    <li class="nav-item">
+      <a class="nav-link text-secondary" href="{{url_for('studies_bp.summary_study', num_study=study.number, vision='planning')}}">Vision Planning</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="{{url_for('studies_bp.summary_study', num_study=study.number, vision='budget')}}">Vision budget</a>
+    </li>
+  </ul>
+
+  <br>
+
+  <table class="table table-bordered table-striped text-center">
+
+    <thead class="text-white">
+      <tr class="bg-primary">
+        <td class="d-none d-sm-block">N°</td>
+        <td >Phase</td>
+        <td>Nombre JEH</td>
+        <td>Prix JEH</td>
+        <td>Total</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in study.list_phases %}
+      <tr>
+        <td class="d-none d-sm-block">{{i.phase_number}}</td>
+        <td>{{i.name}}</td>
+        <td>{{i.nb_jeh}}</td>
+        <td>{{i.price_jeh}} €</td>
+        <td>{{i.nb_jeh*i.price_jeh}} €</td>
+      </tr>
+      {% endfor %}
+      <tr class="bg-warning">
+        <th scope="row">Sous Total</th>
+        <th colspan="4" class="text-center">{{info["price"]}} €</th>
+      </tr>
+      <tr>
+        <td>Frais de dossier</td>
+        <td colspan="4">{{study.application_fees}} €</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr class="bg-success">
+        <th scope="row">Total</th>
+        <th colspan="4" class="text-center">{{info["price"] + study.application_fees}} €</th>
+      </tr>
+    </tfoot>
+  </table>
+
+  {% endif %}
+</div>
+{% endblock %}
