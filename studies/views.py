@@ -1,8 +1,13 @@
+import os
+
 from flask import Blueprint, request, render_template, url_for, redirect
 from flask_login import current_user
 
 from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
 import models as mo
+
+from models.contact import Contact
+from models.company import Company
 
 studies_bp = Blueprint('studies_bp', __name__, template_folder='templates')
 
@@ -72,10 +77,11 @@ def create_study():
     formCreateStudy = CreateStudy(request.form)
     formSubmit = TypeCreate(request.form)
 
+
     #Edit prospect
-    list_prospect = mo.organization.Organization.objects
+    list_prospect = Contact.get_all()
     formProspectChoice = ProspectChoice(request.form, obj=list_prospect)
-    formProspectChoice.prospect_choice.choices = [(g.id, g.name) for g in list_prospect.order_by('name')]
+    formProspectChoice.prospect_choice.choices = [(g.id, g.get_name()) for g in list_prospect]
 
 
     if request.method == 'POST':
@@ -87,7 +93,7 @@ def create_study():
             etu = mo.study.Study(
                 number = 12, #change needed
                 name = formCreateStudy.study_name.data,
-                id_organization = formProspectChoice.prospect_choice.data,
+                id_hubspot = formProspectChoice.prospect_choice.data,
                 id_follower_quality = formCreateStudy.follower_quality.data,
                 id_follower_study = formCreateStudy.follower_study.data,
                 description = formCreateStudy.description.data,
@@ -138,4 +144,11 @@ def create_prospect():
 @studies_bp.route('/<num_study>/summary/<vision>', methods=['GET', 'POST'])
 def summary_study(num_study=None, vision="planning"):
     study = mo.study.Study.objects(number=num_study).first()
-    return render_template('recapStudy.html', study=study, vision=vision)
+
+    contact = Contact.get(study.id_hubspot)
+    
+    if contact.company_id:
+        company = Company.get(contact.company_id)
+    else:
+        company = Company("00", "")
+    return render_template('recapStudy.html', study=study, vision=vision, contact=contact, company=company, hubspot_id=os.environ['HUBSPOT_ID'])
