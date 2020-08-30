@@ -233,7 +233,7 @@ def starter_db():
         adress="Adresse du groupe",
         city= "Nantes",
         postal_code="202020",
-        list_labels = []
+        list_labels = [],
         list_contacts = [celine, john]
     ).save()
 
@@ -244,7 +244,6 @@ def starter_db():
         postal_code="202020",
         list_labels = [],
         list_contacts = [elon]
-        list_contacts = [celine]
     ).save()
 
     #Create Study
