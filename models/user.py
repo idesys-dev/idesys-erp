@@ -21,6 +21,8 @@ class User(UserMixin, me.Document):
     list_label = me.ListField(me.ReferenceField(Labels))
     list_documents = me.ListField(me.ReferenceField(Documents))
 
+    gmail_history_id = me.StringField()
+
     #pylint: disable=invalid-overridden-method
     @staticmethod
     def is_authenticated():

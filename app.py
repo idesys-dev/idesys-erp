@@ -23,24 +23,26 @@ def create_app(config_filename=None):
         app.config['GOOGLE_CLIENT_ID'] = os.environ['GOOGLE_CLIENT_ID']
     else:
         app.config.from_pyfile(config_filename)
-    
+
     MongoEngine(app)
-    
+
     #Launch seeder
     if app.config['ENV'] == 'development' :
         starter_db()
-   
+
 
     with app.app_context():
         from auth.views import auth_blueprint
         from documents.views import documents_bp
         from studies.views import studies_bp
+        from organizations.views import organizations_bp
     from models.user import User
     from admin import create_admin
 
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     app.register_blueprint(documents_bp, url_prefix='/documents')
     app.register_blueprint(studies_bp, url_prefix='/studies')
+    app.register_blueprint(organizations_bp, url_prefix='/organizations')
 
     # User session management setup
     # https://flask-login.readthedocs.io/en/latest
@@ -68,6 +70,5 @@ def create_app(config_filename=None):
 
 if __name__ == "__main__":
     app = create_app()
-    
+
     app.run(host=os.environ['FLASK_RUN_HOST'], ssl_context='adhoc')
-   
