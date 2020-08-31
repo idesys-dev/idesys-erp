@@ -64,11 +64,12 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <p class="font-weight-bold text-primary text-uppercase mb-1">{{study.id_organization.name}}</p>
-              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].first_name}} {{study.id_organization.list_contacts[0].last_name}}</p>
-              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].job}}</p>
-              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].phone}}</p>
-              <p class="mb-0 text-gray-800">{{study.id_organization.list_contacts[0].email}}</p>
+              <p class="font-weight-bold text-primary text-uppercase mb-1">{{company.name}}</p>
+              <p class="mb-0 text-gray-800">{{contact.firstname}} {{contact.lastname}}</p>
+              <p class="mb-0 text-gray-800">{{contact.jobtitle}}</p>
+              <p class="mb-0 text-gray-800">{{contact.email}}</p>
+              <p class="mb-0 text-gray-800">{{contact.phone}}</p>
+              <a class="btn btn-outline-secondary" href="https://app.hubspot.com/contacts/{{hubspot_id}}/contact/{{contact.id}}/">Voir la fiche HubSpot</a>
             </div>
             <div class="col-auto">
               <i class="fas fa-address-card fa-2x text-gray-300"></i>

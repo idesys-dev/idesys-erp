@@ -19,3 +19,5 @@ slackclient
 flask-admin
 email_validator
 python-dotenv
+hubspot-api-client ~= 3.0
+pytest-mock

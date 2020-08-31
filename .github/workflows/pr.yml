@@ -1,0 +1,21 @@
+name: Docker update
+on: [pull_request]
+
+jobs:
+  docker:
+    if: ${{contains(github.event.pull_request.labels.*.name, 'docker-change')}}
+    env:
+      COMPOSE_FILE: "docker-compose.yml:docker-compose.github.yml"
+
+    runs-on: ubuntu-latest
+
+    steps:
+     - uses: actions/checkout@v2
+     - name: Env
+       run: cp -f .env.dist .env
+     - name: Docker Login
+       run: docker login  docker.pkg.github.com -u ${GITHUB_ACTOR} -p ${{secrets.TOKEN}}
+     - name: Docker Build
+       run: | 
+        docker-compose build --pull
+        docker-compose push
