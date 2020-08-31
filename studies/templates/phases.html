@@ -10,20 +10,21 @@
 <!-- Tabs -->
 <div class="card">
   <div class="card-header">
-    <ul class="nav nav-pills nav-fill card-header-pills">
+    <ul class="nav nav-pills nav-fill">
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('studies_bp.dashboard') }}">Récapitulatif</a>
+        <a class="nav-link text-secondary" href="{{ url_for('studies_bp.summary_study', num_study=study.number, vision='planning') }}">Récapitulatif</a>
       </li>
-      <li class="nav-item ">
+      <li class="nav-item">
         <a class="nav-link active" href="{{ url_for('studies_bp.phases', num_study=study.number) }}">Phases</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('studies_bp.dashboard', tab='finished') }}">Missions</a>
+        <a class="nav-link text-secondary" href="#">Missions</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('studies_bp.dashboard', tab='failed') }}">Document</a>
+        <a class="nav-link text-secondary" href="#">Documents</a>
       </li>
     </ul>
+
   </div>
   <!-- End tabs -->
 

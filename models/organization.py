@@ -12,7 +12,7 @@ class Organization(me.Document):
 
     @staticmethod
     def get(orga_id):
-        return Organization.objects(id=orga_id).first()    
+        return Organization.objects(id=orga_id).first()
 
     @staticmethod
     def get_organization():
@@ -20,3 +20,11 @@ class Organization(me.Document):
         for item in Organization.objects:
             list_orga.append((item.id, item.name))
         return list_orga
+
+    @staticmethod
+    def get_all_mails_contact():
+        mails = []
+        for organization in Organization.objects:
+            for contact in organization.list_contacts:
+                mails.append(contact.email)
+        return mails

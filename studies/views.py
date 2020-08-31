@@ -1,9 +1,12 @@
+import base64 as b64
+import json
+from urllib.parse import urlparse
+from os.path import basename
+
 from flask import Blueprint, request, render_template, url_for, redirect, flash
 from flask_login import current_user
 
 #Import for jeh -> phase
-import base64 as b64
-import json 
 from studies.forms import CreatePhases, TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
 import models as mo
 
@@ -39,7 +42,7 @@ def dashboard(tab='all'):
 
     elif tab == 'failed':
         title = "Avortees"
-   
+
     return render_template('dashboard.html',
             study=mo.study.Study.objects,
             labels=mo.labels.Labels.objects,
@@ -53,6 +56,7 @@ def utility_processor():
     def get_info(id_study):
         total_price = 0
         tot_jeh = 0
+        total_length = 0
         if id_study == '':
             return "Id non valide"
 
@@ -61,10 +65,12 @@ def utility_processor():
         for i in sty.list_phases:
             total_price += i.price_jeh * i.nb_jeh
             tot_jeh += i.nb_jeh
-        
-        return {"price":total_price, 
-                "tot_jeh": tot_jeh}
-        
+            total_length += i.lenght_week
+
+        return {"price":total_price,
+                "tot_jeh": tot_jeh,
+                "tot_weeks": total_length}
+
     def check_number_phase(list_phases):
         error = False
         list_number = []
@@ -74,14 +80,14 @@ def utility_processor():
         num = 1
         while num < len(list_phases)+1 :
             if num not in list_number:
-                error = True 
+                error = True
             num +=1
         return error
-        
+
     return dict(get_info=get_info, check_number_phase = check_number_phase)
 
 @studies_bp.route('/create-study', methods=['GET', 'POST'])
-def createStudy():
+def create_study():
     # We declare all forms we describe in the forms.py
     formLabel = LabelsForm(request.form)
     formCreateStudy = CreateStudy(request.form)
@@ -92,11 +98,11 @@ def createStudy():
     formProspectChoice = ProspectChoice(request.form, obj=list_prospect)
     formProspectChoice.prospect_choice.choices = [(g.id, g.name) for g in list_prospect.order_by('name')]
 
-    
+
     if request.method == 'POST':
         if request.form['btn'] == 'Valider' and formSubmit.structure_save.data == 'Non':
             # If the prospect doesn't exist, we create it
-            return redirect(url_for(".createProspect"))
+            return redirect(url_for(".create_prospect"))
 
         if request.form['btn'] ==  'Enregistrer':
             etu = mo.study.Study(
@@ -121,7 +127,7 @@ def createStudy():
     formProspectChoice=formProspectChoice )
 
 @studies_bp.route('/create-prospect', methods=['GET', 'POST'])
-def createProspect():
+def create_prospect():
     formCreateProspect = CreateProspect(request.form)
     formCreateContact = CreateContact(request.form)
 
@@ -143,22 +149,22 @@ def createProspect():
                 list_contacts=[cont])
             org.save()
 
-
-            return redirect(url_for(".createStudy"))
+            return redirect(url_for(".create_study"))
 
     return render_template('createProspect.html',
     formCreateProspect=formCreateProspect,
     formCreateContact=formCreateContact )
 
+
 #Study - Phases
 @studies_bp.route('/<num_study>/phases', methods=['GET', 'POST'])
 def phases(num_study=None):
     study = mo.study.Study.objects(number=num_study).first()
-    
-    #Form to create new phases 
+
+    #Form to create new phases
     form_create_phase = CreatePhases()
-    
-    #Sort phases by phase_number attribute 
+
+    #Sort phases by phase_number attribute
     study.list_phases.sort( key = lambda x : x.phase_number)
 
     #Initiate forms to edit phases
@@ -167,7 +173,7 @@ def phases(num_study=None):
         form = CreatePhases()
         list_form.append(form)
 
-    
+
     #Forms to edit phases
     if request.method == 'GET':
         for j in range(len(study.list_phases)) :
@@ -183,8 +189,8 @@ def phases(num_study=None):
             form.control_point.data = i.control_point
             form.bill.data = i.bill
 
-            
-          
+
+
     if request.method == 'POST':
 
         #Request to create a phase
@@ -219,13 +225,13 @@ def phases(num_study=None):
             phs_del.delete()
 
             return redirect(url_for('studies_bp.phases', num_study = study.number))
-        
+
         #Request to edit a phase
         if request.form['btn'] ==  'Modifier':
             id_edit = request.form['hidden2']
             phs_edit = mo.phases.Phases.get(id_edit)
             form = list_form[int(request.form['hidden3'])]
-            
+
             if form.validate_on_submit():
                 phs_edit.name = form.name.data
                 phs_edit.description = form.description.data
@@ -234,7 +240,7 @@ def phases(num_study=None):
                 phs_edit.price_jeh = form.price_jeh.data
                 phs_edit.phase_number = form.phase_number.data
                 phs_edit.control_point = form.control_point.data
-                phs_edit.bill = form.bill.data 
+                phs_edit.bill = form.bill.data
 
                 phs_edit.save()
                 flash("Phase edited !")
@@ -244,7 +250,7 @@ def phases(num_study=None):
 
             return redirect(url_for('studies_bp.phases', num_study = study.number))
 
-        #Request to add a JEH Maker link 
+        #Request to add a JEH Maker link
         if request.form['btn'] ==  'Ajouter JEH':
             link = request.form['link-jeh']
             study.link_jeh = link
@@ -254,13 +260,13 @@ def phases(num_study=None):
             obj = jeh_link_to_json(link)
             list_phase_json = obj['phases']
 
-            #Drop current phase 
+            #Drop current phase
             for phase in study.list_phases :
                 phase.delete()
-            
+
             study.list_phases = []
 
-            #Create new phases 
+            #Create new phases
             for i in list_phase_json :
                 phs = mo.phases.Phases(
                     phase_number = i["id"],
@@ -274,23 +280,22 @@ def phases(num_study=None):
                 study.save()
 
             return redirect(url_for('studies_bp.phases', num_study = study.number))
-        
 
-    return render_template('phases.html', study = study, 
+
+    return render_template('phases.html', study = study,
                         form_create_phase = form_create_phase,
                         list_form = list_form )
 
 #Convert JEH Maker link to json objects
 def jeh_link_to_json(link_jeh):
-    #First clean up link 
-    num = 0
-    for i in range(len(link_jeh)) :
-        if link_jeh[i] == '/':
-            num += 1
-        if num == 5 :
-            link_jeh = link_jeh[i+1:]
-            break
-    
+    #First clean up link
+    code_b64 = basename(urlparse(link_jeh).fragment)
+
     #Then decode and convert
-    obj = json.loads(b64.b64decode(link_jeh))
+    obj = json.loads(b64.b64decode(code_b64))
     return obj
+
+@studies_bp.route('/<num_study>/summary/<vision>', methods=['GET', 'POST'])
+def summary_study(num_study=None, vision="planning"):
+    study = mo.study.Study.objects(number=num_study).first()
+    return render_template('recapStudy.html', study=study, vision=vision)
