@@ -1,0 +1,285 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}{{study.name}}{% endblock %}
+
+{% block content %}
+<p><a href="{{ url_for('studies_bp.dashboard', tab='all') }}" class="text-decoration-none text-primary"><i
+      class="fas fa-chevron-left"></i> Retour</a></p>
+<h2>Étude {{study.number}} - {{study.name}}</h2>
+
+<!-- Tabs -->
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a class="nav-link text-secondary" href="{{ url_for('studies_bp.summary_study', num_study=study.number, vision='planning') }}">Récapitulatif</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="{{ url_for('studies_bp.phases', num_study=study.number) }}">Phases</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-secondary" href="#">Missions</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-secondary" href="#">Documents</a>
+      </li>
+    </ul>
+
+  </div>
+  <!-- End tabs -->
+
+
+  <!-- Show phases-->
+  <div class="card-body">
+    <!-- Button : See JEH Maker / Add Phase -->
+    <ul class="list-inline">
+      <a href="" class="btn btn-warning list-inline-item" data-toggle="modal" data-target="#ajoutjeh">
+        <span class="py-2">JEH Maker</span>
+      </a>
+      <!-- Button to add a phase trigger modal-->
+      <button type="button" class="btn btn-success list-inline-item" data-toggle="modal" data-target="#addphase">
+        <span class="d-none d-md-block "><i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
+          Ajouter une nouvelle phase</span>
+        <span class="d-md-none py-2"><i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
+          Phase</span>
+      </button>
+    </ul>
+
+
+    <!-- Cards list of phases -->
+    {% set ns = namespace(num=0) %}
+    {% set ne = namespace(found=false) %}
+    {% for i in study.list_phases %}
+    {% set ne.found = true %}
+
+    <!-- Def row -->
+    <div class=" card text-left shadow mt-2 border-left-secondary">
+      <div class="card-body">
+        <div class="row">
+          <!-- Part 1 : title description-->
+          <div class="col-md-7 ">
+            <h6 class="font-weight-bold text-primary">Phase {{i.phase_number}} : {{i.name}}</h6>
+            <span>Description : {{i.description}}</span>
+          </div>
+
+          <!-- Part 2 : bages with info  -->
+          <div class="col-md-4 text-center my-auto ">
+            <ul class="list-inline">
+              <h4 class="list-inline-item"><span class="badge badge-info">{{i.price_jeh*i.nb_jeh}} €</span></h4>
+              <h4 class="list-inline-item"><span class="badge badge-info">{{i.lenght_week}} sem</span></h4>
+              <h4 class="list-inline-item"><span class="badge badge-info">{{i.nb_jeh}} JEH</span></h4>
+            </ul>
+          </div>
+
+          <!-- Button to edit or delete a phase-->
+          <div class="col-md-1 ml-auto my-auto">
+            <!-- Edit button -->
+            <a href="" class="btn btn-secondary ml-1 my-1" data-toggle="modal" data-target="#edit{{i.id}}">
+              <i class="fa fa-pencil-alt " aria-hidden="true"></i>
+            </a>
+            <!-- Delete button -->
+            <a href="" class="btn btn-danger ml-1 my-1" data-toggle="modal" data-target="#delete{{i.id}}">
+              <i class="fa fa-trash-alt " aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End row -->
+
+    <!-- Modal to delete phase -->
+    <div class="modal fade" id="delete{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Suppression de phase</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" class="phases">
+              <p> Etes vous sur de supprimer la phase : {{i.name}} ?</p>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <p><input type="submit" name="btn" value="Supprimer" class='btn btn btn-danger btn-block'></p>
+                <input type="hidden" name="hidden" value="{{i.id}}">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div><!-- End modal delete -->
+
+
+    <!-- Modal to edit phase -->
+    <div class="modal fade" id="edit{{i.id}}" data-backdrop="static" role="dialog"
+      aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modifier une phase</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Start Container -->
+            {% from "_formhelpers.html" import render_field %}
+            <form method="post" class="phases">
+              <div class="row">
+                <!-- Start Row  -->
+                <div class="col">
+                  <!-- Start Col -->
+                  <dl>
+                    {% set form = list_form[ns.num] %}
+                    {{ form.csrf_token }}
+
+                    {{ render_field(form.name, class='form-control') }}
+                    {{ render_field(form.description, class='form-control') }}
+                    <div class="row">
+                      <div class="col">
+                        {{ render_field(form.lenght_week, class='form-control') }}
+                        {{ render_field(form.price_jeh, class='form-control') }}
+                        {{ render_field(form.nb_jeh, class='form-control') }}
+                      </div>
+                      <div class="col">
+                        {{ render_field(form.control_point, class='form-control') }}
+                        {{ render_field(form.bill, class='form-control') }}
+                        {{ render_field(form.phase_number, class='form-control') }}
+
+                      </div>
+                    </div>
+                  </dl>
+                  <!--End Col -->
+                </div>
+                <!-- End Row -->
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <p><input type="submit" name="btn" value="Modifier" class='btn btn btn-success btn-block'></p>
+                <input type="hidden" name="hidden2" value="{{i.id}}">
+                <input type="hidden" name="hidden3" value="{{ns.num}}">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div> <!-- End modal edit-->
+    {% set ns.num = ns.num + 1 %}
+    {% endfor %}
+    <!-- End phases-->
+
+    <!-- Error : no phase found -->
+    {% if not ne.found %}
+    <div class=" card bg-danger text-center my-2 ">
+      <div class="card-body">
+        <span class="text-white font-weight-bold"> Error 404 : No phases found. Essayer d'abord d'importer un JEH Maker
+          !</span>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Error : number don't match -->
+    {% if  check_number_phase(study.list_phases) %}
+    <div class=" card bg-danger text-center my-2 ">
+      <div class="card-body">
+        <span class="text-white font-weight-bold"> Error phases number ! </span>
+      </div>
+    </div>
+    {% endif %}
+  </div> <!-- End cards body-->
+</div> <!-- End cards -->
+
+<!-- Modal to see JEH Maker  -->
+<div class="modal fade" id="ajoutjeh" data-backdrop="static" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">JEH Maker</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" class="phases">
+
+          {% if study.link_jeh == None %}
+          <p> Ajouter un JEH Maker : <input type="url" name="link-jeh"></p>
+          {% else %}
+          <p> Consulter le JEH Maker <a href="{{study.link_jeh}}" target="_blank"> ici.</a> </p>
+          <p> Mettre à jour le JEH Maker : <input type="url" name="link-jeh"></p>
+          <p class="text-danger text-center">Mettre à jour effaceras toutes les phases !</p>
+          {% endif %}
+
+          <div class="modal-footer">
+            <!-- Cancel button -->
+            <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Annuler</button>
+            <!-- JEH Maker link button -->
+            <a href="https://jeh-maker.idesys.org/#/" target="_blank"><button type="button" class="btn btn-info">
+                JEH Maker</button></a>
+            <!-- Add JEH Maker button -->
+            <p><input type="submit" name="btn" value="Ajouter JEH" class='btn btn btn-success btn-block'></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> <!-- End modal JEH -->
+
+
+<!-- Modal to add phase -->
+<div class="modal fade" id="addphase" data-backdrop="static" role="dialog" aria-labelledby="exampleModalLongTitle"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Ajouter une nouvelle phase</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Start Container -->
+        {% from "_formhelpers.html" import render_field %}
+        <form method="POST">
+          <div class="row">
+            <!-- Start Row  -->
+            <div class="col">
+              <!-- Start Col -->
+              <dl>
+                {% set form = form_create_phase %}
+                {{ form.csrf_token }}
+
+                {{ render_field(form.name, class='form-control') }}
+                {{ render_field(form.description, class='form-control') }}
+                <div class="row">
+                  <div class="col">
+                    {{ render_field(form.lenght_week, class='form-control') }}
+                    {{ render_field(form.price_jeh, class='form-control') }}
+                    {{ render_field(form.nb_jeh, class='form-control', min=1) }}
+                  </div>
+                  <div class="col">
+                    {{ render_field(form.control_point, class='form-control') }}
+                    {{ render_field(form.bill, class='form-control') }}
+                    {{ render_field(form.phase_number, class='form-control') }}
+                  </div>
+                </div>
+              </dl>
+              <!--End Col -->
+            </div>
+            <!-- End Row -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            <p><input type="submit" name="btn" value="Enregistrer" class='btn btn btn-success btn-block'></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

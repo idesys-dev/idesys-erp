@@ -1,7 +1,10 @@
 import pytest
+
+
 import models as mo
 from models.contact import Contact
 from models.company import Company
+
 
 def get_infos():
     study = mo.study.Study.objects.first()
@@ -25,7 +28,7 @@ def test_summary_planning(client, mocker):
     study = mo.study.Study.objects.first()
     summary_planning = client.get('studies/' + str(study.number) + '/summary/planning')
     infos = get_infos()
-    
+
     assert summary_planning.status_code == 200
     assert b'<p> Affichage du planning </p>' in summary_planning.data
     assert str(study.number).encode() in summary_planning.data

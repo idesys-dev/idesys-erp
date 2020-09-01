@@ -21,21 +21,10 @@
   <div class="col-6">
     <!-- Search -->
     <span>Rechercher une étude</span>
-    <form class="d-none d-sm-inline-block form-inline ml-5  navbar-search">
-      <div class="input-group">
-        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search"
-          aria-describedby="basic-addon2">
-        <div class="input-group-append">
-          <button class="btn btn-primary" type="button">
-            <i class="fas fa-search fa-sm"></i>
-          </button>
-        </div>
-      </div>
-    </form>
 
     <!-- Buttons labels search -->
     <ul class="list-inline mt-4 ">
-      {% for i in listCategory %}
+      {% for i in list_category %}
       <div class="dropdown list-inline-item mb-2">
         <button class="btn btn-secondary dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
@@ -95,24 +84,22 @@
 
         </div>
 
-
         <!-- Part 2 : fallower, quality, intervener-->
         <div class="col-md-3 text-center py-0">
           <p><small>Qualité : </small>{{i.id_follower_quality.name}}</p>
           <p><small>Suiveur : </small>{{i.id_follower_study.name}}</p>
           <div class="dropdown list-inline-item mb-2">
-            <button class="btn btn-secondary dropdown-toggle " type="button" id="dropdownMenuButton"
+            <button class="btn btn-white dropdown-toggle " type="button" id="dropdownMenuButton"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Intervenant(s)
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               {% for j in i.list_missions %}
               <a class="dropdown-item" href="#">{{j.id_intervener.name}}</a>
               {% endfor %}
             </div>
           </div>
         </div>
-
 
         <div class="col-md-2 text-center">
           <span>{{i.state}}</span>
@@ -130,15 +117,18 @@
         <!-- End row -->
       </div>
       <div class="card-footer d-flex">
-        <ul class="list-group list-group-horizontal-md">
+        <ul class="list-inline my-auto">
           {% for j in i.list_labels %}
-          <li class="bg-secondary text-white list-group-item py-1"><small>{{j.label}}</small></li>
+          <h6 class="list-inline-item ">
+            <span class="badge badge-info">{{j.label}}</span>
+          </h6>
           {% endfor %}
         </ul>
         <!-- See study-->
         <a href="{{url_for('studies_bp.summary_study', num_study=i.number, vision='planning')}}" class="btn btn-primary ml-auto">
           <span class="text">Consulter</span>
         </a>
+
       </div>
     </div>
     {% endif %}

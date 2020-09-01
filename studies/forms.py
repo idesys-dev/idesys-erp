@@ -1,8 +1,10 @@
-from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField
+from wtforms import Form, StringField, IntegerField, SelectField, TextAreaField, BooleanField
 from wtforms.fields.html5 import EmailField, TelField
 from wtforms import validators as v
 from models.labels import Labels
 from models.user import User
+from flask_wtf import FlaskForm
+
 
 class TypeCreate(Form):
     structure_save = SelectField('L\'organisme est-il déjà défini ?', choices=[
@@ -75,3 +77,30 @@ class LabelsForm(Form):
     year = SelectField('Année', choices=Labels.get_labels("Année"))
     sector = SelectField('Filière', choices=Labels.get_labels("Filière"))
     prospection = SelectField('Prospection', choices=Labels.get_labels("Prospection"))
+
+class CreatePhases(FlaskForm):
+    name = StringField('Nom', validators=[
+        v.Length(min=5, max=50, message="Entre 5 et 50 caractères"),
+        v.DataRequired()
+    ])
+    description = TextAreaField('Description',  validators=[
+        v.Length(min=0, max=150),
+        v.DataRequired()
+    ])
+    lenght_week = IntegerField('Durée en semaine',  validators=[
+        v.DataRequired()
+    ])
+    nb_jeh = IntegerField('Nombre de JEH',  validators=[
+        v.DataRequired()
+    ])
+    price_jeh = IntegerField('Prix d\'une JEH',  validators=[
+        v.NumberRange(min=80, max=400, message="JEH compris entre 80 & 400 €"),
+        v.DataRequired()
+    ])
+    phase_number = IntegerField('Numéro de phase',  validators=[
+        v.DataRequired()
+    ])
+
+    control_point = BooleanField('Point de controle')
+
+    bill = BooleanField('Facture')

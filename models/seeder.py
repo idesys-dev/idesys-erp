@@ -1,5 +1,6 @@
 from models import phases, study, roles, organization, labels, user, missions, contacts, mail
 from datetime import date
+
 # pylint:disable=too-many-locals
 def starter_db():
     print("Begin seeder")
@@ -40,17 +41,6 @@ def starter_db():
         role = rq.id
     ).save()
 
-    user.User(
-        email = "antoine.zuber@idesys.org",
-        name = "Antoine ZUBER",
-        google_id="",
-        adress = "Quelque Part",
-        postal_code = "99999",
-        city = "",
-        graduation_classes = "5A",
-        mandate = True,
-        role = rq.id
-    ).save()
 
     pt = user.User(
         email = "paul.terrassin@idesys.org",

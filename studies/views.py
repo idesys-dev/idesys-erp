@@ -1,10 +1,19 @@
+import base64 as b64
+import json
+from urllib.parse import urlparse
+from os.path import basename
 import os
 
-from flask import Blueprint, request, render_template, url_for, redirect
+from flask import Blueprint, request, render_template, url_for, redirect, flash
+
 from flask_login import current_user
 
-from studies.forms import TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
+#Import for jeh -> phase
+from studies.forms import CreatePhases, TypeCreate, ProspectChoice, CreateStudy, CreateProspect, CreateContact, LabelsForm
 import models as mo
+
+#pylint: disable=too-many-statements
+#pylint: disable=too-many-locals
 
 from models.contact import Contact
 from models.company import Company
@@ -67,8 +76,20 @@ def utility_processor():
                 "tot_jeh": tot_jeh,
                 "tot_weeks": total_length}
 
-    return dict(get_info=get_info)
+    def check_number_phase(list_phases):
+        error = False
+        list_number = []
+        for i in list_phases:
+            list_number.append(i.phase_number)
 
+        num = 1
+        while num < len(list_phases)+1 :
+            if num not in list_number:
+                error = True
+            num +=1
+        return error
+
+    return dict(get_info=get_info, check_number_phase = check_number_phase)
 
 @studies_bp.route('/create-study', methods=['GET', 'POST'])
 def create_study():
@@ -140,13 +161,151 @@ def create_prospect():
     formCreateProspect=formCreateProspect,
     formCreateContact=formCreateContact )
 
-#@studies_bp.route('/<num_study>/summary', methods=['GET', 'POST'])
+#Study - Phases
+@studies_bp.route('/<num_study>/phases', methods=['GET', 'POST'])
+def phases(num_study=None):
+    study = mo.study.Study.objects(number=num_study).first()
+
+    #Form to create new phases
+    form_create_phase = CreatePhases()
+
+    #Sort phases by phase_number attribute
+    study.list_phases.sort( key = lambda x : x.phase_number)
+
+    #Initiate forms to edit phases
+    list_form = []
+    for i in study.list_phases :
+        form = CreatePhases()
+        list_form.append(form)
+
+
+    #Forms to edit phases
+    if request.method == 'GET':
+        for j in range(len(study.list_phases)) :
+            i = study.list_phases[j]
+            form = list_form[j]
+
+            form.name.data = i.name
+            form.description.data = i.description
+            form.lenght_week.data = i.lenght_week
+            form.nb_jeh.data = i.nb_jeh
+            form.price_jeh.data = i.price_jeh
+            form.phase_number.data = i.phase_number
+            form.control_point.data = i.control_point
+            form.bill.data = i.bill
+
+
+
+    if request.method == 'POST':
+
+        #Request to create a phase
+        if request.form['btn'] ==  'Enregistrer':
+            if form_create_phase.validate_on_submit():
+                phs = mo.phases.Phases(
+                    name = form_create_phase.name.data,
+                    description = form_create_phase.description.data,
+                    lenght_week = form_create_phase.lenght_week.data,
+                    nb_jeh = form_create_phase.nb_jeh.data,
+                    price_jeh = form_create_phase.price_jeh.data,
+                    phase_number = form_create_phase.phase_number.data,
+                    control_point = form_create_phase.control_point.data,
+                    bill = form_create_phase.bill.data,
+                    ).save()
+                #add link to mission
+                study.list_phases.append(phs.id)
+                study.save()
+
+                flash("Phase created !")
+            else:
+                flash("Impossible to create phase, wrong data")
+
+            return redirect(url_for('studies_bp.phases', num_study = study.number))
+
+        #Request to delete a phase
+        if request.form['btn'] ==  'Supprimer':
+            id_delete = request.form['hidden']
+            phs_del = mo.phases.Phases.get(id_delete)
+            study.list_phases.remove(phs_del)
+            study.save()
+            phs_del.delete()
+
+            return redirect(url_for('studies_bp.phases', num_study = study.number))
+
+        #Request to edit a phase
+        if request.form['btn'] ==  'Modifier':
+            id_edit = request.form['hidden2']
+            phs_edit = mo.phases.Phases.get(id_edit)
+            form = list_form[int(request.form['hidden3'])]
+
+            if form.validate_on_submit():
+                phs_edit.name = form.name.data
+                phs_edit.description = form.description.data
+                phs_edit.lenght_week = form.lenght_week.data
+                phs_edit.nb_jeh = form.nb_jeh.data
+                phs_edit.price_jeh = form.price_jeh.data
+                phs_edit.phase_number = form.phase_number.data
+                phs_edit.control_point = form.control_point.data
+                phs_edit.bill = form.bill.data
+
+                phs_edit.save()
+                flash("Phase edited !")
+
+            else:
+                flash("Impossible to edit phase, wrong data")
+
+            return redirect(url_for('studies_bp.phases', num_study = study.number))
+
+        #Request to add a JEH Maker link
+        if request.form['btn'] ==  'Ajouter JEH':
+            link = request.form['link-jeh']
+            study.link_jeh = link
+            study.save()
+
+            #JSON from JEh
+            obj = jeh_link_to_json(link)
+            list_phase_json = obj['phases']
+
+            #Drop current phase
+            for phase in study.list_phases :
+                phase.delete()
+
+            study.list_phases = []
+
+            #Create new phases
+            for i in list_phase_json :
+                phs = mo.phases.Phases(
+                    phase_number = i["id"],
+                    name = i["title"],
+                    nb_jeh = i["nbJeh"],
+                    price_jeh = i["jeh"],
+                    lenght_week = 1
+                ).save()
+
+                study.list_phases.append(phs)
+                study.save()
+
+            return redirect(url_for('studies_bp.phases', num_study = study.number))
+
+
+    return render_template('phases.html', study = study,
+                        form_create_phase = form_create_phase,
+                        list_form = list_form )
+
+#Convert JEH Maker link to json objects
+def jeh_link_to_json(link_jeh):
+    #First clean up link
+    code_b64 = basename(urlparse(link_jeh).fragment)
+
+    #Then decode and convert
+    obj = json.loads(b64.b64decode(code_b64))
+    return obj
+
 @studies_bp.route('/<num_study>/summary/<vision>', methods=['GET', 'POST'])
 def summary_study(num_study=None, vision="planning"):
     study = mo.study.Study.objects(number=num_study).first()
 
     contact = Contact.get(study.id_hubspot)
-    
+
     if contact.company_id:
         company = Company.get(contact.company_id)
     else:
