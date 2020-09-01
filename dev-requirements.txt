@@ -2,22 +2,5 @@ coverage
 pytest
 prospector
 pre-commit
-flask
-flask-login
-flask-mongoengine
-oauthlib
-dnspython
-requests
-pyopenssl
-google-api-python-client
-Flask-WTF
-gunicorn
-docxtpl
-openpyxl
-template_pptx_jinja
-slackclient
-flask-admin
-email_validator
-python-dotenv
-hubspot-api-client ~= 3.0
 pytest-mock
+pytest-cov
