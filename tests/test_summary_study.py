@@ -1,8 +1,10 @@
 import pytest
 
+
 import models as mo
 from models.contact import Contact
 from models.company import Company
+
 
 def get_infos():
     study = mo.study.Study.objects.first()
@@ -34,7 +36,6 @@ def test_summary_planning(client, mocker):
     assert str(infos[0]).encode() in summary_planning.data
     assert str(infos[1]).encode() in summary_planning.data
     assert str(infos[2]).encode() in summary_planning.data
-
 
 @pytest.mark.usefixtures("authenticated_request")
 def test_summary_budget(client, mocker):

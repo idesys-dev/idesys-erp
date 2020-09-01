@@ -5,6 +5,7 @@ from os.path import basename
 import os
 
 from flask import Blueprint, request, render_template, url_for, redirect, flash
+
 from flask_login import current_user
 
 #Import for jeh -> phase
@@ -298,7 +299,6 @@ def jeh_link_to_json(link_jeh):
     #Then decode and convert
     obj = json.loads(b64.b64decode(code_b64))
     return obj
-
 
 @studies_bp.route('/<num_study>/summary/<vision>', methods=['GET', 'POST'])
 def summary_study(num_study=None, vision="planning"):

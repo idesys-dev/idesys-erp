@@ -1,5 +1,6 @@
 from utils.hubspot import Hubspot
 
+
 class Contact():
     id = ""
     firstname = ""
@@ -41,8 +42,10 @@ class Contact():
         )
         properties = contact.properties
         company_id= None
+
         if contact.associations is not None and len(contact.associations['companies'].results) > 1:
             company_id=contact.associations['companies'].results[0].id
+
         return Contact(
             contact.id,
             properties['firstname'],

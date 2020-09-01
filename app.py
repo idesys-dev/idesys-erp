@@ -64,6 +64,7 @@ def create_app(config_filename=None):
         return render_template('pages/index.html')
     # pylint: enable=unused-variable
 
+
     return app
 
 
