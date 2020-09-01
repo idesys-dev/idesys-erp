@@ -25,7 +25,7 @@ lint: ## Linter
 	$(DOCKER_COMPOSE) exec -T server python3 -m prospector --profile /code/.prospector.yaml || true
 
 test: ## Launch Test
-	$(DOCKER_COMPOSE) exec -T server pytest -v
+	$(DOCKER_COMPOSE) exec -T server pytest -v --cov=. --cov-report=html
 
 
 generate-secret: ## Generate secret token
